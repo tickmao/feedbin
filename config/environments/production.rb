@@ -51,7 +51,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   # Less verbose logs
-  config.lograge.enabled = true
+  config.lograge.enabled = false
   config.lograge.custom_options = lambda do |event|
     custom_options = {}
     if event.payload && event.payload[:feedbin_request_id].present?
@@ -62,7 +62,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :info
+  config.log_level = :debug
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:subdomain, :uuid]
