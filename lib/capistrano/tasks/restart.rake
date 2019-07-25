@@ -2,11 +2,11 @@ namespace :deploy do
   desc "Restart services"
   task :restart do
     on roles :app do
-      begin
-        execute :sudo, "/etc/init.d/unicorn", :start
-      rescue SSHKit::Command::Failed
-        execute :sudo, "/etc/init.d/unicorn", :reload
-      end
+      # begin
+      #   execute :sudo, "/etc/init.d/unicorn", :start
+      # rescue SSHKit::Command::Failed
+      #   execute :sudo, "/etc/init.d/unicorn", :reload
+      # end
       #
       # begin
       #   execute :sudo, :restart, :clock

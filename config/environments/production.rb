@@ -2,6 +2,8 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   config.hosts << "feedbin.com"
   config.hosts << "api.feedbin.com"
+  config.hosts << "feedbin"
+  config.hosts << "api.feedbin"
 
   # Code is not reloaded between requests.
   config.cache_classes = true
