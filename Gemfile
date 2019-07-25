@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem "rails", "= 5.1.7"
+gem "rails", "= 6.0.0.rc1"
 
 gem "rails-deprecated_sanitizer"
 gem "rails-controller-testing"
 gem "rails_autolink"
 
-gem "nokogumbo", "= 1.4.9"
+gem "nokogumbo"
 
 group :development do
   gem "capistrano"
@@ -37,7 +37,7 @@ group :development, :test do
   gem "standard"
 end
 
-gem "pg", "< 1.0"
+gem "pg"
 gem "unicorn"
 
 gem "feedjira", github: "feedbin/feedjira", ref: "e6b7b11"
