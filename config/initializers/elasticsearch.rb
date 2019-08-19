@@ -17,6 +17,19 @@ if Rails.env.development? || Rails.env.test?
   Elasticsearch::Model.client.transport.tracer = ActiveSupport::Logger.new("log/elasticsearch.log")
   begin
     Entry.__elasticsearch__.create_index!
+    $search[:main].indices.create index: "actions",
+      body: {
+        mappings: {
+          properties: {
+            query: {
+              type: "percolator"
+            },
+            message: {
+              type: "text"
+            }
+          }
+        }
+      }
   rescue
     nil
   end

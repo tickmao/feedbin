@@ -231,7 +231,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(options = {})
-    base = as_json(root: false, only: Entry.mappings.to_hash[:entry][:properties].keys.reject { |key| key.to_s.start_with?("twitter") })
+    base = as_json(root: false, only: Entry.mappings.to_hash[:properties].keys.reject { |key| key.to_s.start_with?("twitter") || key.to_s.start_with?("full_entry") })
     base["title"] = ContentFormatter.summary(title)
     base["content"] = ContentFormatter.summary(content)
     base["emoji"] = (base["title"] + base["content"]).scan(Unicode::Emoji::REGEX).join(" ")

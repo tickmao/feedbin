@@ -13,30 +13,43 @@ module Searchable
     TAG_GROUP_REGEX = /tag_id:\((.*?)\)/
 
     search_settings = {
-      "analysis": {
-        "analyzer": {
-          "lower_exact": {
-            "tokenizer": "whitespace",
-            "filter": ["lowercase"],
+      analysis: {
+        analyzer: {
+          lower_exact: {
+            type: "custom",
+            tokenizer: "standard",
+            filter: ["lowercase", "asciifolding"],
           },
+          stemmed: {
+            type: "custom",
+            tokenizer: "standard",
+            filter: ["lowercase", "asciifolding", "english_stemmer"],
+          }
         },
-      },
+        filter: {
+          english_stemmer: {
+            type: "stemmer",
+            name: "english"
+          }
+        }
+      }
     }
 
-    settings search_settings do
-      mappings _source: {enabled: false} do
-        indexes :id, type: "long", index: :not_analyzed
-        indexes :title, analyzer: "snowball", fields: {exact: {type: "string", analyzer: "lower_exact"}}
-        indexes :content, analyzer: "snowball", fields: {exact: {type: "string", analyzer: "lower_exact"}}
-        indexes :emoji, analyzer: "whitespace", fields: {exact: {type: "string", analyzer: "whitespace"}}
-        indexes :author, analyzer: "lower_exact", fields: {exact: {type: "string", analyzer: "lower_exact"}}
-        indexes :url, analyzer: "keyword", fields: {exact: {type: "string", analyzer: "keyword"}}
-        indexes :feed_id, type: "long", index: :not_analyzed, include_in_all: false
-        indexes :published, type: "date", include_in_all: false
-        indexes :updated, type: "date", include_in_all: false
 
-        indexes :twitter_screen_name, analyzer: "whitespace"
-        indexes :twitter_name, analyzer: "whitespace"
+    settings search_settings do
+      mappings do
+        indexes :id, type: "long"
+        indexes :title, analyzer: "stemmed", fields: {exact: {type: "text", analyzer: "lower_exact"}}
+        indexes :content, analyzer: "stemmed", fields: {exact: {type: "text", analyzer: "lower_exact"}}
+        indexes :emoji, analyzer: "standard", fields: {exact: {type: "text", analyzer: "standard"}}
+        indexes :author, analyzer: "lower_exact", fields: {exact: {type: "text", analyzer: "lower_exact"}}
+        indexes :url, analyzer: "keyword", fields: {exact: {type: "text", analyzer: "keyword"}}
+        indexes :feed_id, type: "long"
+        indexes :published, type: "date"
+        indexes :updated, type: "date"
+
+        indexes :twitter_screen_name, analyzer: "standard"
+        indexes :twitter_name, analyzer: "standard"
         indexes :twitter_retweet, type: "boolean"
         indexes :twitter_media, type: "boolean"
         indexes :twitter_image, type: "boolean"
@@ -82,7 +95,7 @@ module Searchable
         options[:size] = 50
 
         query = build_query(options)
-        query[:fields] = ["id", "feed_id"]
+        query["_source"] = ["id", "feed_id"]
 
         OpenStruct.new({id: saved_search.id, query: query})
       }.compact
@@ -103,7 +116,7 @@ module Searchable
 
     def self.build_query(options)
       {}.tap do |hash|
-        hash[:fields] = ["id"]
+        hash["_source"] = ["id"]
         if options[:sort]
           if %w[desc asc].include?(options[:sort])
             hash[:sort] = [{published: options[:sort]}]
@@ -132,8 +145,6 @@ module Searchable
         if options[:query].present?
           hash[:query][:bool][:must] = {
             query_string: {
-              fields: ["_all", "title.*", "content.*", "emoji", "author", "url"],
-              quote_field_suffix: ".exact",
               default_operator: "AND",
               query: options[:query],
             },
