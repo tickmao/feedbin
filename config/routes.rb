@@ -129,7 +129,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :entries, only: [:show, :index] do
+  resources :entries, only: [:show, :index, :destroy] do
     member do
       post :content
       post :unread_entries, to: "unread_entries#update"
@@ -169,7 +169,7 @@ Rails.application.routes.draw do
     get :payment_details
     get :import_export
     get :appearance
-    get :save
+    get :newsletters_pages
     post :update_credit_card
     post :update_plan
     post :font

@@ -390,6 +390,8 @@ $.extend feedbin,
       next = $('<div class="previous-entry load-next-entry"></div>')
       transitionClass = "slide-down"
 
+    $('.entry-toolbar').addClass("animate")
+
     next.html(content)
 
     next.insertAfter(innerContent)
@@ -400,6 +402,7 @@ $.extend feedbin,
     ), 1
 
     setTimeout ( ->
+      $('.entry-toolbar').removeClass("animate")
       next.removeClass("next-entry")
       next.removeClass("previous-entry")
       next.attr("data-behavior", "inner_content_target")
@@ -2279,6 +2282,10 @@ $.extend feedbin,
     statsBarTouched: ->
       $(document).on 'feedbin:native:statusbartouched', (event, xCoordinate) ->
         feedbin.scrollToTop(xCoordinate)
+
+    didBecomeActive: ->
+      $(document).on 'feedbin:native:didBecomeActive', (event, value) ->
+        feedbin.refresh()
 
     linkActions: ->
       $(document).on 'click', '[data-behavior~=view_link]', (event) ->
