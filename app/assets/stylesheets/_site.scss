@@ -19,21 +19,21 @@ $theme-color-500: #656A73;
 $theme-color-600: #39404B;
 $theme-color-700: #0D1623;
 
-$theme-color-dusk-100: #47494B;
-$theme-color-dusk-200: #595B5D;
-$theme-color-dusk-300: #7E7F81;
-$theme-color-dusk-400: #A3A4A5;
-$theme-color-dusk-500: #C7C8C9;
-$theme-color-dusk-600: #ECECED;
-$theme-color-dusk-700: #FFFFFF;
+$theme-color-dusk-100: #333333;
+$theme-color-dusk-200: #6f6f6f;
+$theme-color-dusk-300: #949494;
+$theme-color-dusk-400: #b8b8b8;
+$theme-color-dusk-500: #dddddd;
+$theme-color-dusk-600: #eeeeee;
+$theme-color-dusk-700: #ffffff;
 
-$theme-color-sunset-100: #E3E1D9;
-$theme-color-sunset-200: #CCCBC3;
-$theme-color-sunset-300: #9F9E98;
-$theme-color-sunset-400: #72716D;
-$theme-color-sunset-500: #444441;
-$theme-color-sunset-600: #2E2D2C;
-$theme-color-sunset-700: #171716;
+$theme-color-sunset-100: #e9e6e1;
+$theme-color-sunset-200: #dddad6;
+$theme-color-sunset-300: #c8c6c4;
+$theme-color-sunset-400: #acaaa9;
+$theme-color-sunset-500: #858484;
+$theme-color-sunset-600: #525252;
+$theme-color-sunset-700: #1a1a1a;
 
 $theme-color-midnight-100: #1A1A1A;
 $theme-color-midnight-200: #333333;
@@ -56,8 +56,8 @@ $color-accent-red-600: #BB0B2F;
 $color-base: (
     debug:    color-base,
     day:      #FFFFFF,
-    sunset:   #F9F7EE,
-    dusk:     #353739,
+    sunset:   #f5f2eb,
+    dusk:     #262626,
     midnight: #000000,
 );
 
@@ -65,6 +65,14 @@ $color-contrast-100: (
     debug:    color-contrast-100,
     day:      $theme-color-100,
     sunset:   $theme-color-sunset-100,
+    dusk:     $theme-color-dusk-100,
+    midnight: $theme-color-midnight-100,
+);
+
+$color-base-alt: (
+    debug:    color-base-alt,
+    day:      #FFFFFF,
+    sunset:   #f5f2eb,
     dusk:     $theme-color-dusk-100,
     midnight: $theme-color-midnight-100,
 );
@@ -108,6 +116,7 @@ $color-contrast-600: (
     dusk:     $theme-color-dusk-600,
     midnight: $theme-color-midnight-600,
 );
+$color-icons: map-merge($color-contrast-600, (debug: color-icons, midnight: white));
 
 $color-contrast-700: (
     debug:    color-contrast-700,
@@ -121,7 +130,7 @@ $color-borders: (
     debug:    color-borders,
     day:      $theme-color-200,
     sunset:   $theme-color-sunset-200,
-    dusk:     $theme-color-dusk-200,
+    dusk:     black,
     midnight: $theme-color-midnight-200,
 );
 $color-borders-alt: map-merge($color-borders, (debug: color-borders-alt, midnight: black));
@@ -129,7 +138,7 @@ $color-borders-alt: map-merge($color-borders, (debug: color-borders-alt, midnigh
 $color-selected: (
     debug:    color-selected,
     day:      $color-accent-blue-600,
-    sunset:   #171716,
+    sunset:   $theme-color-sunset-700,
     dusk:     $color-accent-blue-600,
     midnight: $color-accent-blue-600,
 );
@@ -152,11 +161,12 @@ $color-selected-active: (
 
 $color-selected-off: (
     debug:    color-selected-off,
-    day:      #223D4F,
-    sunset:   #5B5A57,
-    dusk:     #5D6B80,
-    midnight: #223D4F,
+    day:      $theme-color-500,
+    sunset:   $theme-color-sunset-500,
+    dusk:     $theme-color-dusk-100,
+    midnight: $theme-color-midnight-100,
 );
+
 
 $image-spinners: (
     debug:    image-spinners,
@@ -168,7 +178,6 @@ $image-spinners: (
 
 $color-arrow-shadow: $color-borders;
 $selected: #0867E2;
-$color-icons: $color-contrast-600;
 $inset-bg-color: #f4f6f8;
 $box-shadow-dropdown: 0px 4px 6px 0 rgba(0, 0, 0, 0.1);
 $focus-glow: 0px 0px 10px 0 rgba($theme-color-500, 0.6);
@@ -930,7 +939,7 @@ Structure
 .search-control {
     @include background-color($color-contrast-100);
     @include border-bottom($color-borders);
-    @include font-size(11);
+    @include font-size(12);
     line-height: 14px;
     height: $toolbar-height;
     position: absolute;
@@ -1253,7 +1262,7 @@ $hamburger-dot: 4px;
     .icon-subscribe {
         $size: 38px;
         @include color(#FFF);
-        @include background-color($color-selected);
+        @include background-color($color-icons);
         user-select: none;
         line-height: 1;
         cursor: pointer;
@@ -1265,7 +1274,7 @@ $hamburger-dot: 4px;
         height: $size;
         border-radius: $size;
         svg {
-            fill: #FFF !important;
+            @include fill($color-base);
         }
     }
 }
@@ -1497,10 +1506,6 @@ $hamburger-dot: 4px;
         padding: 0;
         list-style: none;
         li {
-            padding: 0;
-            margin: 0;
-            position: relative;
-            z-index: 0;
             a {
                 text-decoration: none;
             }
@@ -1529,55 +1534,15 @@ $hamburger-dot: 4px;
                     background-color: transparent;
                 }
             }
-            .feed-link, &.source-section {
-                @include font-size(14);
-                @include color($color-contrast-700);
-                @include size-in-rems(padding, 6 16)
-            }
-            &.source-section {
-                @include font-size(12);
-                @include size-in-rems(padding-top, 22)
-                @include color($color-contrast-400);
-                font-weight: bold;
-                text-transform: uppercase;
-                display: flex;
-                align-items: center;
-                svg {
-                    @include fill($color-icons);
-                }
-                &.hide {
-                    display: none;
-                }
-            }
-            .feed-link {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 100%;
-                display: block;
-                align-items: stretch;
-                display: flex;
-            }
-            .favicon-wrap {
-                margin-right: 6px;
-                flex-shrink: 0;
-            }
-            .collection-label-wrap {
-                min-width: 0;
-                flex: 1 1 auto;
-                line-height: 1;
-                display: flex;
-                align-items: center;
-            }
-            .collection-label {
-                display: block;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                line-height: 1.3;
-                white-space: nowrap;
-                &.hide {
-                    display: none;
-                }
+            &.source-section,
+            &.collection-unread .feed-link,
+            &.collection-all .feed-link,
+            &.collection-starred .feed-link,
+            &.collection-recently-played .feed-link,
+            &.collection-updated .feed-link,
+            &.collection-recently-read .feed-link,
+            &.collection-pages .feed-link {
+                padding-left: 16px;
             }
             .count-wrap {
                 margin-left: 5px;
@@ -1596,6 +1561,9 @@ $hamburger-dot: 4px;
             }
             .tag-link .count-wrap {
                 margin-left: 0;
+            }
+            .tag-link .favicon-wrap {
+                display: none;
             }
             .feed-action-form {
                 padding: 0;
@@ -1779,6 +1747,69 @@ $hamburger-dot: 4px;
     }
 }
 
+.feed-list {
+    li {
+        padding: 0;
+        margin: 0;
+        position: relative;
+        z-index: 0;
+
+        .feed-link, &.feed-link, &.source-section {
+            @include font-size(14);
+            @include color($color-contrast-700);
+            @include size-in-rems(padding-top, 6)
+            @include size-in-rems(padding-bottom, 6)
+            padding-left: 40px;
+            padding-right: 16px;
+            .favicon-wrap {
+                margin-right: 6px;
+                flex-shrink: 0;
+            }
+            .collection-label-wrap {
+                min-width: 0;
+                flex: 1 1 auto;
+                line-height: 1;
+                display: flex;
+                align-items: center;
+            }
+            .collection-label {
+                display: block;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                line-height: 1.3;
+                white-space: nowrap;
+                &.hide {
+                    display: none;
+                }
+            }
+        }
+        &.source-section {
+            @include font-size(12);
+            @include size-in-rems(padding-top, 22)
+            @include color($color-contrast-400);
+            font-weight: bold;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            svg {
+                @include fill($color-icons);
+            }
+            &.hide {
+                display: none;
+            }
+        }
+        .feed-link, &.feed-link {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            display: block;
+            align-items: stretch;
+            display: flex;
+        }
+    }
+}
+
 .favicon-wrap {
     height: 20px;
     width: 20px;
@@ -1787,7 +1818,7 @@ $hamburger-dot: 4px;
     align-items: center;
     justify-content: center;
     box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
-    border-radius: 1px;
+    border-radius: 2px;
     flex: 0 0 auto;
     .favicon, svg, img {
         background-repeat: no-repeat;
@@ -1853,7 +1884,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     box-shadow: none;
     svg {
         @include fill($color-icons);
-        li.selected > .feed-link &, .entries li.selected & {
+        li.selected > .feed-link &, li.selected.feed-link &, .entries li.selected & {
             fill: #FFF;
         }
     }
@@ -2036,7 +2067,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         @include size-in-rems(padding, 10 10px 10 0)
         margin-left: 39px;
         position: relative;
-        @include border-bottom($color-contrast-100);
+        @include border-bottom(map-merge($color-contrast-100, (debug: seperator, dusk: #1c1c1c)));
         > .favicon-wrap {
             display: none;
         }
@@ -3227,7 +3258,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         width: 200px;
         border-radius: 4px;
         @include border($color-borders);
-        @include background-color($color-base);
+        @include background-color($color-base-alt);
         box-shadow: $box-shadow-dropdown;
         position: absolute;
         z-index: 10000;
@@ -3272,6 +3303,9 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                     }
                     .favicon-unread {
                         display: none;
+                    }
+                    .share-keyboard {
+                        color: #FFF;
                     }
                 }
                 &.no-border {
@@ -3376,7 +3410,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         align-items: baseline;
     }
     .share-keyboard {
-        @include font-size(11);
+        @include font-size(16);
         margin-left: auto;
         font-style: normal;
         margin-top: 2px;
@@ -3535,7 +3569,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     background-repeat: no-repeat;
     @include border($color-borders);
     @include box-shadow($color-contrast-200, 0 0 1px 0);
-    @include background-color($color-base);
+    @include background-color($color-base-alt);
     .dropdown-content {
         top: 15px;
     }
@@ -3663,7 +3697,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     blockquote {
         padding: 0 0 0 15px;
         border-left: 4px solid transparent;
-        @include border-color($color-borders);
+        @include border-color(map-merge($color-borders, (dusk: $theme-color-dusk-200)));
     }
 
     blockquote p:last-child {
@@ -3731,12 +3765,12 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                 @include fill($color-contrast-400);
             }
         }
-        .view-latest-link {
+        .diff-wrap-text a, .view-latest-link {
             @include color((day: map-get($color-selected, day), dusk: white, sunset: map-get($color-selected, sunset), midnight: white));
             &:hover {
                 text-decoration: underline;
                 cursor: pointer;
-                @include color($color-selected-hover);
+                @include color((day: $color-accent-blue-600, dusk: $theme-color-dusk-500, sunset: $color-accent-blue-600, midnight: $theme-color-midnight-500));
             }
             .theme-dusk &, .theme-midnight & {
                 text-decoration: underline;
@@ -3966,7 +4000,8 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         display: none;
         width: 70px;
         height: 39px;
-        background-color: rgba(black, .8);
+        background-color: rgba(black, .3);
+        backdrop-filter: blur(8px);
         border-radius: 4px;
         position: absolute;
         margin: auto;
@@ -4000,6 +4035,9 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         }
         &:not(.loaded) .image-wrap:hover .play-button {
             display: block;
+            .touch & {
+                display: none;
+            }
         }
     }
     .embed-title {
@@ -4201,8 +4239,8 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
 
 .inline-diff {
 
-    ins, .diff-ins {
-        background: #8ED9AB;
+    ins {
+        background: #C1EAD1;
         color: #022F14;
         a {
             color: #022F14;
@@ -4214,12 +4252,11 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     }
 
     img.diff-ins, code.diff-ins {
-        border: 2px solid #8ED9AB;
+        border: 2px solid #C1EAD1;
     }
 
-    del, .diff-del {
-        text-decoration: none;
-        background: #E090A0;
+    del {
+        background: #EEC2CB;
         color: #33030D;
         a {
             color: #33030D;
@@ -4227,10 +4264,11 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         img {
             opacity: .5;
         }
+        text-decoration: line-through;
     }
 
     img.diff-del, code.diff-del {
-        border: 2px solid #E090A0;
+        border: 2px solid #EEC2CB;
     }
 
     img.diff-del {
@@ -4521,6 +4559,39 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     }
 }
 
+.jump-search-empty {
+    .modal-purpose-search {
+        .modal-body {
+            display: none;
+        }
+        .modal-header-input input {
+            border-radius: 8px;
+        }
+    }
+}
+.modal-purpose-search {
+    li.feed-link, li.source-section {
+        padding-left: 16px;
+    }
+    .feed-link {
+        cursor: pointer;
+    }
+    li.selected {
+        @include background-color($color-selected);
+        color: #fff !important;
+    }
+    .feed-list {
+        padding-bottom: 22px;
+    }
+}
+.jump-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+        padding-left: 16px;
+    }
+}
 /*------------------------------------------------------------------------------
 Settings
 ------------------------------------------------------------------------------*/
@@ -4829,45 +4900,37 @@ body.settings {
     }
     input[name="user[theme]"] + label {
         padding-left: 50px;
-        &:before {
-            content: "";
-            display: block;
-            height: 16px;
-            width: 16px;
-            position: absolute;
-            left: 28px;
-            top: 15px;
-            @media (max-width: $small-breakpoint) {
-                left: 15px;
-            }
-        }
         @media (max-width: $small-breakpoint) {
             padding-left: 35px;
         }
     }
-    label[for="user_theme_day"] {
-        &:before {
-            background-color: map-get($color-base, day);
-            border: 1px solid map-get($color-borders, day);
+    .color-preview {
+        content: "";
+        display: block;
+        height: 16px;
+        width: 16px;
+        position: absolute;
+        left: 28px;
+        top: 15px;
+        @media (max-width: $small-breakpoint) {
+            left: 15px;
         }
     }
-    label[for="user_theme_sunset"] {
-        &:before {
-            background-color: map-get($color-base, sunset);
-            border: 1px solid map-get($color-borders, sunset);
-        }
+    .color-preview-day {
+        background-color: map-get($color-base, day);
+        border: 1px solid map-get($color-borders, day);
     }
-    label[for="user_theme_dusk"] {
-        &:before {
-            background-color: map-get($color-base, dusk);
-            border: 1px solid map-get($color-borders, dusk);
-        }
+    .color-preview-sunset {
+        background-color: map-get($color-base, sunset);
+        border: 1px solid map-get($color-borders, sunset);
     }
-    label[for="user_theme_midnight"] {
-        &:before {
-            background-color: map-get($color-base, midnight);
-            border: 1px solid map-get($color-borders, midnight);
-        }
+    .color-preview-dusk {
+        background-color: map-get($color-base, dusk);
+        border: 1px solid map-get($color-borders, dusk);
+    }
+    .color-preview-midnight {
+        background-color: map-get($color-base, midnight);
+        border: 1px solid map-get($color-borders, midnight);
     }
     .theme-day {
         .theme-button-day {
@@ -5516,39 +5579,40 @@ body.settings {
     }
 }
 input[type="checkbox"] + label .slider-checkbox {
-    width: 56px;
+    width: 55px;
     height: 26px;
     display: block;
     position: absolute;
     right: 30px;
     top: 10px;
     border-radius: 28px;
-    background-color: #9e9e9e;
-    &:before {
-        background-color: #FFF;
-        height: 22px;
-        width: 22px;
-        border-radius: 22px;
-        background-color: $theme-color-200;
-        content: "";
-        top: 2px;
-        left: 2px;
-        position: absolute;
-        z-index: 2;
-        transition: left .2s ease, opacity .3s ease;
-        opacity: 1;
-    }
-    &:after {
-        z-index: 1;
+    @include background-color($color-contrast-400);
+    $size: 20px;
+    &:before, &:after {
         position: absolute;
         display: block;
         content: "";
-        height: 22px;
-        width: 22px;
-        border-radius: 22px;
-        background-color: $theme-color-200;
-        left: 2px;
-        top: 2px;
+        height: $size;
+        width: $size;
+        border-radius: $size;
+        @include background-color((
+            debug:    color-contrast-inverted-100,
+            day:      $theme-color-100,
+            sunset:   $theme-color-sunset-100,
+            dusk:     $theme-color-dusk-600,
+            midnight: $theme-color-midnight-600,
+        ));
+        top: 3px;
+        left: 3px;
+    }
+    &:before {
+        z-index: 2;
+        transition: left .2s ease, opacity .3s ease;
+        opacity: 1;
+        background-color: #FFF;
+    }
+    &:after {
+        z-index: 1;
         transition: left .2s ease;
     }
     @media (max-width: $small-breakpoint) {
@@ -5565,12 +5629,44 @@ input[type="checkbox"]:checked + label .slider-checkbox {
     @include background-color($color-accent-green-600);
     &:after {
         left: 32px;
-        background: #FFF image-url("icon-check.svg") 4px 5px no-repeat;
-        box-shadow: 0 4px 3px 0 rgba(0, 0, 0, 0.2);
+        background: #FFF image-url("icon-check.svg") 3px 5px no-repeat;
     }
     &:before {
         left: 32px;
         opacity: 0;
+    }
+}
+.control-group {
+    input[type="radio"] + label {
+        position: relative;
+        $size: 20px;
+        &:before, &:after {
+            position: absolute;
+            right: 33px;
+            top: 13px;
+            content: "";
+            height: $size;
+            width: $size;
+            border-radius: $size;
+            @media (max-width: $small-breakpoint) {
+                right: 18px;
+            }
+        }
+        &:before {
+            z-index: 2;
+            background-color: transparent;
+            border: 3px solid $theme-color-300;
+        }
+    }
+    input[type="radio"]:checked + label {
+        &:before {
+            border-color: $color-accent-green-600;
+        }
+        &:after {
+            z-index: 1;
+            border: 6px solid white;
+            background-color: $color-accent-green-600;
+        }
     }
 }
 .control-group-description {
@@ -5739,21 +5835,6 @@ input[type="checkbox"]:checked + label .slider-checkbox {
     }
     input[type="radio"], input[type="checkbox"] {
         @extend .visually-hidden;
-    }
-    input[type="radio"]:checked + label {
-        position: relative;
-        &:after {
-            position: absolute;
-            right: 37px;
-            top: 19px;
-            content: "";
-            background: image-url("icon-check.svg") 0 0 no-repeat;
-            height: 12px;
-            width: 15px;
-            @media (max-width: $small-breakpoint) {
-                right: 22px;
-            }
-        }
     }
     input[type="checkbox"] + label {
         padding-right: 85px !important;
@@ -6137,9 +6218,6 @@ Buttons
 .button-secondary {
     @include background-color(transparent);
     @include color($color-selected);
-    .theme-dusk &, .theme-midnight & {
-        color: #fff;
-    }
     &[disabled] {
         background-color: transparent !important;
         @include color($color-contrast-300, $extra: !important);
@@ -6658,7 +6736,7 @@ a:hover.danger {
 .theme-color-border {
     width: 5px;
     height: 5px;
-    @include background-color($color-contrast-200);
+    @include background-color($color-borders);
 }
 
 
@@ -9027,7 +9105,7 @@ button.close {
 }
 
 
-.modal-purpose-generic, .modal-purpose-subscribe, .modal-purpose-edit {
+.modal-purpose-generic, .modal-purpose-subscribe, .modal-purpose-edit, .modal-purpose-search {
     .modal-body {
         padding: 0;
     }

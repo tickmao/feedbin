@@ -16,19 +16,53 @@ $.extend feedbin,
   swipe: false
   messageTimeout: null
   panel: 1
+  panelScrollComplete: true
+  jumpResultTemplate: null
   colorHash: new ColorHash
     lightness: [.3,.4,.5,.6,.7]
     saturation: [.7,.8]
 
+  reveal: (element, callback = null) ->
+    timeout = 150
+    parent = element.closest('li')
+    if parent.is('.zero-count')
+      feedbin.data.viewMode = 'view_all'
+      parent.removeClass('zero-count')
+      setTimeout ( ->
+        feedbin.hideQueue.push parent.data('feed-id')
+      ), timeout
+
+    unless element.is('.tag-link')
+      tagParent = element.closest('[data-tag-id]')
+      if tagParent.find(".drawer").data('hidden') == true
+        tagParent.find('[data-behavior~=toggle_drawer]').submit();
+        timeout = 250
+      if tagParent.is('.zero-count')
+        tagParent.removeClass('zero-count')
+        setTimeout ( ->
+          feedbin.hideQueue.push tagParent.data('feed-id')
+        ), timeout
+
+    element.click()
+
+    setTimeout ( ->
+      feedbin.scrollTo(element, $('.feeds'))
+      if typeof(callback) == 'function'
+        callback()
+    ), timeout
+
+  jumpOpen: ->
+    ($(".modal.modal-purpose-search").data('bs.modal') || {})._isShown
+
   isRelated: (selector, element) ->
     !!($(element).is(selector) || $(element).parents(selector).length)
 
-  showSearch: ->
+  showSearch: (val = '') ->
     $('body').addClass('search')
     $('body').removeClass('hide-search')
     field = $('[data-behavior~=search_form] input[type=search]')
     field.focus()
-    field.val('')
+    field.val(val)
 
   hideSearch: ->
     $('body').removeClass('search')
@@ -246,6 +280,47 @@ $.extend feedbin,
     $('[data-behavior~=diff_latest]').toggleClass("hide")
     $('[data-behavior~=diff_content]').toggleClass("hide")
 
+  jumpTemplate: ->
+    if feedbin.jumpResultTemplate == null
+      feedbin.jumpResultTemplate = $($('.modal [data-behavior~=result_template]').html())
+    feedbin.jumpResultTemplate
+
+  jumpResultItem: (title, icon, index = null) ->
+    markup = feedbin.jumpTemplate().clone()
+    markup.find('.text-wrap').html(title)
+    markup.find('.icon-wrap').replaceWith(icon)
+    markup.attr('data-index', index)
+    markup
+
+  jumpTo: (element) ->
+    parent = element.closest('li')
+    viewMode = feedbin.data.viewMode
+
+    feedbin.reveal element, ->
+      feedbin.data.viewMode = viewMode
+
+  jumpMenu: ->
+    feedbin.showModal("search", "Search")
+    $("body").addClass("jump-search-empty")
+    setTimeout ( ->
+      $(".modal [data-behavior~=autofocus]").focus()
+    ), 150
+
+    options = []
+    $('[data-jumpable]').each (index, element)->
+      element = $(element)
+      jumpable = element.data('jumpable')
+      icon = element.find('.favicon-wrap').prop('outerHTML')
+      markup = feedbin.jumpResultItem(jumpable.title, icon, index)
+      options.push
+        element: element
+        jumpable: jumpable
+        markup: markup
+        action: () ->
+          feedbin.jumpTo(element)
+
+    feedbin.jumpOptions = options
+
   drawBarCharts: ->
     $('[data-behavior~=line_graph]').each ()->
       feedbin.drawBarChart(@, $(@).data('values'))
@@ -299,15 +374,20 @@ $.extend feedbin,
       containerClass = ".sidebar-column"
     offset = $(selector)[0].offsetLeft
 
-    if !animate
-      $(containerClass).css {'scroll-behavior': 'auto'}
-      $(containerClass).prop 'scrollLeft', offset
-      $(containerClass).css {'scroll-behavior': 'smooth'}
-    else
+    if animate
+      timeout = 200
+      feedbin.panelScrollComplete = false
       if feedbin.smoothScroll
         $(containerClass).prop 'scrollLeft', offset
       else
-        $(containerClass).animate({scrollLeft: offset}, {duration: 250})
+        $(containerClass).animate({scrollLeft: offset}, {duration: timeout})
+      setTimeout ( ->
+        feedbin.panelScrollComplete = true
+      ), timeout
+    else
+      $(containerClass).css {'scroll-behavior': 'auto'}
+      $(containerClass).prop 'scrollLeft', offset
+      $(containerClass).css {'scroll-behavior': 'smooth'}
 
   showPanel: (panel, state = true) ->
     feedbin.panel = panel
@@ -315,21 +395,21 @@ $.extend feedbin,
       if feedbin.mobileView()
         window.history.replaceState({panel: 1}, document.title, "/");
       $('body').addClass('nothing-selected').removeClass('feed-selected entry-selected')
-      if feedbin.swipe
+      if feedbin.swipe && $('body').hasClass('has-offscreen-panels')
         feedbin.scrollToPanel('.feeds-column')
 
     else if panel == 2
       if state && feedbin.mobileView()
         window.history.pushState({panel: 2}, document.title, "/");
       $('body').addClass('feed-selected').removeClass('nothing-selected entry-selected')
-      if feedbin.swipe
+      if feedbin.swipe && $('body').hasClass('has-offscreen-panels')
         feedbin.scrollToPanel('.entries-column')
 
     else if panel == 3
       if state && feedbin.mobileView()
         window.history.pushState({panel: 3}, document.title, "/");
       $('body').addClass('entry-selected').removeClass('nothing-selected feed-selected')
-      if feedbin.swipe
+      if feedbin.swipe && $('body').hasClass('has-offscreen-panels')
         feedbin.scrollToPanel('.entry-column')
 
 
@@ -555,6 +635,10 @@ $.extend feedbin,
           element.data('title', newTitle)
         else
           element.html(newTitle)
+      if element.is('[data-jumpable]')
+        jumpable = element.data('jumpable')
+        jumpable["title"] = newTitle
+        element.data('jumpable', jumpable)
 
   queryString: (name) ->
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]")
@@ -1527,10 +1611,6 @@ $.extend feedbin,
         $("[data-behavior~=entries_header] .feed-title-wrap").text(title)
         true
 
-      $(document).on 'ajax:complete', '[data-behavior~=feed_link]', (event, xhr) ->
-        $(".entries").removeClass("loading")
-        true
-
     feedSelected: ->
       $(document).on 'click', '[data-behavior~=show_feeds]', ->
         feedbin.showPanel(1)
@@ -2345,6 +2425,79 @@ $.extend feedbin,
     showApp: ->
       $('.app-wrap').addClass('show')
       $('.loading-app').addClass('hide')
+
+    jumpTo: ->
+      $(document).on 'submit', '[data-behavior~=jump_search]', (event) ->
+        target = $('.modal [data-behavior~=results_target]')
+        selected = $('.selected', target)
+        if selected.length > 0
+          selected.click()
+        else
+          $('[data-behavior~=jump_to]', target).first().click()
+
+        event.preventDefault()
+
+      $(document).on 'mouseleave', '[data-behavior~=jump_to]', (event) ->
+        $(@).removeClass('selected')
+
+      $(document).on 'mouseenter', '[data-behavior~=jump_to]', (event) ->
+        target = $('.modal [data-behavior~=results_target]')
+        $('.selected', target).removeClass('selected')
+        $(@).addClass('selected')
+
+      $(document).on 'click', '[data-behavior~=jump_to]', (event) ->
+        $('.modal').modal('hide')
+        if action = $(@).data('action')
+          action()
+        else
+          index = $(@).data('index')
+          feedbin.jumpOptions[index].action()
+
+    jumpMenu: ->
+      $(document).on 'keyup', '[data-behavior~=jump_menu]', (event) ->
+
+        # Don't run on arrow up or down
+        return if event.keyCode == 38 || event.keyCode == 40
+
+        template = $($('.modal [data-behavior~=result_template]').html())
+
+        query = $(@).val()
+        target = $('.modal [data-behavior~=results_target]')
+        if query.length > 0
+          $('body').removeClass('jump-search-empty')
+
+
+          results = _.filter feedbin.jumpOptions, (option) ->
+            option.score = option.jumpable.title.score(query)
+            option.score > 0
+
+          results = _.sortBy results, (option) ->
+            -option.score
+
+          results = _.groupBy results, (option) ->
+            option.jumpable.section
+
+          output = []
+          _.each results, (value, key) ->
+            output.push $("<li class='source-section'>#{key}</li>")
+            output = output.concat(_.pluck(value, 'markup'))
+
+          search = feedbin.jumpResultItem("#{query}", '<span class="favicon-wrap collection-favicon"><svg width="16" height="16" class="icon-search"><use xlink:href="#icon-search"></use></svg></span>')
+          search.data 'action', () ->
+            feedbin.showSearch(query)
+            $('[data-behavior~=search_form]').submit()
+
+          output.unshift search
+          output.unshift $("<li class='source-section'>Search</li>")
+
+          target.html(output)
+
+          if target.find('.selected').length == 0
+            target.find('[data-behavior~=jump_to]').first().addClass('selected')
+
+        else
+          $('body').addClass('jump-search-empty')
+          target.html('')
 
     subscribe: ->
       $(document).on 'shown.bs.modal', (event) ->

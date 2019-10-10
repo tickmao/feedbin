@@ -13,7 +13,7 @@
     </script>
 <% end %>
 <%= render partial: 'shared/svg' %>
-<div class="application-messages"><a href="" class="message-content" data-behavior="messages">You have subscribed</a></div>
+<div class="application-messages"><a href="" class="message-content" data-behavior="messages"></a></div>
 <div class="loading-app">
     <%= svg_tag "logo", size: "120x120" %>
 </div>
@@ -27,7 +27,7 @@
             </div>
             <div class="feeds showing-audio-player" data-behavior="droppable">
                 <%= render partial: 'shared/view_mode' %>
-                <ul data-behavior="feeds_target" class="feeds-target">
+                <ul data-behavior="feeds_target" class="feeds-target feed-list">
                     <%= render partial: 'feeds/feeds', locals: {collections: @feed_data[:collections], saved_searches: @feed_data[:saved_searches], tags: @feed_data[:tags], feeds: @feed_data[:feeds], page_feed: @feed_data[:page_feed]} %>
                 </ul>
             </div>
@@ -115,6 +115,7 @@
 <%= render partial: "shared/modals/conversation" %>
 <%= render partial: "shared/modals/generic" %>
 <%= render partial: "shared/modals/edit" %>
+<%= render partial: "shared/modals/search" %>
 
 <%= render partial: "shared/readability_loading" %>
 <%= render partial: "shared/resizable_form" %>
@@ -127,3 +128,6 @@
 
 <%= one_time_content && one_time_content.html_safe %>
 
+<script>
+    <%= render partial: 'shared/message_flash', locals: {flash: flash} %>
+</script>
