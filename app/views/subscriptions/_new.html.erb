@@ -17,7 +17,7 @@
                         <div class="action <%= (feeds.length == 1) ? 'hide' : '' %>">
                             <%= pf.check_box :subscribe, checked: index == 0 ? true : false, data: {behavior: "check_toggle"} %>
                             <%= pf.label :subscribe do %>
-                                <span class="slider-checkbox"></span>
+                                <%= toggle_switch %>
                             <% end %>
                         </div>
                         <p class="feed-url" title="Feed URL"><%= feed.feed_url %></p>
@@ -28,7 +28,7 @@
                                 Tweets with media and links only
                                 <%= pf.check_box :media_only, checked: true, data: {behavior: "check_toggle"} %>
                                 <%= pf.label :media_only do %>
-                                    <span class="slider-checkbox"></span>
+                                    <%= toggle_switch %>
                                 <% end %>
                             </label>
                         </div>

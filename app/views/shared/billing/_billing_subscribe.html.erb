@@ -67,21 +67,21 @@
         <% @plans.each do |plan| %>
             <% if @user.trial_end.future? %>
                 <% if plan.name == "Monthly" %>
-                    <p class="control-group-description <%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
+                    <p class="<%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
                         Subscribing will charge your card <strong><%= number_to_currency(plan.price, precision: 0) %></strong> when your <%= plan_name %> ends on <strong><%= @user.trial_end.to_s(:date) %></strong> and again each month thereafter. You can change plans or cancel any time.
                     </p>
                 <% else %>
-                    <p class="control-group-description <%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
+                    <p class="<%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
                         Subscribing will charge your card <strong><%= number_to_currency(plan.price, precision: 0) %></strong> when your <%= plan_name %> ends on <strong><%= @user.trial_end.to_s(:date) %></strong> and again each year thereafter. You can change plans or cancel any time.
                     </p>
                 <% end %>
             <% else %>
                 <% if plan.name == "Monthly" %>
-                    <p class="control-group-description <%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
+                    <p class="<%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
                         Subscribing will charge your card <strong><%= number_to_currency(plan.price, precision: 0) %></strong> immediately and again each month thereafter. You can change plans or cancel any time.
                     </p>
                 <% else %>
-                    <p class="control-group-description <%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
+                    <p class="<%= plan == @default_plan ? '' : 'hide' %>" data-behavior="billing_help_text" data-plan-id="<%= dom_id(plan) %>">
                         Subscribing will charge your card <strong><%= number_to_currency(plan.price, precision: 0) %></strong> immediately and again each year thereafter. You can change plans or cancel any time.
                     </p>
                 <% end %>

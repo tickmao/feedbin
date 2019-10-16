@@ -11,7 +11,7 @@
     <li>
         <%= check_box_tag "tag_id[#{tag.id}]", tag.name, tag_editor.checked?(tag) %>
         <%= label_tag "tag_id[#{tag.id}]" do %>
-            <%= tag.name %> <span class="slider-checkbox"></span>
+            <%= tag.name %> <%= toggle_switch %>
         <% end %>
     </li>
     <% end %>

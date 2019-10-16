@@ -70,19 +70,19 @@
                     <li>
                         <%= f.check_box :muted, data: {behavior: "auto_submit"}, id: "subscription_muted" %>
                         <%= f.label :muted do %>
-                            Muted <span class="slider-checkbox"></span>
+                            Muted <%= toggle_switch %>
                         <% end %>
                     </li>
                     <li>
                         <%= f.check_box :show_updates, data: {behavior: "auto_submit"}, id: "subscription_show_updates" %>
                         <%= f.label :show_updates do %>
-                            Show updates <span class="slider-checkbox"></span>
+                            Show updates <%= toggle_switch %>
+                            <p class="control-group-description">
+                                Tells you when an article has been changed after being published
+                            </p>
                         <% end %>
                     </li>
                 </ul>
-                <p class="control-group-description">
-                    Tells you when an article has been changed after being published
-                </p>
                 <% if subscription.feed.twitter_feed? %>
                     <div class="inset-content">
                         <h4 class="group-header">Twitter Options</h4>
@@ -91,19 +91,19 @@
                         <li>
                             <%= f.check_box :show_retweets, data: {behavior: "auto_submit"}, id: "subscription_show_retweets" %>
                             <%= f.label :show_retweets do %>
-                                Show Retweets <span class="slider-checkbox"></span>
+                                Show Retweets <%= toggle_switch %>
                             <% end %>
                         </li>
                         <li>
                             <%= f.check_box :media_only, data: {behavior: "auto_submit"}, id: "subscription_media_only" %>
                             <%= f.label :media_only do %>
-                                Media Only <span class="slider-checkbox"></span>
+                                Media Only <%= toggle_switch %>
+                                <p class="control-group-description">
+                                    Only show tweets that contain links or images
+                                </p>
                             <% end %>
                         </li>
                     </ul>
-                    <p class="control-group-description">
-                        Only show tweets that contain links or images
-                    </p>
                 <% end %>
                 <% if !subscription.feed.twitter_feed? %>
                     <ul class="control-group">

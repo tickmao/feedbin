@@ -184,6 +184,15 @@ $focus-glow: 0px 0px 10px 0 rgba($theme-color-500, 0.6);
 $subtle-focus-glow: 0px 0px 1px 0 rgba($selected, 1);
 
 
+$color-sidebar: (
+    debug:    color-sidebar,
+    day:      $theme-color-100,
+    sunset:   $theme-color-sunset-100,
+    dusk:     black,
+    midnight: $theme-color-midnight-100,
+);
+
+
 /*------------------------------------------------------------------------------
 Grid
 ------------------------------------------------------------------------------*/
@@ -563,9 +572,8 @@ table {
 }
 
 .pill-list {
-    background-color: #FFF;
     border-radius: 8px;
-    border: 1px solid map-get($color-borders, day);
+    @include border($color-borders);
     margin: 0 0 30px 0;
     padding: 0;
     list-style: none;
@@ -577,7 +585,7 @@ table {
     li {
         @include settings-row;
         margin: 0;
-        border-bottom: 1px solid map-get($color-borders, day);
+        @include border-bottom($color-borders);
         position: relative;
         overflow: hidden;
         &:last-child {
@@ -589,7 +597,7 @@ table {
                 display: block;
                 text-decoration: none;
                 @include settings-row;
-                color: map-get($color-contrast-700, day);
+                @include color($color-contrast-700);
                 z-index: 10;
                 position: relative;
                 @media (max-width: $small-breakpoint) {
@@ -790,9 +798,6 @@ table {
 }
 
 .inset {
-    background-color: map-get($color-contrast-100, day);
-    border-radius: 8px;
-    border: 1px solid map-get($color-borders, day);
     margin: 0 0 20px 0;
     padding: 30px 0 30px 0;
     .inset-content {
@@ -805,27 +810,15 @@ table {
         border-left: none;
         border-right: none;
     }
-    @media (max-width: $small-breakpoint) {
-        padding: 15px 0 0 0;
-        border: none;
-        background-color: transparent;
-        border-radius: 0;
-    }
 }
 
-.settings-page .inset, .settings-page .feed-form-wrap {
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-    @media (max-width: $small-breakpoint) {
-        box-shadow: none;
-    }
-}
 
 .feed-form-wrap {
     border-radius: 8px;
 }
 
 .description-inset {
-    padding: 0 30px 0 30px;
+    padding: 0;
     &.icon-email {
         background: image-url("icon-share-email.svg") 30px 3px no-repeat;
         background-size: 24px 16px;
@@ -4610,18 +4603,17 @@ Settings
 .settings-nav {
     flex-direction: column;
     width: 310px;
+    @include background-color($color-sidebar);
     .logo {
         padding: 39px 0 0 21px;
-        background-color: $theme-color-700;
         display: block;
         svg {
             width: 140px;
             height: 30px;
             path {
-                fill: #FFF;
+                @include fill($color-contrast-700);
             }
         }
-
     }
     .modal & {
         width: 100%;
@@ -4687,10 +4679,9 @@ Settings
         body:not(.touch) &:hover {
             color: #FFF;
             text-decoration: none;
-            background-color: #223D4F;
+            @include background-color($color-selected-off);
         }
         &.active {
-            color: #FFF;
             @include background-color($color-selected, $extra: !important);
             .modal & {
                 @include color($color-selected);
@@ -4699,21 +4690,23 @@ Settings
             }
         }
     }
-    .settings-inner & {
+    .settings & {
         a {
-            color: #fff;
+            @include color($color-contrast-700);
+            &.active {
+                @include color(#FFF);
+            }
         }
         .nav-header {
             padding: 0 $nav-padding;
-            color: $theme-color-100;
+            @include color($color-contrast-700);
             margin: 40px 0 8px 0;
         }
         .icon-wrap {
             svg {
-                fill: $theme-color-100;
+                @include fill($color-contrast-600);
             }
         }
-
     }
 }
 
@@ -4728,13 +4721,8 @@ Settings
             background-color: transparent;
         }
         .settings-inner & {
-            color: $theme-color-400;
+            @include color($color-contrast-400);
         }
-    }
-    .has-icon a {
-        display: flex;
-        align-items: center;
-        padding-left: 35px;
     }
     &.border {
         &:before {
@@ -4751,17 +4739,17 @@ Settings
     .settings-inner & {
         &.border {
             &:before {
-                background-color: $theme-color-600;
+                @include background-color($theme-color-400);
             }
         }
     }
 }
 
 body.settings {
-    background-color: map-get($color-contrast-700, day);
-    color: map-get($color-contrast-700, day);
+    @include background-color($color-contrast-100);
+    @include color($color-contrast-700);
     @media (max-width: $small-breakpoint) {
-        background-color: #FFF;
+        @include background-color($color-base);
     }
 }
 
@@ -4781,7 +4769,7 @@ body.settings {
     .settings-content {
         position: relative;
         padding: 0;
-        background-color: #FFF;
+        @include background-color($color-base);
         flex-grow: 1;
         max-width: 100%;
         min-width: 0;
@@ -4807,7 +4795,7 @@ body.settings {
         margin: 32px 0 32px;
         font-size: 32px;
         font-weight: bold;
-        color: $theme-color-700;
+        @include color($color-contrast-700);
         -webkit-font-smoothing: antialiased;
     }
     h3 {
@@ -4956,40 +4944,14 @@ body.settings {
     }
     .theme-background {
         padding: 10px;
-        &.theme-day {
-            background-color: map-get($color-contrast-100, day);
-            .title {
-                color: map-get($color-contrast-700, day);
-            }
-        }
-        &.theme-sunset {
-            background-color: map-get($color-contrast-100, sunset);
-            .title {
-                color: map-get($color-contrast-700, sunset);
-            }
-        }
-        &.theme-dusk {
-            background-color: map-get($color-contrast-100, dusk);
-            .title {
-                color: map-get($color-contrast-700, dusk);
-            }
-        }
-        &.theme-midnight {
-            background-color: map-get($color-contrast-100, midnight);
-            .title {
-                color: map-get($color-contrast-700, midnight);
-            }
-        }
+        @include background-color($color-base);
     }
     .preview-group {
         z-index: 1000;
         margin-bottom: 30px;
         top: 0;
         position: sticky;
-        background-color: map-get($color-contrast-100, day);
-        @media (max-width: $small-breakpoint) {
-            background-color: map-get($color-contrast-100, day);
-        }
+        @include background-color($color-base);
         .control-group {
             margin-bottom: 0;
         }
@@ -5099,9 +5061,9 @@ body.settings {
     .feed-controls {
         display: flex;
         border-radius: 8px 8px 0 0;
-        background-color: $inset-bg-color;
-        border: 1px solid #DCDEE0;
-        padding: 15px 30px 12px 30px;
+        @include background-color($color-base);
+        @include border($color-borders);
+        padding: 24px 30px 24px 30px;
         @media (max-width: $small-breakpoint) {
             padding-left: 15px;
             padding-right: 15px;
@@ -5128,12 +5090,14 @@ body.settings {
     }
     .feed-actions {
         flex-grow: 1;
+        display: flex;
     }
     .feeds-checkbox {
         margin-right: 15px;
     }
     .feed-dropdown {
         display: inline-block;
+        margin-left: auto;
         .dropdown-content {
             width: 215px;
             top: 25px;
@@ -5165,7 +5129,6 @@ body.settings {
         }
     }
     .feed-list-toolbar-button {
-        margin-right: 15px;
         @include color($color-selected);
         appearance: none;
         background: transparent;
@@ -5408,7 +5371,7 @@ body.settings {
         .subscription-link {
             display: flex;
             justify-content: space-between;
-            color: map-get($color-contrast-700, day);
+            @include color($color-contrast-700);
             padding: 13px 30px 13px $checkbox-offset;
             align-items: center;
             &:hover {
@@ -5431,33 +5394,38 @@ body.settings {
         .subscription-controls {
             display: flex;
             align-items: center;
-            background: image-url("icon-arrow.svg") 100% 50% no-repeat;
             background-size: 12px 18px;
             width: 170px;
-            padding-right: 20px;
+            justify-content: flex-end;
             .tags {
                 text-align: right;
-                font-size: 14px;
-                @include color($color-contrast-400);
+                font-size: 12px;
+                @include color($color-contrast-500);
                 display: block;
                 text-overflow: ellipsis;
                 overflow: hidden;
-                width: 100%;
+                max-width: 100%;
                 white-space: nowrap;
                 margin-right: 20px;
                 margin-right: 15px;
+                @include background-color($color-contrast-100);
+                padding: 5px 12px;
+                border-radius: 15px;
+                font-weight: bold;
+            }
+            svg {
+                @include fill($color-contrast-400);
+                transform: scaleX(-1);
             }
         }
         .favicon-container {
             display: block;
-            height: 16px;
-            width: 16px;
+            height: 20px;
+            width: 20px;
             margin-right: 8px;
             .favicon-wrap {
-                position: static;
-                height: 16px;
-                width: 16px;
-                top: 0;
+                position: relative;
+                top: -1px;
                 left: 0;
                 box-shadow: none;
             }
@@ -5487,7 +5455,7 @@ body.settings {
             @include color($color-contrast-400);
         }
         .subscription-meta {
-            margin-left: 24px;
+            margin-left: 28px;
             display: flex;
             .feed-url-wrap {
                 display: block;
@@ -5498,10 +5466,19 @@ body.settings {
         }
         .canvas-wrap {
             width: 97px;
+            height: 20px;
             overflow-x: hidden;
             overflow-y: visible;
             z-index: 0;
+            margin-right: 16px;
+            line-height: 0;
+            background-image: linear-gradient(0deg, white, $color-accent-blue-400);
+            position: relative;
+            @include background-color($color-base);
             canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
                 width: 100%;
                 height: 100%;
             }
@@ -5511,23 +5488,6 @@ body.settings {
         }
         .subscription-item {
             margin-right: 10px;
-        }
-        .update-icon {
-            content: "";
-            background: image-url("icon-clock-settings.svg") 0 -16px no-repeat;
-            background-size: 16px 32px;
-            height: 16px;
-            width: 16px;
-            display: none;
-            margin: auto;
-        }
-        .mute-icon {
-            background: image-url("icon-mute-settings.svg") 0 -13px no-repeat;
-            background-size: 12px 26px;
-            height: 13px;
-            width: 12px;
-            display: none;
-            margin: auto;
         }
     }
     .modal-purpose-action_preview {
@@ -5582,45 +5542,54 @@ body.settings {
         color: #fff;
     }
 }
-input[type="checkbox"] + label .slider-checkbox {
-    width: 55px;
-    height: 26px;
-    display: block;
+input[type="checkbox"] + label .toggle-switch-wrap {
     position: absolute;
-    right: 30px;
-    top: 10px;
-    border-radius: 28px;
-    @include background-color($color-contrast-400);
-    $size: 20px;
-    &:before, &:after {
-        position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .toggle-switch {
+        width: 43px;
+        height: 24px;
         display: block;
-        content: "";
-        height: $size;
-        width: $size;
-        border-radius: $size;
-        @include background-color((
-            debug:    color-contrast-inverted-100,
-            day:      $theme-color-100,
-            sunset:   $theme-color-sunset-100,
-            dusk:     $theme-color-dusk-600,
-            midnight: $theme-color-midnight-600,
-        ));
-        top: 3px;
-        left: 3px;
-    }
-    &:before {
-        z-index: 2;
-        transition: left .2s ease, opacity .3s ease;
-        opacity: 1;
-        background-color: #FFF;
-    }
-    &:after {
-        z-index: 1;
-        transition: left .2s ease;
-    }
-    @media (max-width: $small-breakpoint) {
-        right: 15px;
+        position: relative;
+        border-radius: 24px;
+        @include background-color($color-contrast-400);
+        &:before {
+            $size: 18px;
+            position: absolute;
+            display: block;
+            content: "";
+            height: $size;
+            width: $size;
+            border-radius: $size;
+            @include background-color((
+                debug:    color-contrast-inverted-100,
+                day:      $theme-color-100,
+                sunset:   $theme-color-sunset-100,
+                dusk:     $theme-color-dusk-600,
+                midnight: $theme-color-midnight-600,
+            ));
+            top: 3px;
+            left: 3px;
+        }
+        &:before {
+            z-index: 1;
+            transition: transform .2s ease;
+            opacity: 1;
+        }
+        svg {
+            position: absolute;
+            transition: transform .2s ease, opacity .3s ease;
+            top: 9px;
+            left: 7px;
+            z-index: 2;
+            opacity: 0;
+            fill: $color-accent-green-600;
+        }
     }
     .modal & {
         right: 24px;
@@ -5629,25 +5598,27 @@ input[type="checkbox"] + label .slider-checkbox {
         }
     }
 }
-input[type="checkbox"]:checked + label .slider-checkbox {
+input[type="checkbox"]:checked + label .toggle-switch {
     @include background-color($color-accent-green-600);
-    &:after {
-        left: 32px;
-        background: #FFF image-url("icon-check.svg") 3px 5px no-repeat;
+    &:before, svg {
+        transform: translateX(19px);
     }
     &:before {
-        left: 32px;
-        opacity: 0;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        @include background-color(#FFF);
+    }
+    svg {
+        opacity: 1;
     }
 }
 .control-group {
     input[type="radio"] + label {
         position: relative;
-        $size: 20px;
+        $size: 18px;
         &:before, &:after {
             position: absolute;
-            right: 33px;
-            top: 13px;
+            right: 3px;
+            top: 15px;
             content: "";
             height: $size;
             width: $size;
@@ -5659,7 +5630,8 @@ input[type="checkbox"]:checked + label .slider-checkbox {
         &:before {
             z-index: 2;
             background-color: transparent;
-            border: 3px solid $theme-color-300;
+            border: 2px solid transparent;
+            @include border-color($color-contrast-300);
         }
     }
     input[type="radio"]:checked + label {
@@ -5668,18 +5640,17 @@ input[type="checkbox"]:checked + label .slider-checkbox {
         }
         &:after {
             z-index: 1;
-            border: 6px solid white;
+            border: 5px solid white;
+            @include border-color($color-base);
             background-color: $color-accent-green-600;
         }
     }
 }
 .control-group-description {
-    @include settings-row;
     padding-top: 0;
     font-size: 12px;
     color: #999;
-    margin-top: -35px !important;
-    margin-bottom: 12px;
+    margin: 8px 0 0 0;
     @media (max-width: $small-breakpoint) {
         margin-top: -20px !important;
     }
@@ -5734,10 +5705,7 @@ input[type="checkbox"]:checked + label .slider-checkbox {
             }
         }
         &.text {
-            padding: 0 30px;
-            @media (max-width: $small-breakpoint) {
-                padding: 0 15px;
-            }
+            padding: 0;
             & + .text {
                 margin-top: 10px;
             }
@@ -5793,12 +5761,6 @@ input[type="checkbox"]:checked + label .slider-checkbox {
                 }
             }
         }
-        &.card-number-wrap {
-            padding: 0 30px;
-            @media (max-width: $small-breakpoint) {
-                padding: 0 15px;
-            }
-        }
         #card-element {
             border-width: 2px;
             border-style: solid;
@@ -5813,10 +5775,9 @@ input[type="checkbox"]:checked + label .slider-checkbox {
         }
     }
     .table {
-        background-color: #FFF;
-        border-top: 1px solid map-get($color-borders, day);
+        @include border-top($color-borders);
     }
-    input[type="checkbox"]:focus + label .slider-checkbox, input[type="checkbox"]:active + label .slider-checkbox {
+    input[type="checkbox"]:focus + label .toggle-switch, input[type="checkbox"]:active + label .toggle-switch {
         box-shadow: $focus-glow;
     }
     input[type="radio"]:focus + label {
@@ -5835,7 +5796,7 @@ input[type="checkbox"]:checked + label .slider-checkbox {
     button {
         @include color($color-selected);
         appearance: none;
-        background: #FFF;
+        background: transparent;
     }
     input[type="radio"], input[type="checkbox"] {
         @extend .visually-hidden;
@@ -5852,13 +5813,10 @@ input[type="checkbox"]:checked + label .slider-checkbox {
             width: 33% !important;
         }
         td:first-child {
-            padding-left: 30px !important;
-            @media (max-width: $small-breakpoint) {
-                padding-left: 15px !important;
-            }
+            padding-left: 0 !important;
         }
         td:last-child {
-            padding-right: 30px !important;
+            padding-right: 0 !important;
             text-align: right;
             @media (max-width: $small-breakpoint) {
                 padding-right: 15px !important;
@@ -6696,7 +6654,7 @@ a:hover.danger {
         position: absolute;
         top: 4px;
         left: 9px;
-        background-color: #FFF;
+        @include background-color($color-base);
         height: 44px;
         width: 35px;
         content: '';
@@ -6707,7 +6665,14 @@ a:hover.danger {
         left: 0;
         top: -1px;
         &:before {
-            background-color: $theme-color-dusk-100;
+            @include background-color((
+                debug:    color-contrast-inverted-600,
+                day:      $theme-color-600,
+                sunset:   $theme-color-sunset-600,
+                dusk:     $theme-color-dusk-200,
+                midnight: $theme-color-midnight-200,
+            ));
+
             background-image: image-url("icon-muted.svg");
             background-position: 4px 3px;
             background-size: 9.693px 9.693px;
@@ -8680,7 +8645,7 @@ button.close {
                 top: -9999px !important;
                 left: -9999px !important;
             }
-            .slider-checkbox {
+            .toggle-switch {
                 position: relative;
                 right: auto;
                 top: auto;
@@ -8700,7 +8665,7 @@ button.close {
                 top: -9999px !important;
                 left: -9999px !important;
             }
-            .slider-checkbox {
+            .toggle-switch {
                 margin-left: 15px;
                 position: relative;
                 display: inline-block;

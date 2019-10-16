@@ -58,7 +58,7 @@
             <%=
                 f.collection_check_boxes(:actions, Feedbin::Application.config.action_names, :value, :label) do |b|
                   content_tag :li, data: {behavior: "action_#{b.value}"} do
-                    b.check_box + b.label {  "#{b.text} <span class='slider-checkbox'></span>".html_safe }
+                    b.check_box + b.label {  "#{b.text} #{toggle_switch}".html_safe }
                   end
                 end
             %>
@@ -67,7 +67,7 @@
             <li>
                 <%= f.check_box :apply_action %>
                 <%= f.label :apply_action do %>
-                    Apply to existing matches <span class="slider-checkbox"></span>
+                    Apply to existing matches <%= toggle_switch %>
                 <% end %>
             </li>
         </ul>

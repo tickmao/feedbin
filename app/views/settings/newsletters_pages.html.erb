@@ -8,20 +8,22 @@
             <h4 class="group-header">Newsletters</h4>
         </div>
         <ul class="pill-list">
-            <li><%= mail_to @user.newsletter_address %></li>
+            <li>
+                <%= mail_to @user.newsletter_address %>
+                <p class="control-group-description">
+                    Use this address to <a href="https://feedbin.com/blog/2016/02/03/subscribe-to-email-newsletters-in-feedbin/">receive emails</a> in Feedbin.
+                </p>
+            </li>
         </ul>
-        <p class="control-group-description">
-            Use this address to <a href="https://feedbin.com/blog/2016/02/03/subscribe-to-email-newsletters-in-feedbin/">receive emails</a> in Feedbin.
-        </p>
         <ul class="pill-list">
             <li>
                 Default Tag
                 <%= f.select :newsletter_tag, tag_options, {}, {class: "select", data: {behavior: "auto_submit"}} %>
+                <p class="control-group-description">
+                    Automatically put incoming newsletters in this tag.
+                </p>
             </li>
         </ul>
-        <p class="control-group-description no-margin">
-            Automatically put incoming newsletters in this tag.
-        </p>
     </div>
 
     <div class="inset">
@@ -29,11 +31,13 @@
             <h4 class="group-header">Pages</h4>
         </div>
         <ul class="pill-list">
-            <li>Bookmarklet: <%= bookmarklet %></li>
+            <li>
+                Bookmarklet: <%= bookmarklet %>
+                <p class="control-group-description">
+                    Drag this to your bookmarks bar. Use it to <a href="https://feedbin.com/blog/2019/08/20/save-webpages-to-read-later/">save articles from the web</a> to Feedbin.
+                </p>
+            </li>
         </ul>
-        <p class="control-group-description">
-            Drag this to your bookmarks bar. Use it to <a href="https://feedbin.com/blog/2019/08/20/save-webpages-to-read-later/">save articles from the web</a> to Feedbin.
-        </p>
     </div>
 </div>
 <% end %>

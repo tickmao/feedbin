@@ -58,7 +58,12 @@ module ApplicationHelper
     options = options.symbolize_keys
 
     name = name.sub(".svg", "")
-    options[:width], options[:height] = extract_dimensions(options.delete(:size)) if options[:size]
+
+    options.delete(:size)
+
+    icon = Feedbin::Application.config.icons[name]
+    options[:width] = icon.width
+    options[:height] = icon.height
 
     options[:class] = [name, options[:class]].compact.join(" ")
 
@@ -125,6 +130,14 @@ module ApplicationHelper
       address.join("\n")
     else
       address.join("<br>").html_safe
+    end
+  end
+
+  def toggle_switch
+    content_tag :span, class: "toggle-switch-wrap" do
+      content_tag :span, class: "toggle-switch" do
+        svg_tag "icon-check"
+      end
     end
   end
 end

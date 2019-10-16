@@ -320,7 +320,12 @@ $.extend feedbin,
 
   drawBarCharts: ->
     $('[data-behavior~=line_graph]').each ()->
-      feedbin.drawBarChart(@, $(@).data('values'))
+      element = $(@)
+      fill = element.find("canvas")[0]
+      line = element.find("canvas")[1]
+
+      feedbin.drawBarChart(line, element.data('values'), element.data('stroke'))
+      feedbin.drawBarChartFill(fill, element.data('values'), element.css("backgroundColor"))
 
   replaceModal: (target, body) ->
     modal = $(".#{target}")
@@ -1000,7 +1005,37 @@ $.extend feedbin,
 
     points
 
-  drawBarChart: (canvas, values) ->
+  drawBarChartFill: (canvas, values, fill) ->
+    if values && canvas.getContext
+
+      context = canvas.getContext("2d")
+      canvasHeight = $(canvas).outerHeight()
+      canvasWidth = $(canvas).outerWidth()
+
+      ratio = 1
+      if 'devicePixelRatio' of window
+        ratio = window.devicePixelRatio
+
+      $(canvas).attr('width', canvasWidth * ratio)
+      $(canvas).attr('height', canvasHeight * ratio)
+      context.scale(ratio, ratio)
+
+      context.fillStyle = fill
+      context.lineWidth = 0
+
+      points = feedbin.buildPoints(values, canvasWidth, canvasHeight)
+
+      context.beginPath()
+      context.lineTo(0, canvasHeight)
+      for point, index in points
+        context.lineTo(point.x, point.y)
+
+      context.lineTo(100, canvasHeight)
+      context.lineTo(100, 0)
+      context.lineTo(0, 0)
+      context.fill()
+
+  drawBarChart: (canvas, values, stroke) ->
     if values && canvas.getContext
       lineTo = (x, y, context, height) ->
         if y == 0
@@ -1022,8 +1057,8 @@ $.extend feedbin,
       context.scale(ratio, ratio)
 
       context.lineJoin = 'round'
-      context.strokeStyle = $(canvas).data('stroke')
-      context.lineWidth = 1
+      context.strokeStyle = stroke
+      context.lineWidth = 2
       context.lineCap = 'round'
 
       points = feedbin.buildPoints(values, canvasWidth, canvasHeight)

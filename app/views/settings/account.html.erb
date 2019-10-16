@@ -52,7 +52,7 @@
                     <li>
                         <%= check_box_tag :billing_event_id, Rails.application.message_verifier(:billing_event_id).generate(@last_payment.id) %>
                         <%= label_tag :billing_event_id do %>
-                            Also refund my recent <strong><%= number_to_currency((@last_payment.event_object["amount"].to_f / 100), precision: 0) %></strong> payment <span class="slider-checkbox"></span>
+                            Also refund my recent <strong><%= number_to_currency((@last_payment.event_object["amount"].to_f / 100), precision: 0) %></strong> payment <%= toggle_switch %>
                         <% end %>
                     </li>
                 </ul>

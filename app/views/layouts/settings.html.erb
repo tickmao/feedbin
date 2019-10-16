@@ -1,5 +1,6 @@
-<% @class = "settings settings-page settings-#{params[:action]}" %>
+<% @class = "settings-#{params[:action]} theme-#{@user.theme || "day"}"%>
 <% content_for :content do %>
+<div class="settings settings-page">
     <div class="application-messages"><a href="" class="message-content" data-behavior="messages"></a></div>
     <script>
         <%= render partial: 'shared/message_flash', locals: {flash: flash} %>
@@ -13,5 +14,6 @@
     </div>
     <%= render partial: 'shared/svg' %>
     <%= render partial: "shared/modals/settings_modal" %>
+</div>
 <% end %>
 <%= render template: 'layouts/application' %>

@@ -1,7 +1,19 @@
 <div class="settings-content-inner">
     <div class="settings-outer">
+        <h2>Subscriptions</h2>
         <div class="feed-settings">
-            <h2>Subscriptions</h2>
+            <div class="dropdown-wrap dropdown-right feed-dropdown">
+                <button class="feed-list-toolbar-button button-caret no-margin" data-behavior="toggle_dropdown sort_label">Sort by <%= params[:sort] || "name" %></button>
+                <div class="dropdown-content">
+                    <ul>
+                        <li data-value="name"><a href="?sort=name&amp;q=<%= params[:q] %>">Sort by name</a></li>
+                        <li data-value="last-updated"><a href="?sort=updated&amp;q=<%= params[:q] %>">Sort by updated</a></li>
+                        <li data-value="volume"><a href="?sort=volume&amp;q=<%= params[:q] %>">Sort by volume</a></li>
+                        <li data-value="tags"><a href="?sort=tag&amp;q=<%= params[:q] %>">Sort by tag</a></li>
+                    </ul>
+                </div>
+            </div>
+
             <%= form_tag settings_subscriptions_path, method: :get, remote: true do %>
                 <input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" />
             <% end %>

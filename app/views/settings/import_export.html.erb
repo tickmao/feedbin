@@ -12,10 +12,10 @@
                     <li>
                         <div class="field-wrap">
                             <%= f.file_field :upload %>
+                            <p class="control-group-description">You can import OPML files. Import is done in the background so you may not see every subscription right away.</p>
                         </div>
                     </li>
                 </ul>
-                <p class="control-group-description">You can import OPML files. Import is done in the background so you may not see every subscription right away.</p>
                 <div class="description-inset">
                     <div class="button-wrap">
                         <%= f.submit "Import", class: "button no-margin" %>
@@ -41,11 +41,11 @@
             <% if @user.starred_entries.exists? %>
                 <li>
                     Starred Articles <%= link_to "Export", starred_export_path, method: :post, class: 'pull-right' %>
+                    <% if @user.starred_entries.exists? %>
+                        <p class="control-group-description">A link will be emailed to you.</p>
+                    <% end %>
                 </li>
             <% end %>
         </ul>
-        <% if @user.starred_entries.exists? %>
-            <p class="control-group-description">A link will be emailed to you.</p>
-        <% end %>
     </div>
 </div>
