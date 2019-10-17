@@ -648,30 +648,30 @@ table {
     @extend .pill-list;
     li {
         padding: 0;
-        @media (max-width: $small-breakpoint) {
-            padding-right: 0;
-            padding-left: 0;
+        .icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 25px;
+        }
+        svg {
+            @include fill($color-icons);
+            flex-shrink: 0;
         }
     }
     .service-header {
         @include settings-row;
+        display: flex;
+        align-items: center;
     }
     .service-options-wrap {
         position: relative;
         height: 0;
         transition: height .2s ease;
         overflow: hidden;
-        &.open {
-            @include arrow(
-                $x-position: 35px,
-                $y-position: 0,
-                $arrow-color: $color-base,
-                $shadow-color: $color-arrow-shadow);
-
-        }
         .service-options {
-            @include settings-row;
-            border-top: 1px solid map-get($color-borders, day);
+            padding-bottom: 16px;
             overflow: hidden;
             form {
                 max-width: 300px;
@@ -685,14 +685,14 @@ table {
     }
     .list-action {
         position: absolute;
-        right: 15px;
+        right: 0;
         top: 16px;
     }
     .service-title {
-        color: #212121;
+        @include color($color-contrast-700);
         font-size: 16px;
         margin: 0;
-        padding: 0 0 0 40px;
+        padding: 0 0 0 16px;
         overflow: visible;
     }
     .service-error {
@@ -731,69 +731,6 @@ table {
     }
     .pad-top {
         padding-top: 7px;
-    }
-    .service-options {
-        background-color: map-get($color-contrast-100, day);
-    }
-    .icon-share-facebook {
-        background-image: image-url("icon-share-facebook.svg");
-        background-size: 25px 25px;
-        @include share-icon(0, 0);
-    }
-    .icon-share-twitter {
-        background-image: image-url("icon-share-twitter.svg");
-        background-size: 21px 25px;
-        @include share-icon(1, 3);
-    }
-    .icon-share-evernote {
-        background-image: image-url("icon-share-evernote.svg");
-        background-size: 22px 25px;
-        @include share-icon(1, 2);
-    }
-    .icon-share-tumblr {
-        background-image: image-url("icon-share-tumblr.svg");
-        background-size: 14px 24px;
-        @include share-icon(4, 3);
-    }
-    .icon-share-pinboard {
-        background-image: image-url("icon-share-pinboard.svg");
-        background-size: 25px 25px;
-        @include share-icon(0, 3);
-    }
-    .icon-share-kindle {
-        background-image: image-url("icon-share-kindle.svg");
-        background-size: 26px 23px;
-        @include share-icon(0, 3);
-    }
-    .icon-share-email {
-        background-image: image-url("icon-share-email.svg");
-        background-size: 24px 16px;
-        @include share-icon(0, 6);
-    }
-    .icon-share-instapaper {
-        background-image: image-url("icon-share-instapaper.svg");
-        background-size: 10px 23px;
-        @include share-icon(7, 2);
-    }
-    .icon-share-pocket {
-        background-image: image-url("icon-share-pocket.svg");
-        background-size: 24px 21px;
-        @include share-icon(0, 5);
-    }
-    .icon-share-buffer {
-        background-image: image-url("icon-share-buffer.svg");
-        background-size: 25px 25px;
-        @include share-icon(0, 2);
-    }
-    .icon-share-micro_blog {
-        background-image: image-url("icon-share-micro-blog.svg");
-        background-size: 25px 25px;
-        @include share-icon(0, 0);
-    }
-    .icon-share-custom {
-        background-image: image-url("icon-share-custom.svg");
-        background-size: 21px 21px;
-        @include share-icon(1, 2);
     }
 }
 

@@ -29,6 +29,9 @@ class Share::Tumblr < Share::Service
   end
 
   def request_token
+    Rails.logger.info { "------------------" }
+    Rails.logger.info { redirect_uri }
+    Rails.logger.info { "------------------" }
     consumer.get_request_token(oauth_callback: redirect_uri)
   end
 
