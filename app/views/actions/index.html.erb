@@ -15,11 +15,7 @@
         </div>
     </div>
     <div class="inset">
-        <ul class="control-group">
-            <li>
-                <%= link_to '+ Add Action', new_action_path, class: 'add-action' %>
-            </li>
-        </ul>
+        <%= link_to '+ Add Action', new_action_path, class: 'button-huge' %>
         <% if @actions.present? %>
             <ul class="pill-list">
                 <% @actions.each do |action| %>

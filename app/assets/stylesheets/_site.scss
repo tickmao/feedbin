@@ -291,7 +291,7 @@ a:active {
 }
 
 p {
-    margin: 0 0 15px 0;
+    margin: 0 0 16px 0;
 }
 
 sub,
@@ -4692,6 +4692,9 @@ body.settings {
 
 .settings {
     font-size: 16px;
+    p {
+        line-height: 1.6;
+    }
     .settings-inner {
         display: flex;
         align-items: stretch;
@@ -6140,6 +6143,23 @@ Buttons
         }
     }
 }
+
+.button-huge {
+    background-color: #E6F0FC;
+    border: 2px dashed $color-accent-blue-600;
+    width: 100%;
+    border-radius: 4px;
+    padding: 16px;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    @include color($color-accent-blue-600);
+    &:hover {
+        @include color($color-accent-blue-700);
+        text-decoration: none;
+    }
+}
+
 .settings .pagination {
     text-align: center;
     a, span, em {
