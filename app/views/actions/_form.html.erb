@@ -1,18 +1,15 @@
 <%= form_for(@action, as: :action_params, remote: true) do |f| %>
     <div class="inset">
-        <ul class="control-group no-border">
-            <li class="text no-border">
-                <%= f.text_field :title, placeholder: "Action Name" %>
-            </li>
-        </ul>
-        <div class="inset-content">
-            <h4 class="group-header">Article Matches Search</h4>
-        </div>
-        <ul class="control-group no-border">
-            <li class="text no-border">
-                <%= f.search_field :query, placeholder: "Search" %>
-            </li>
-        </ul>
+        <label class="text-field">
+            Action Name
+            <%= f.text_field :title, placeholder: "Name" %>
+        </label>
+
+        <label class="text-field">
+            Article Matches Search
+            <%= f.search_field :query, placeholder: "Search" %>
+        </label>
+
         <% if @user.taggings.present? %>
             <div class="inset-content por">
                 <h4 class="group-header">Article is in Tag</h4>
@@ -37,7 +34,7 @@
                 <%= f.check_box :all_feeds, data: {behavior: 'check_feeds'} %>
                 Include All
             </label>
-            <input type="text" class="action-feed-search" data-behavior="feed_search" placeholder="Filter" />
+            <input type="text" class="small-field" data-behavior="feed_search" placeholder="Filter" />
         </div>
         <div class="filter-wrap">
             <div class="filter" data-behavior="search_results">

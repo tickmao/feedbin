@@ -47,6 +47,10 @@ class SubscriptionPresenter < BasePresenter
     end
   end
 
+  def bar_class(data)
+    data.count == 0 ? "zero" : ""
+  end
+
   def bar_title(data)
     type = (subscription.feed.twitter_feed?) ? "tweet" : "article"
     "#{data.day}: #{data.count} #{type.pluralize(data.count)}"

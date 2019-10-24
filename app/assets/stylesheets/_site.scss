@@ -188,8 +188,8 @@ $color-sidebar: (
     debug:    color-sidebar,
     day:      $theme-color-100,
     sunset:   $theme-color-sunset-100,
-    dusk:     black,
-    midnight: $theme-color-midnight-100,
+    dusk:     map-get($color-base, dusk),
+    midnight: map-get($color-base, midnight),
 );
 
 
@@ -388,6 +388,17 @@ textarea {
     vertical-align: top;
 }
 
+@mixin form-control {
+    @include color($color-contrast-700);
+    @include font-size(16);
+    max-width: 100%;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+}
+
 textarea,
 input[type="text"],
 input[type="password"],
@@ -404,24 +415,26 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
+    @include form-control;
     @include border-color(transparent);
-    @include color($color-contrast-700);
     @include background-color($color-contrast-200);
-    @include font-size(16);
     border-width: 2px;
     border-style: solid;
-    padding: 13px 10px;
-    max-width: 300px;
-    width: 100%;
+    padding: 10px 8px;
     display: inline-block;
-    margin-bottom: 7px;
     vertical-align: middle;
     border-radius: 8px;
+    text-align: left;
+    margin: 0;
     &:focus {
         @include color(map-get($color-contrast-700, day));
         @include background-color(#FFF);
         @include border-color($color-selected);
         outline: none;
+        box-shadow: inset 0px 0px 2px 0 rgba($selected, 0.5);
+    }
+    &.small-field {
+        max-width: 340px;
     }
 }
 
@@ -735,8 +748,7 @@ table {
 }
 
 .inset {
-    margin: 0 0 20px 0;
-    padding: 30px 0 30px 0;
+    margin: 0 0 56px 0;
     .inset-content {
         @include settings-row;
         padding-top: 0 !important;
@@ -4541,6 +4553,7 @@ Settings
     flex-direction: column;
     width: 310px;
     @include background-color($color-sidebar);
+    @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
     .logo {
         padding: 39px 0 0 21px;
         display: block;
@@ -4676,7 +4689,7 @@ Settings
     .settings-inner & {
         &.border {
             &:before {
-                @include background-color($theme-color-400);
+                @include background-color($color-borders);
             }
         }
     }
@@ -4702,9 +4715,6 @@ body.settings {
     }
     .settings-inner .settings-nav {
         flex-shrink: 0;
-        @media (max-width: 900px) {
-            width: 230px;
-        }
     }
     .settings-content {
         position: relative;
@@ -4714,7 +4724,7 @@ body.settings {
         max-width: 100%;
         min-width: 0;
         .settings-content-inner {
-            max-width: 900px;
+            max-width: 700px;
             padding: 0 20px 0 37px;
             @media (max-width: $small-breakpoint) {
                 padding: 0;
@@ -5139,15 +5149,12 @@ body.settings {
             line-height: 1;
             display: flex;
             margin-bottom: 20px;
-            padding: 15px 12px 30px 12px;
-            border-radius: 8px;
-            background-color: #FFF;
-            @include border($color-borders);
+            padding: 0 0 30px 0;
             .graph-wrap {
                 flex: 1 1 auto;
                 padding-top: 25%;
-                border-left: 1px solid map-get($color-borders, day);
-                border-bottom: 1px solid map-get($color-borders, day);
+                @include border-left($color-borders);
+                @include border-bottom($color-borders);
                 margin-left: 5px;
                 position: relative;
                 .graph {
@@ -5161,11 +5168,15 @@ body.settings {
                     right: 0;
                     flex-wrap: nowrap;
                     div {
-                        border-left: 1px solid white;
+                        margin-left: 2px;
                         content: "";
                         flex: 1;
-                        background-color: $color-accent-blue-600;
+                        background-color: $color-accent-green-600;
                         min-height: 1px;
+                        border-radius: 2px 2px 0 0;
+                        &.zero {
+                            border-radius: 0;
+                        }
                     }
                 }
             }
@@ -5391,7 +5402,7 @@ body.settings {
             }
         }
         .last-updated-wrap, .subscription-meta {
-            font-size: 14px;
+            @include font-size(14);
             @include color($color-contrast-400);
         }
         .subscription-meta {
@@ -5412,9 +5423,9 @@ body.settings {
             z-index: 0;
             margin-right: 16px;
             line-height: 0;
-            background-image: linear-gradient(0deg, white, $color-accent-blue-400);
             position: relative;
             @include background-color($color-base);
+            background-image: linear-gradient(0deg, rgba($color-accent-green-600, 0), rgba($color-accent-green-600, 0.8));
             canvas {
                 position: absolute;
                 top: 0;
@@ -5586,18 +5597,29 @@ input[type="checkbox"]:checked + label .toggle-switch {
         }
     }
 }
-.control-group-description {
+.control-group-description, .control-description {
     padding-top: 0;
-    font-size: 12px;
-    color: #999;
+    @include font-size(14px);
+    @include color($color-contrast-400);
     margin: 8px 0 0 0;
-    @media (max-width: $small-breakpoint) {
-        margin-top: -20px !important;
-    }
-    &.no-margin {
-        margin-bottom: 0;
-    }
+    white-space: normal;
 }
+.control-description {
+    position: relative;
+    top: -24px;
+}
+
+label.text-field {
+    display: block;
+    font-weight: bold;
+    @include font-size(16);
+    input {
+        display: block;
+        margin-top: 10px;
+    }
+    margin-bottom: 30px;
+}
+
 .control-group {
     list-style: none;
     margin: 0;
@@ -5607,6 +5629,15 @@ input[type="checkbox"]:checked + label .toggle-switch {
     &.no-border {
         @include border-bottom(transparent);
     }
+    li > label,
+    li > a,
+    li > .form-control {
+        @include form-control;
+        padding: 16px 0;
+    }
+    li > a {
+        @include color($color-accent-blue-600);
+    }
     > li {
         margin: 0;
         padding: 0;
@@ -5614,54 +5645,6 @@ input[type="checkbox"]:checked + label .toggle-switch {
         @include border-top($color-borders);
         &.no-border {
             @include border-top(transparent);
-        }
-        > {
-            label,
-            button:not(.unstyled),
-            textarea,
-            a,
-            input,
-            #card-element,
-            .field-wrap {
-                margin: 0;
-                font-size: 16px;
-                display: block;
-                text-align: left;
-                line-height: 1;
-                position: relative;
-                border: none;
-                border-radius: 0;
-                max-width: 100%;
-                width: 100%;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-                @include settings-row;
-                @include border-color($color-borders);
-                @include background-color($color-base);
-                &:focus {
-                    box-shadow: inset 0px 0px 2px 0 rgba($selected, 0.5);
-                }
-            }
-        }
-        &.text {
-            padding: 0;
-            & + .text {
-                margin-top: 10px;
-            }
-            > input, > textarea {
-                @include background-color($color-contrast-200, $extra: !important);
-                border-width: 2px !important;
-                border-style: solid;
-                border-radius: 8px;
-                padding-left: 8px;
-                padding-right: 8px;
-                &:focus {
-                    @include background-color(#FFF, $extra: !important);
-                    box-shadow: none;
-                    @include border($color-selected);
-                }
-            }
         }
         &.card-meta {
             display: flex;
@@ -5680,8 +5663,6 @@ input[type="checkbox"]:checked + label .toggle-switch {
                 @include font-size(16);
                 border-radius: 8px;
                 height: 52px;
-
-
                 padding: 0 15px;
                 line-height: 1.1;
                 border: none;
@@ -5766,7 +5747,6 @@ input[type="checkbox"]:checked + label .toggle-switch {
             margin: 0;
         }
     }
-
 }
 
 .settings-feeds {
@@ -5848,14 +5828,8 @@ table.small td {
         padding-left: 15px;
         padding-right: 15px;
     }
-    .action-feed-search {
-        font-size: 13px !important;
-        padding: 2px 4px!important;
-        max-width: 200px;
-        margin-left: auto;
-        margin-bottom: 0;
-    }
 }
+
 .filter-wrap {
     padding: 12px 0 0 0;
     background-color: #FFF;
@@ -6157,6 +6131,7 @@ Buttons
     &:hover {
         @include color($color-accent-blue-700);
         text-decoration: none;
+        border-color: $color-accent-blue-700;
     }
 }
 
@@ -6514,11 +6489,11 @@ input[type="text"].hide {
 }
 
 .muted {
-    color: #666666;
+    @include color($color-contrast-600);
 }
 
 .extra-muted {
-    color: #b7b7b7;
+    @include color($color-contrast-500);
 }
 
 .danger {
