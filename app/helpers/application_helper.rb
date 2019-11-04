@@ -140,4 +140,11 @@ module ApplicationHelper
       end
     end
   end
+
+  def radio_button_control
+    content_tag :span, class: "radio-button-wrap" do
+      content_tag :span, class: "radio-button" do
+      end
+    end
+  end
 end

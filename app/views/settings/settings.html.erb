@@ -10,11 +10,15 @@
             <ul class="control-group">
                 <li>
                     <%= f.radio_button(:entry_sort, "DESC", checked: @user.entry_sort.nil? || @user.entry_sort === 'DESC', data: {behavior: "auto_submit"}) %>
-                    <%= f.label('entry_sort_desc', "Newest First") %>
+                    <%= f.label :entry_sort_desc do %>
+                        Newest First <%= radio_button_control %>
+                    <% end %>
                 </li>
                 <li>
                     <%= f.radio_button(:entry_sort, "ASC", data: {behavior: "auto_submit"}) %>
-                    <%= f.label('entry_sort_asc', "Oldest First") %>
+                    <%= f.label :entry_sort_asc do %>
+                        Oldest First <%= radio_button_control %>
+                    <% end %>
                 </li>
             </ul>
         </div>

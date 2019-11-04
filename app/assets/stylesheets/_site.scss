@@ -4695,21 +4695,37 @@ Settings
     }
 }
 
-body.settings {
-    @include background-color($color-contrast-100);
-    @include color($color-contrast-700);
-    @media (max-width: $small-breakpoint) {
-        @include background-color($color-base);
-    }
-}
-
 .settings {
+    @include color($color-contrast-600);
     font-size: 16px;
+    height: 100%;
     p {
         line-height: 1.6;
     }
+    small {
+        font-size: 13px;
+        color: #999;
+    }
+    code {
+        padding: 0;
+    }
+    h2 {
+        margin: 32px 0 32px;
+        font-size: 32px;
+        font-weight: bold;
+        @include color($color-contrast-700);
+        -webkit-font-smoothing: antialiased;
+    }
+    h3 {
+        font-size: 18px;
+        margin: 18px 0 15px 0;
+        &.no-margin {
+            margin-bottom: 0;
+        }
+    }
     .settings-inner {
         display: flex;
+        flex: 1;
         align-items: stretch;
         min-height: 100%;
     }
@@ -4731,29 +4747,8 @@ body.settings {
             }
         }
     }
-    small {
-        font-size: 13px;
-        color: #999;
-    }
-    code {
-        padding: 0;
-    }
     .alert {
         margin-top: 20px;
-    }
-    h2 {
-        margin: 32px 0 32px;
-        font-size: 32px;
-        font-weight: bold;
-        @include color($color-contrast-700);
-        -webkit-font-smoothing: antialiased;
-    }
-    h3 {
-        font-size: 18px;
-        margin: 18px 0 15px 0;
-        &.no-margin {
-            margin-bottom: 0;
-        }
     }
     .subscription-profile {
         @include settings-row;
@@ -5495,7 +5490,7 @@ body.settings {
 }
 input[type="checkbox"] + label .toggle-switch-wrap {
     position: absolute;
-    right: 0;
+    right: 4px;
     top: 0;
     bottom: 0;
     width: 43px;
@@ -5510,6 +5505,19 @@ input[type="checkbox"] + label .toggle-switch-wrap {
         border-radius: 24px;
         @include background-color($color-contrast-400);
         &:before {
+            $size: 32px;
+            height: $size;
+            width: $size;
+            border-radius: $size;
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            display: block;
+            content: "";
+            z-index: 1;
+            transition: transform .2s ease;
+        }
+        &:after {
             $size: 18px;
             position: absolute;
             display: block;
@@ -5527,8 +5535,8 @@ input[type="checkbox"] + label .toggle-switch-wrap {
             top: 3px;
             left: 3px;
         }
-        &:before {
-            z-index: 1;
+        &:after {
+            z-index: 2;
             transition: transform .2s ease;
             opacity: 1;
         }
@@ -5537,7 +5545,7 @@ input[type="checkbox"] + label .toggle-switch-wrap {
             transition: transform .2s ease, opacity .3s ease;
             top: 9px;
             left: 7px;
-            z-index: 2;
+            z-index: 3;
             opacity: 0;
             fill: $color-accent-green-600;
         }
@@ -5551,10 +5559,13 @@ input[type="checkbox"] + label .toggle-switch-wrap {
 }
 input[type="checkbox"]:checked + label .toggle-switch {
     @include background-color($color-accent-green-600);
-    &:before, svg {
+    &:before {
         transform: translateX(19px);
     }
-    &:before {
+    &:after, svg {
+        transform: translateX(19px);
+    }
+    &:after {
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         @include background-color(#FFF);
     }
@@ -5562,39 +5573,86 @@ input[type="checkbox"]:checked + label .toggle-switch {
         opacity: 1;
     }
 }
-.control-group {
-    input[type="radio"] + label {
-        position: relative;
-        $size: 18px;
-        &:before, &:after {
+input[type="checkbox"]:focus + label .toggle-switch {
+    &:before {
+        @include background-color($color-accent-blue-600);
+    }
+}
+input[type="radio"] + label .radio-button-wrap {
+    $radio-button-size: 32px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: $radio-button-size;
+    display: flex;
+    align-items: center;
+    .radio-button {
+        border-radius: $radio-button-size;
+        height: $radio-button-size;
+        width: $radio-button-size;
+        &:before {
+            $size: 18px;
             position: absolute;
-            right: 3px;
-            top: 15px;
+            display: block;
             content: "";
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: $size;
             height: $size;
             width: $size;
-            border-radius: $size;
-            @media (max-width: $small-breakpoint) {
-                right: 18px;
-            }
-        }
-        &:before {
-            z-index: 2;
-            background-color: transparent;
             border: 2px solid transparent;
-            @include border-color($color-contrast-300);
-        }
-    }
-    input[type="radio"]:checked + label {
-        &:before {
-            border-color: $color-accent-green-600;
+            z-index: 1;
         }
         &:after {
-            z-index: 1;
-            border: 5px solid white;
-            @include border-color($color-base);
-            background-color: $color-accent-green-600;
+            $size: 8px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            content: "";
+            border-radius: $size;
+            height: $size;
+            width: $size;
+            @include background-color($color-base);
+            z-index: 2;
         }
+    }
+}
+input[type="radio"] + label .radio-button-wrap .radio-button {
+    &:before {
+        @include border-color($color-contrast-400);
+        background-color: transparent;
+    }
+}
+input[type="radio"]:checked + label .radio-button-wrap .radio-button {
+    &:before {
+        @include border-color($color-accent-blue-600);
+        background-color: transparent;
+    }
+    &:after {
+        @include background-color($color-accent-blue-600);
+    }
+}
+input[type="radio"]:focus + label .radio-button-wrap .radio-button {
+    @include background-color($color-accent-blue-600);
+    &:before {
+        @include border-color(white);
+        background-color: transparent;
+    }
+    &:after {
+        @include background-color(transparent);
+    }
+}
+input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
+    &:before {
+        @include border-color(white);
+        background-color: transparent;
+    }
+    &:after {
+        @include background-color(white);
     }
 }
 .control-group-description, .control-description {
@@ -5697,12 +5755,6 @@ label.text-field {
     }
     .table {
         @include border-top($color-borders);
-    }
-    input[type="checkbox"]:focus + label .toggle-switch, input[type="checkbox"]:active + label .toggle-switch {
-        box-shadow: $focus-glow;
-    }
-    input[type="radio"]:focus + label {
-        box-shadow: inset 0px 0px 2px 0 rgba($selected, 0.5);
     }
     label {
         user-select: none;

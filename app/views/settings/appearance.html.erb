@@ -65,11 +65,15 @@
             <ul class="control-group">
                 <li>
                     <%= f.radio_button(:entries_display, "block", {checked: @user.entries_display.nil? || @user.entries_display === 'block', data: {behavior: 'appearance_radio auto_submit', setting: 'entries-display'}}) %>
-                    <%= f.label(:entries_display_block, "Default") %>
+                    <%= f.label :entries_display_block do %>
+                        Default <%= radio_button_control %>
+                    <% end %>
                 </li>
                 <li>
                     <%= f.radio_button(:entries_display, "inline", {data: {behavior: 'appearance_radio auto_submit', setting: 'entries-display'}}) %>
-                    <%= f.label(:entries_display_inline, "Inline") %>
+                    <%= f.label :entries_display_inline do %>
+                        Inline <%= radio_button_control %>
+                    <% end %>
                 </li>
             </ul>
             <div class="inset-content">
