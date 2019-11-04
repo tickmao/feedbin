@@ -5,7 +5,7 @@ Variables
 $small-breakpoint: 700px;
 
 $toolbar-height: 41px;
-$font-stack: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-stack: -apple-system, system-ui, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
 $audio-player-height: 115px;
 $audio-player-height-minimized: 54px;
 $base-button-position: 10px;
@@ -138,7 +138,7 @@ $color-borders-alt: map-merge($color-borders, (debug: color-borders-alt, midnigh
 $color-selected: (
     debug:    color-selected,
     day:      $color-accent-blue-600,
-    sunset:   $theme-color-sunset-700,
+    sunset:   $color-accent-blue-600,
     dusk:     $color-accent-blue-600,
     midnight: $color-accent-blue-600,
 );
@@ -146,7 +146,7 @@ $color-selected: (
 $color-selected-hover: (
     debug:    color-selected-hover,
     day:      $color-accent-blue-700,
-    sunset:   $theme-color-sunset-500,
+    sunset:   $color-accent-blue-700,
     dusk:     $color-accent-blue-700,
     midnight: $color-accent-blue-700,
 );
@@ -154,7 +154,7 @@ $color-selected-hover: (
 $color-selected-active: (
     debug:    color-selected-active,
     day:      $color-accent-blue-600,
-    sunset:   #171716,
+    sunset:   $color-accent-blue-600,
     dusk:     $color-accent-blue-600,
     midnight: $color-accent-blue-600,
 );
@@ -389,7 +389,7 @@ textarea {
 }
 
 @mixin form-control {
-    @include color($color-contrast-700);
+    @include color($color-contrast-600);
     @include font-size(16);
     max-width: 100%;
     width: 100%;
@@ -431,7 +431,6 @@ input[type="color"],
         @include background-color(#FFF);
         @include border-color($color-selected);
         outline: none;
-        box-shadow: inset 0px 0px 2px 0 rgba($selected, 0.5);
     }
     &.small-field {
         max-width: 340px;
@@ -478,7 +477,6 @@ select {
 }
 
 label {
-    margin-bottom: 1px;
     display: block;
 }
 
@@ -4723,6 +4721,13 @@ Settings
             margin-bottom: 0;
         }
     }
+    .toolbar {
+        display: flex;
+        flex: 1;
+        .last-control {
+            margin-left: auto;
+        }
+    }
     .settings-inner {
         display: flex;
         flex: 1;
@@ -4815,6 +4820,7 @@ Settings
     }
     h4.group-header {
         font-size: 16px;
+        @include color($color-contrast-700);
     }
     h3.box-header {
         margin: 0;
@@ -4965,7 +4971,7 @@ Settings
     }
     .feed-settings {
         display: flex;
-        margin: 25px 0 24px;
+        margin: 24px 0 24px;
         h2 {
             flex-grow: 1;
             margin: 0;
@@ -4981,18 +4987,15 @@ Settings
         }
     }
     .feed-search {
-        padding: 5px 25px 5px 36px !important;
-        font-size: 14px;
-        background-image: image-url("favicon-search-light.svg");
-        background-position: 11px 6px;
         background-repeat: no-repeat;
         max-width: 250px;
         display: block;
         margin: 0;
+        padding-right: 31px;
         &.processing {
-            background-image: image-url("favicon-search-light.svg"), image-url("spinner-day.svg");
-            background-position: 11px 6px, 97% 6px;
-            background-size: auto, 16px 16px;
+            background-image: image-url("spinner-day.svg");
+            background-position: 96% 11px;
+            background-size: 16px 16px;
         }
         @media (max-width: $small-breakpoint) {
             max-width: 100%
@@ -5018,8 +5021,7 @@ Settings
         }
     }
     .select-all-wrap {
-        background-color: $inset-bg-color;
-        border: 1px solid #DCDEE0;
+        @include border($color-borders);
         border-top: none;
         padding: 15px 30px 12px 30px;
         .checkbox input {
@@ -5042,7 +5044,6 @@ Settings
     }
     .feed-dropdown {
         display: inline-block;
-        margin-left: auto;
         .dropdown-content {
             width: 215px;
             top: 25px;
@@ -5478,8 +5479,19 @@ Settings
         }
     }
     .select {
-        width: 150px;
-        margin-left: 10px;
+        appearance: none;
+        border: none;
+        @include background-color($color-contrast-200);
+        @include color($color-contrast-600);
+        font-size: 16px;
+        line-height: 1.1;
+        padding: 0 8px;
+        height: 42px;
+        border: 2px solid transparent;
+        &:focus {
+            background-color: #FFF;
+            border: 2px solid $color-accent-blue-600;
+        }
     }
     .error-message {
         background-color: $color-accent-red-600;
@@ -5666,6 +5678,43 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     position: relative;
     top: -24px;
 }
+.input-with-icon {
+    position: relative;
+    display: block;
+    line-height: 1;
+    input {
+        padding-left: 30px !important;
+    }
+    .select {
+        padding-right: 32px;
+    }
+    .icon-wrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        &.right {
+            right: 0;
+            left: auto;
+        }
+    }
+    svg {
+        @include fill($color-icons);
+    }
+    input + .icon-wrap svg {
+        @include fill($color-contrast-400);
+    }
+    input:focus + .icon-wrap {
+        svg {
+            @include fill($color-selected);
+        }
+    }
+}
 
 label.text-field {
     display: block;
@@ -5692,6 +5741,7 @@ label.text-field {
     li > .form-control {
         @include form-control;
         padding: 16px 0;
+        margin: 0;
     }
     li > a {
         @include color($color-accent-blue-600);
@@ -5703,6 +5753,9 @@ label.text-field {
         @include border-top($color-borders);
         &.no-border {
             @include border-top(transparent);
+        }
+        &.text {
+            padding: 4px 0;
         }
         &.card-meta {
             display: flex;
@@ -5774,8 +5827,8 @@ label.text-field {
     input[type="radio"], input[type="checkbox"] {
         @extend .visually-hidden;
     }
-    input[type="checkbox"] + label {
-        padding-right: 85px !important;
+    input[type="checkbox"] + label, input[type="radio"] + label {
+        padding-right: 63px;
     }
     &.no-margin {
         margin-bottom: 0;
@@ -6502,6 +6555,10 @@ hr.nospace {
 
 .hide {
     display: none;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 input[type="text"].hide {

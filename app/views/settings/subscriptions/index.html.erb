@@ -1,23 +1,22 @@
 <div class="settings-content-inner">
     <div class="settings-outer">
         <h2>Subscriptions</h2>
-        <div class="feed-settings">
-            <div class="dropdown-wrap dropdown-right feed-dropdown">
-                <button class="feed-list-toolbar-button button-caret no-margin" data-behavior="toggle_dropdown sort_label">Sort by <%= params[:sort] || "name" %></button>
-                <div class="dropdown-content">
-                    <ul>
-                        <li data-value="name"><a href="?sort=name&amp;q=<%= params[:q] %>">Sort by name</a></li>
-                        <li data-value="last-updated"><a href="?sort=updated&amp;q=<%= params[:q] %>">Sort by updated</a></li>
-                        <li data-value="volume"><a href="?sort=volume&amp;q=<%= params[:q] %>">Sort by volume</a></li>
-                        <li data-value="tags"><a href="?sort=tag&amp;q=<%= params[:q] %>">Sort by tag</a></li>
-                    </ul>
-                </div>
+        <%= form_tag settings_subscriptions_path, method: :get, remote: true, class: "feed-settings", data: {behavior: "spinner"} do %>
+            <div class="toolbar">
+                <span class="input-with-icon">
+                    <%= select_tag :sort, options_for_select([["Sort by Name", "name"], ["Sort by Last Updated", "updated"], ["Sort by Volume", "volume"]], params[:sort]), class: "select", data: {behavior: "autosubmit"} %>
+                    <span class="icon-wrap right">
+                        <%= svg_tag "icon-caret" %>
+                    </span>
+                </span>
+                <span class="input-with-icon last-control">
+                    <input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" />
+                    <span class="icon-wrap">
+                        <%= svg_tag "icon-search" %>
+                    </span>
+                </span>
             </div>
-
-            <%= form_tag settings_subscriptions_path, method: :get, remote: true do %>
-                <input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" />
-            <% end %>
-        </div>
+        <% end %>
     </div>
     <%= render partial: "subscriptions_list" %>
 </div>

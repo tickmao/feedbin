@@ -326,7 +326,7 @@ $.extend feedbin,
 
       feedbin.drawBarChart(line, element.data('values'), element.data('stroke'))
       feedbin.drawBarChartFill(fill, element.data('values'), element.css("backgroundColor"))
-
+    $('.canvas-wrap').removeClass('hidden')
   replaceModal: (target, body) ->
     modal = $(".#{target}")
     placeholderHeight = modal.find('.modal-dialog').outerHeight()
@@ -1890,22 +1890,6 @@ $.extend feedbin,
         $(@).parents('form').submit()
         feedbin.fonts(newFont)
 
-    feedSettings: ->
-      $(document).on 'click', '[data-behavior~=sort_feeds]', (event, xhr) ->
-        sortBy = $(@).data('value')
-        label = $(@).text()
-        $('[data-behavior~=sort_label]').text(label)
-        if sortBy == "name"
-          sortFunction = feedbin.sortByName
-        else if sortBy == "last-updated"
-          sortFunction = feedbin.sortByLastUpdated
-        else if sortBy == "volume"
-          sortFunction = feedbin.sortByVolume
-        else if sortBy == "tags"
-          sortFunction = feedbin.sortByTags
-        $('.sortable li').sort(sortFunction).appendTo('.sortable');
-      return
-
     fontSize: ->
       $(document).on 'click', '[data-behavior~=increase_font]', (event) ->
         feedbin.updateFontSize('increase')
@@ -2096,9 +2080,6 @@ $.extend feedbin,
         $(@).parents('li').find('.show-service-options').removeClass('hide')
         event.preventDefault()
         return
-
-    drawBarCharts: ->
-      feedbin.drawBarCharts()
 
     selectText: ->
       $(document).on 'mouseup', '[data-behavior~=select_text]', (event) ->
@@ -2548,6 +2529,9 @@ $.extend feedbin,
         field = $('.modal-purpose-subscribe [data-behavior~=feeds_search_field]')
         field.val(subscription)
         field.closest("form").submit()
+
+    drawBarCharts: ->
+      feedbin.drawBarCharts()
 
 
 $.each feedbin.preInit, (i, item) ->

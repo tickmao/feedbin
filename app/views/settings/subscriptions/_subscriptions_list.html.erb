@@ -5,14 +5,13 @@
             <%= hidden_field_tag :q, params[:q] %>
 
             <div class="feed-controls-wrap">
-                <div class="feed-controls">
+                <div class="feed-controls toolbar">
                     <div class="feed-actions">
                         <label class="checkbox">
                             <input type="checkbox" class="feeds-checkbox" data-behavior="toggle_checked" />
                             Select all
                         </label>
-
-                        <div class="dropdown-wrap feed-dropdown">
+                        <div class="dropdown-wrap feed-dropdown last-control">
                             <button class="feed-list-toolbar-button button-caret" data-behavior="toggle_dropdown feed_actions">Actions</button>
                             <div class="dropdown-content">
                                 <ul>
@@ -58,7 +57,7 @@
                                                 <span class="title-container">
                                                     <%= subscription.title %>
                                                 </span>
-                                                <span class="last-updated-wrap">
+                                                <span class="last-updated-wrap hide">
                                                     <%= timeago(subscription.last_published_entry) %>, <%= number_with_delimiter(subscription.post_volume) %>/mo
                                                 </span>
                                             </span>
@@ -70,7 +69,7 @@
                                         </span>
                                     </span>
                                     <span class="subscription-controls">
-                                        <span class="canvas-wrap" data-values="<%= subscription.entries_count %>" data-stroke="#07AC47" data-behavior="line_graph">
+                                        <span class="canvas-wrap hidden" data-values="<%= subscription.entries_count %>" data-stroke="#07AC47" data-behavior="line_graph">
                                             <%= content_tag :canvas, '', width: 97, height: 20 %>
                                             <%= content_tag :canvas, '', width: 97, height: 20 %>
                                         </span>
@@ -86,3 +85,7 @@
         <%= will_paginate @subscriptions, previous_label: "Previous", next_label: "Next" %>
     </div>
 </div>
+<script>
+$('.last-updated-wrap').removeClass('hide')
+
+</script>
