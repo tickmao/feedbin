@@ -522,6 +522,27 @@ label {
     }
 }
 
+.select {
+    appearance: none;
+    border: none;
+    @include background-color($color-contrast-200);
+    @include color($color-contrast-600);
+    font-size: 16px;
+    line-height: 1.1;
+    padding: 0 8px;
+    height: 42px;
+    border: 2px solid transparent;
+    &:focus {
+        @include color(map-get($color-contrast-700, day));
+        background-color: #FFF;
+        border: 2px solid $color-accent-blue-600;
+    }
+    &[disabled] {
+        @include background-color($color-contrast-300);
+        @include color($color-contrast-200);
+    }
+}
+
 label select {
     margin-bottom: 0;
 }
@@ -612,6 +633,13 @@ table {
     td, th {
         padding: 11px !important;
     }
+}
+
+.pill {
+    @include border($color-borders);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
 }
 
 .pill-list {
@@ -4783,9 +4811,6 @@ Settings
     .alert {
         margin-top: 20px;
     }
-    .subscription-profile {
-        @include settings-row;
-    }
     .input-wrap {
         position: relative;
         flex: 1;
@@ -5052,12 +5077,17 @@ Settings
         @include border($color-borders);
         @include background-color($color-base);
         border-top: none;
-        padding: 15px 16px 12px 16px;
+        padding: 16px;
     }
     .feed-actions {
         flex-grow: 1;
         display: flex;
         align-items: center;
+    }
+    .select-all-wrap, .feed-actions {
+        .checkbox input {
+            margin-right: 16px !important;
+        }
     }
     .feed-dropdown {
         display: inline-block;
@@ -5161,8 +5191,8 @@ Settings
         .chart-wrap {
             line-height: 1;
             display: flex;
-            margin-bottom: 20px;
-            padding: 0 0 30px 0;
+            margin-bottom: 32px;
+            padding: 0 0 24px 0;
             .graph-wrap {
                 flex: 1 1 auto;
                 padding-top: 25%;
@@ -5322,6 +5352,9 @@ Settings
             .feeds-checkbox {
                 margin: 0 0 0 16px !important;
             }
+            input {
+                z-index: 10;
+            }
         }
         .subscription-link {
             display: flex;
@@ -5443,6 +5476,23 @@ Settings
             margin-right: 10px;
         }
     }
+    .subscription-pill {
+        align-items: center;
+        margin-bottom: 32px;
+        .favicon-wrap {
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+        h4 {
+            flex: 1;
+            margin: 0 !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+        }
+
+    }
     .modal-purpose-action_preview {
         .action-description {
             border-radius: 8px;
@@ -5482,22 +5532,6 @@ Settings
         }
         .next_page {
             content: "Next";
-        }
-    }
-    .select {
-        appearance: none;
-        border: none;
-        @include background-color($color-contrast-200);
-        @include color($color-contrast-600);
-        font-size: 16px;
-        line-height: 1.1;
-        padding: 0 8px;
-        height: 42px;
-        border: 2px solid transparent;
-        &:focus {
-            @include color(map-get($color-contrast-700, day));
-            background-color: #FFF;
-            border: 2px solid $color-accent-blue-600;
         }
     }
     .error-message {
@@ -5723,6 +5757,12 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
             @include fill($color-selected);
         }
     }
+    input[disabled] + .icon-wrap,
+    select[disabled] + .icon-wrap {
+        svg {
+            @include fill($color-contrast-200);
+        }
+    }
 }
 
 label.text-field {
@@ -5740,7 +5780,7 @@ label.text-field {
     list-style: none;
     margin: 0;
     padding: 0;
-    margin-bottom: 30px;
+    margin-bottom: 32px;
     @include border-bottom($color-borders);
     &.no-border {
         @include border-bottom(transparent);
@@ -5826,12 +5866,6 @@ label.text-field {
     }
     textarea {
         line-height: 1.2;
-    }
-    input[type="submit"],
-    button {
-        @include color($color-selected);
-        appearance: none;
-        background: transparent;
     }
     input[type="radio"], input[type="checkbox"] {
         @extend .visually-hidden;
@@ -6163,8 +6197,8 @@ Buttons
     border: none;
     margin: 0;
     padding: 0;
-    @include font-size(16);
-    font-weight: normal;
+    @include font-size(14);
+    font-weight: bold;
     font-family: $font-stack;
     @include color(#FFF);
     text-decoration: none;
@@ -6191,7 +6225,7 @@ Buttons
         box-shadow: $focus-glow;
     }
     &[disabled], &.disabled {
-        @include color(#FFF);
+        @include color($color-contrast-200);
         @include border-color($color-contrast-300);
         @include background-color($color-contrast-300);
         cursor: default;
@@ -6207,18 +6241,31 @@ Buttons
 
 .button-secondary {
     @include background-color(transparent);
-    @include color($color-selected);
-    &[disabled] {
-        background-color: transparent !important;
-        @include color($color-contrast-300, $extra: !important);
-        &:hover {
-            background-color: transparent;
-            @include color($color-contrast-300, $extra: !important);
+    @include color($color-contrast-600);
+    @include border-color($color-contrast-600);
+    &:hover:not([disabled]) {
+        @include background-color(transparent);
+        @include color($color-contrast-600);
+        .theme-dusk &, .theme-midnight & {
+            color: #fff;
         }
     }
-    &:hover {
+    &:active {
         @include background-color(transparent);
-        @include color($color-selected-hover);
+        @include color($color-selected-active);
+        .theme-dusk &, .theme-midnight & {
+            color: #fff;
+        }
+    }
+}
+
+.button-tertiary {
+    @include background-color(transparent);
+    @include color($color-contrast-600);
+    @include border-color(transparent);
+    &:hover:not([disabled]) {
+        @include background-color(transparent);
+        @include color($color-contrast-600);
         .theme-dusk &, .theme-midnight & {
             color: #fff;
         }

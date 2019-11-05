@@ -1,7 +1,7 @@
 class Settings::SubscriptionsController < ApplicationController
   def index
     @user = current_user
-    @subscriptions = subscriptions_with_sort_data.paginate(page: params[:page], per_page: 1)
+    @subscriptions = subscriptions_with_sort_data.paginate(page: params[:page], per_page: 50)
     render layout: "settings"
   end
 

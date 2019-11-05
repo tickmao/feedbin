@@ -1750,31 +1750,35 @@ $.extend feedbin,
 
     feedActions: ->
       $(document).on 'change', '[data-behavior~=feed_actions]', (event) ->
-        console.log $(@).val()
-        # operation = $(@).data('operation')
-        # form = $(@).parents('form')
-        # $('input[name=operation]').val(operation)
-        # form.submit()
+        operation = $(@).val()
+        if operation != ""
+          $(@).closest('form').submit()
 
     checkBoxToggle: ->
       $(document).on 'change', '[data-behavior~=include_all]', (event) ->
         if $(@).is(':checked')
+          $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('checked', true).change()
           $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('disabled', true)
         else
           $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('disabled', false)
 
       $(document).on 'change', '[data-behavior~=toggle_checked]', (event) ->
-
         $('[data-behavior~=toggle_checked_hidden]').toggleClass('hide')
-
+        $('[data-behavior~=toggle_checked_hidden] [type="checkbox"]').prop('checked', false).change()
         if $(@).is(':checked')
-          $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('checked', true)
+          $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('checked', true).change()
         else
-          $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('checked', false)
+          $('[data-behavior~=toggle_checked_target] [type="checkbox"][name]').prop('checked', false).change()
         event.preventDefault()
         return
 
-      $(document).on 'click', '[data-behavior~=check_feeds]', (event) ->
+      $(document).on 'change', '[data-behavior~=enable_control]', (event) ->
+        if $('[data-behavior~=enable_control]:checked').length == 0
+          $('[data-behavior~=enable_control_target]').prop('disabled', true)
+        else
+          $('[data-behavior~=enable_control_target]').prop('disabled', false)
+
+      $(document).on 'change', '[data-behavior~=check_feeds]', (event) ->
         checkboxes = $('[data-behavior~=collection_checkbox]')
         if $(@).is(':checked')
           checkboxes.prop('checked', true)
