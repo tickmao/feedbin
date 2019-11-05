@@ -11,18 +11,15 @@
                             <input type="checkbox" class="feeds-checkbox" data-behavior="toggle_checked" />
                             Select all
                         </label>
-                        <div class="dropdown-wrap feed-dropdown last-control">
-                            <button class="feed-list-toolbar-button button-caret" data-behavior="toggle_dropdown feed_actions">Actions</button>
-                            <div class="dropdown-content">
-                                <ul>
-                                    <li data-operation="unsubscribe"><span>Unsubscribe</span></li>
-                                    <li data-operation="show_updates"><span class="no-border">Show edits on articles</span></li>
-                                    <li data-operation="hide_updates"><span>Hide edits on articles</span></li>
-                                    <li data-operation="mute"><span class="no-border">Mute Feed</span></li>
-                                    <li data-operation="unmute"><span>Unmute Feed</span></li>
-                                </ul>
-                            </div>
-                        </div>
+
+                        <span class="input-with-icon last-control">
+                            <%= select_tag :sort, options_for_select([["Unsubscribe", "unsubscribe"], ["Show edits on articles", "show_updates"], ["Hide edits on articles", "hide_updates"], ["Mute Feed", "mute"], ["Unmute Feed", "unmute"]]), class: "select", data: {behavior: "feed_actions"} %>
+                            <span class="icon-wrap right">
+                                <%= svg_tag "icon-caret" %>
+                            </span>
+                        </span>
+
+
                     </div>
                 </div>
                 <% if @subscriptions.total_entries > @subscriptions.count  %>
@@ -44,7 +41,7 @@
                         <%= fields_for "subscriptions[]", subscription do |f| %>
                             <li class="feeds-wrap <%= subscription_presenter.mute_class %>">
                                 <i class="status-flag icon-muted"></i>
-                                <label class="checkbox-wrap">
+                                <label class="checkbox-wrap checkbox">
                                     <%= check_box_tag "subscription_ids[]", subscription.id, false, id: "subscription_checkbox_#{subscription.id}", class: "checkbox feeds-checkbox" %>
                                 </label>
                                 <%= link_to edit_settings_subscription_path(subscription), class: "subscription-link" do %>
@@ -87,5 +84,4 @@
 </div>
 <script>
 $('.last-updated-wrap').removeClass('hide')
-
 </script>

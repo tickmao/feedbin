@@ -1749,11 +1749,12 @@ $.extend feedbin,
         event.preventDefault()
 
     feedActions: ->
-      $(document).on 'click', '[data-operation]', (event) ->
-        operation = $(@).data('operation')
-        form = $(@).parents('form')
-        $('input[name=operation]').val(operation)
-        form.submit()
+      $(document).on 'change', '[data-behavior~=feed_actions]', (event) ->
+        console.log $(@).val()
+        # operation = $(@).data('operation')
+        # form = $(@).parents('form')
+        # $('input[name=operation]').val(operation)
+        # form.submit()
 
     checkBoxToggle: ->
       $(document).on 'change', '[data-behavior~=include_all]', (event) ->

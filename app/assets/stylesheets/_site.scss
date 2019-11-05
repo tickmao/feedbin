@@ -480,14 +480,46 @@ label {
     display: block;
 }
 
-.radio, .checkbox {
+.radio {
     min-height: 20px;
     padding-left: 20px;
 }
 
-.radio input[type="radio"], .checkbox input[type="checkbox"] {
+.radio input[type="radio"] {
     float: left;
     margin-left: -20px;
+}
+
+.checkbox {
+    $size: 16px;
+    display: flex;
+    align-items: center;
+    input[type="checkbox"] {
+        height: $size;
+        width: $size;
+        border-radius: 2px;
+        appearance: none;
+        background-color: #FFF;
+        border: 2px solid transparent;
+        @include border-color($color-contrast-400);
+        margin-right: 8px;
+        &:checked {
+            @include border-color($color-accent-green-600);
+            background-color: $color-accent-green-600;
+            background-image: image-url("icon-checkbox.svg");
+            background-position: 50%;
+            background-repeat: no-repeat;
+            background-size: 10px 7px;
+        }
+        &[disabled] {
+            @include border-color($color-contrast-300);
+            @include background-color($color-contrast-200);
+        }
+        &[disabled]:checked {
+            @include background-color($color-contrast-300);
+            background-image: image-url("icon-checkbox-disabled.svg");
+        }
+    }
 }
 
 label select {
@@ -3262,7 +3294,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                         flex: 1;
                         margin-left: 8px;
                     }
-                    .icon-settings-check {
+                    .icon-check {
                         margin-left: auto;
                         @include fill($color-contrast-700);
                         visibility: hidden;
@@ -3285,7 +3317,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             .view_unread &.view-mode-unread,
             .view_starred &.view-mode-starred,
             .view_all &.view-mode-all {
-                .icon-settings-check {
+                .icon-check {
                     visibility: visible;
                 }
             }
@@ -4217,10 +4249,6 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
 
 }
 
-.checkbox input {
-    margin-top: 2px;
-}
-
 .radio input {
     margin-top: 2px;
 }
@@ -5011,7 +5039,7 @@ Settings
         border-radius: 8px 8px 0 0;
         @include background-color($color-base);
         @include border($color-borders);
-        padding: 24px 30px 24px 30px;
+        padding: 16px;
         @media (max-width: $small-breakpoint) {
             padding-left: 15px;
             padding-right: 15px;
@@ -5022,25 +5050,14 @@ Settings
     }
     .select-all-wrap {
         @include border($color-borders);
+        @include background-color($color-base);
         border-top: none;
-        padding: 15px 30px 12px 30px;
-        .checkbox input {
-            margin-top: 1px;
-            margin-right: 18px;
-        }
-        @media (max-width: $small-breakpoint) {
-            padding-left: 15px;
-            padding-right: 15px;
-            border-left: none;
-            border-right: none;
-        }
+        padding: 15px 16px 12px 16px;
     }
     .feed-actions {
         flex-grow: 1;
         display: flex;
-    }
-    .feeds-checkbox {
-        margin-right: 15px;
+        align-items: center;
     }
     .feed-dropdown {
         display: inline-block;
@@ -5290,42 +5307,31 @@ Settings
             padding: 0;
         }
         .feeds-wrap {
+            display: flex;
             position: relative;
         }
-        $checkbox-offset: 64px;
-        $checkbox-offset-narrow: 49px;
         .checkbox-wrap {
+            flex-shrink: 0;
             display: flex;
-            padding-top: 18px;
-            position: absolute;
-            z-index: 1000;
+            align-items: flex-start;
+            padding-top: 14px;
             left: 0;
             top: 0;
             bottom: 0;
-            width: $checkbox-offset;
+            width: 48px;
             .feeds-checkbox {
-                margin: 0 0 0 30px !important;
-                padding: 0;
-            }
-            @media (max-width: $small-breakpoint) {
-                padding-top: 15px;
-                width: $checkbox-offset-narrow;
-                .feeds-checkbox {
-                    margin: 0 0 0 15px !important;
-                }
+                margin: 0 0 0 16px !important;
             }
         }
         .subscription-link {
             display: flex;
+            flex: 1;
             justify-content: space-between;
             @include color($color-contrast-700);
-            padding: 13px 30px 13px $checkbox-offset;
+            padding: 13px 16px 13px 0;
             align-items: center;
             &:hover {
                 text-decoration: none;
-            }
-            @media (max-width: $small-breakpoint) {
-                padding: 13px 15px 13px $checkbox-offset-narrow;
             }
         }
         .subscription-data-wrap {
@@ -5489,6 +5495,7 @@ Settings
         height: 42px;
         border: 2px solid transparent;
         &:focus {
+            @include color(map-get($color-contrast-700, day));
             background-color: #FFF;
             border: 2px solid $color-accent-blue-600;
         }
@@ -5706,10 +5713,12 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     svg {
         @include fill($color-icons);
     }
-    input + .icon-wrap svg {
+    input + .icon-wrap svg,
+    select + .icon-wrap svg {
         @include fill($color-contrast-400);
     }
-    input:focus + .icon-wrap {
+    input:focus + .icon-wrap,
+    select:focus + .icon-wrap {
         svg {
             @include fill($color-selected);
         }
