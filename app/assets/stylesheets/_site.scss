@@ -50,6 +50,7 @@ $color-accent-blue-700: #0755B9;
 $color-accent-orange-600: #E96A0E;
 
 $color-accent-green-600: #07AC47;
+$color-accent-green-700: #068D3B;
 
 $color-accent-red-600: #BB0B2F;
 
@@ -167,7 +168,6 @@ $color-selected-off: (
     midnight: $theme-color-midnight-100,
 );
 
-
 $image-spinners: (
     debug:    image-spinners,
     day:      image-url("spinner-day.svg"),
@@ -191,6 +191,39 @@ $color-sidebar: (
     dusk:     map-get($color-base, dusk),
     midnight: map-get($color-base, midnight),
 );
+
+$color-base-light-100: (
+    debug:    color-base-light-100,
+    day:      $theme-color-100,
+    sunset:   $theme-color-sunset-100,
+    dusk:     $theme-color-dusk-600,
+    midnight: $theme-color-midnight-600,
+);
+
+$color-base-light-200: (
+    debug:    color-base-light-200,
+    day:      $theme-color-200,
+    sunset:   $theme-color-sunset-200,
+    dusk:     $theme-color-dusk-500,
+    midnight: $theme-color-midnight-500,
+);
+
+$color-base-dark-300: (
+    debug:    color-base-dark-300,
+    day:      $theme-color-500,
+    sunset:   $theme-color-sunset-500,
+    dusk:     $theme-color-dusk-300,
+    midnight: $theme-color-midnight-300,
+);
+
+$color-disabled-foreground: (
+    debug:    color-base-light-200,
+    day:      $theme-color-200,
+    sunset:   $theme-color-sunset-200,
+    dusk:     $theme-color-dusk-400,
+    midnight: $theme-color-midnight-400,
+);
+
 
 
 /*------------------------------------------------------------------------------
@@ -423,7 +456,7 @@ input[type="color"],
     padding: 10px 8px;
     display: inline-block;
     vertical-align: middle;
-    border-radius: 8px;
+    border-radius: 4px;
     text-align: left;
     margin: 0;
     &:focus {
@@ -497,23 +530,48 @@ label {
     input[type="checkbox"] {
         height: $size;
         width: $size;
-        border-radius: 2px;
+        border-radius: 3px;
         appearance: none;
-        background-color: #FFF;
+        @include background-color($color-base-light-100);
         border: 2px solid transparent;
         @include border-color($color-contrast-400);
         margin-right: 8px;
+        position: relative;
+        &:before {
+            $position: -5px;
+            top: $position;
+            bottom: $position;
+            left: $position;
+            right: $position;
+            content: "";
+            display: block;
+            position: absolute;
+            border: 2px solid transparent;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+        &:focus:before {
+            border-color: $color-accent-blue-400;
+        }
         &:checked {
-            @include border-color($color-accent-green-600);
+            @include border-color(transparent);
             background-color: $color-accent-green-600;
             background-image: image-url("icon-checkbox.svg");
             background-position: 50%;
             background-repeat: no-repeat;
             background-size: 10px 7px;
         }
+        &:active {
+            @include background-color($color-base-light-200);
+            @include border-color($color-base-dark-300);
+            &:checked {
+                @include background-color($color-accent-green-700);
+                @include border-color(transparent);
+            }
+        }
         &[disabled] {
-            @include border-color($color-contrast-300);
             @include background-color($color-contrast-200);
+            @include border-color($color-contrast-300);
         }
         &[disabled]:checked {
             @include background-color($color-contrast-300);
@@ -532,6 +590,7 @@ label {
     padding: 0 8px;
     height: 42px;
     border: 2px solid transparent;
+    border-radius: 4px;
     &:focus {
         @include color(map-get($color-contrast-700, day));
         background-color: #FFF;
@@ -539,7 +598,8 @@ label {
     }
     &[disabled] {
         @include background-color($color-contrast-300);
-        @include color($color-contrast-200);
+        @include color($color-disabled-foreground);
+        cursor: default;
     }
 }
 
@@ -5348,7 +5408,7 @@ Settings
             left: 0;
             top: 0;
             bottom: 0;
-            width: 48px;
+            width: 40px;
             .feeds-checkbox {
                 margin: 0 0 0 16px !important;
             }
@@ -5361,7 +5421,7 @@ Settings
             flex: 1;
             justify-content: space-between;
             @include color($color-contrast-700);
-            padding: 13px 16px 13px 0;
+            padding: 13px 16px 13px 8px;
             align-items: center;
             &:hover {
                 text-decoration: none;
@@ -5747,9 +5807,11 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     svg {
         @include fill($color-icons);
     }
-    input + .icon-wrap svg,
-    select + .icon-wrap svg {
+    input + .icon-wrap svg {
         @include fill($color-contrast-400);
+    }
+    select + .icon-wrap svg {
+        @include fill($color-contrast-600);
     }
     input:focus + .icon-wrap,
     select:focus + .icon-wrap {
@@ -5760,7 +5822,7 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     input[disabled] + .icon-wrap,
     select[disabled] + .icon-wrap {
         svg {
-            @include fill($color-contrast-200);
+            @include fill($color-disabled-foreground);
         }
     }
 }
@@ -5846,7 +5908,7 @@ label.text-field {
             border-width: 2px;
             border-style: solid;
             border-color: transparent;
-            border-radius: 8px;
+            border-radius: 4px;
             padding: 17px 15px;
             @include background-color($color-contrast-200);
             &.StripeElement--focus {
