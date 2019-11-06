@@ -292,7 +292,9 @@ body {
         color: map-get($color-contrast-700, midnight);
     }
     @include respond-to(hidpi) {
+        -moz-osx-font-smoothing: grayscale;
         -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
     }
     &.native.app {
         overflow: hidden;
@@ -550,7 +552,7 @@ label {
             border-radius: 5px;
             pointer-events: none;
         }
-        &:focus:before {
+        &:focus:before, &:active:before {
             border-color: $color-accent-blue-400;
         }
         &:checked {
@@ -568,6 +570,10 @@ label {
                 @include background-color($color-accent-green-700);
                 @include border-color(transparent);
             }
+            &:focus:before {
+                border-color: $color-accent-blue-400;
+            }
+
         }
         &[disabled] {
             @include background-color($color-contrast-200);
@@ -4665,6 +4671,7 @@ Settings
 
 .settings-nav {
     flex-direction: column;
+    order: 1;
     width: 310px;
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
@@ -4854,6 +4861,7 @@ Settings
         flex-shrink: 0;
     }
     .settings-content {
+        order: 2;
         position: relative;
         padding: 0;
         @include background-color($color-base);
@@ -5252,12 +5260,14 @@ Settings
             line-height: 1;
             display: flex;
             margin-bottom: 32px;
-            padding: 0 0 24px 0;
+            padding: 16px 16px 32px 16px;
+            border-radius: 8px;
+            @include background-color($color-contrast-100);
             .graph-wrap {
                 flex: 1 1 auto;
                 padding-top: 25%;
-                @include border-left($color-borders);
-                @include border-bottom($color-borders);
+                @include border-left($color-contrast-400);
+                @include border-bottom($color-contrast-400);
                 margin-left: 5px;
                 position: relative;
                 .graph {
@@ -5266,8 +5276,8 @@ Settings
                     align-items: flex-end;
                     position: absolute;
                     top: 0;
-                    left: 1px;
-                    bottom: 1px;
+                    left: 0;
+                    bottom: 2px;
                     right: 0;
                     flex-wrap: nowrap;
                     div {
@@ -5300,7 +5310,7 @@ Settings
             display: flex;
         }
         .x-axis, .y-axis {
-            color: map-get($color-contrast-400, day);
+            @include color($color-contrast-400);
             font-size: 12px;
         }
         .stats {
@@ -5779,22 +5789,64 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     position: relative;
     top: -24px;
 }
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.spinner-icon {
+    height: 16px;
+    width: 16px;
+    position: relative;
+    &:before, &:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        border-radius: 50%;
+        display: block;
+        content: "";
+        height: 16px;
+        width: 16px;
+    }
+    &:before {
+        border: 2px solid transparent;
+        @include border-color($color-contrast-300);
+    }
+    &:after {
+        transform: translateZ(0);
+        animation: spin 1s infinite linear;
+        border-top: 2px solid transparent;
+        border-right: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+        border-left: 2px solid transparent;
+        @include theme("border-left-color", $color-contrast-400);
+    }
+}
+
 .input-with-icon {
     position: relative;
     display: block;
     line-height: 1;
     input {
-        padding-left: 30px !important;
+        padding-left: 40px !important;
     }
     .select {
-        padding-right: 32px;
+        padding-right: 40px;
     }
     .icon-wrap {
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
-        width: 32px;
+        width: 42px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -5919,6 +5971,7 @@ label.text-field {
     }
     .table {
         @include border-top($color-borders);
+        @include border-bottom($color-borders);
     }
     label {
         user-select: none;

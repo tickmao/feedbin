@@ -30,11 +30,13 @@
                                 </div>
                             </div>
 
+                            <h4 class="group-header">Stats</h4>
+
                             <table class="table table-rounded">
                                 <tbody>
                                     <tr>
                                         <td>
-                                            Subscriber Since
+                                            Subscribed
                                         </td>
                                         <td>
                                             <%= subscription.created_at.to_s(:date) %>
@@ -42,7 +44,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            Last Updated
+                                            Updated
                                         </td>
                                         <td>
                                             <%= subscription.feed.try(:last_published_entry).try(:to_s, :date) || "N/A" %>
