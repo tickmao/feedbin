@@ -539,6 +539,7 @@ label {
         @include border-color($color-contrast-400);
         margin-right: 8px;
         position: relative;
+        flex-shrink: 0;
         &:before {
             $position: -5px;
             top: $position;
@@ -886,10 +887,6 @@ table {
 }
 
 
-.feed-form-wrap {
-    border-radius: 8px;
-}
-
 .description-inset {
     padding: 0;
     &.icon-email {
@@ -902,13 +899,8 @@ table {
         }
     }
     @media (max-width: $small-breakpoint) {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-}
-.settings-outer {
-    @media (max-width: $small-breakpoint) {
-        padding: 0 15px;
+        padding-left: 8px;
+        padding-right: 8px;
     }
 }
 
@@ -994,10 +986,7 @@ Structure
             background-repeat: no-repeat;
             background-position: 97% ($base-button-position + 3);
             background-size: 16px 16px;
-            $default: image-url("spinner-day.svg");
-            $dusk: image-url("spinner-sunset.svg");
-            $sunset: image-url("spinner-night.svg");
-            @include background-image((day: $default, dusk: $dusk, sunset: $sunset, midnight: $dusk));
+            @include background-image($image-spinners);
         }
     }
 }
@@ -3309,6 +3298,8 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         display: none;
         @media (max-width: $small-breakpoint) {
             display: flex;
+            top: 30px;
+            right: 8px;
         }
         .web-settings-button {
             width: 100%;
@@ -4690,6 +4681,7 @@ Settings
         width: 100%;
         display: block;
         border: none;
+        @include background-color($color-base);
         .logo {
             display: none;
         }
@@ -4705,9 +4697,9 @@ Settings
 
 .settings-nav {
     display: none;
-    @include respond-to(screen-sm) {
+	@media (min-width: 700px) {
         display: flex;
-    }
+	}
 }
 
 .nav {
@@ -4836,6 +4828,14 @@ Settings
         font-weight: bold;
         @include color($color-contrast-700);
         -webkit-font-smoothing: antialiased;
+        @media (max-width: $small-breakpoint) {
+            font-size: 24px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-right: 42px;
+        }
+
     }
     h3 {
         font-size: 18px;
@@ -4849,6 +4849,13 @@ Settings
         flex: 1;
         .last-control {
             margin-left: auto;
+        }
+        @media (max-width: $small-breakpoint) {
+            flex-direction: column;
+            .last-control {
+                margin-left: unset;
+                margin-top: 16px;
+            }
         }
     }
     .settings-inner {
@@ -4872,7 +4879,7 @@ Settings
             max-width: 700px;
             padding: 0 20px 0 37px;
             @media (max-width: $small-breakpoint) {
-                padding: 0;
+                padding: 0 8px;
             }
         }
     }
@@ -5108,18 +5115,9 @@ Settings
         }
     }
     .feed-search {
-        background-repeat: no-repeat;
         max-width: 250px;
-        display: block;
-        margin: 0;
-        padding-right: 31px;
         &.processing {
-            background-image: image-url("spinner-day.svg");
-            background-position: 96% 11px;
-            background-size: 16px 16px;
-        }
-        @media (max-width: $small-breakpoint) {
-            max-width: 100%
+            background-image: none;
         }
     }
     .feed-controls-wrap {
@@ -5134,8 +5132,7 @@ Settings
         @include border($color-borders);
         padding: 16px;
         @media (max-width: $small-breakpoint) {
-            padding-left: 15px;
-            padding-right: 15px;
+            padding: 16px 0;
             border-radius: 0;
             border-left: none;
             border-right: none;
@@ -5146,15 +5143,24 @@ Settings
         @include background-color($color-base);
         border-top: none;
         padding: 16px;
+        @media (max-width: $small-breakpoint) {
+            padding: 16px 0;
+            border-left: none;
+            border-right: none;
+        }
     }
     .feed-actions {
         flex-grow: 1;
-        display: flex;
-        align-items: center;
+        .checkbox {
+            flex-shrink: 0;
+        }
     }
     .select-all-wrap, .feed-actions {
         .checkbox input {
             margin-right: 16px !important;
+            @media (max-width: $small-breakpoint) {
+                margin-right: 8px !important;
+            }
         }
     }
     .feed-dropdown {
@@ -5407,11 +5413,13 @@ Settings
             padding: 0;
         }
         .feeds-wrap {
-            display: flex;
             position: relative;
         }
         .checkbox-wrap {
-            flex-shrink: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
             display: flex;
             align-items: flex-start;
             padding-top: 14px;
@@ -5425,6 +5433,12 @@ Settings
             input {
                 z-index: 10;
             }
+            @media (max-width: $small-breakpoint) {
+                width: 22px;
+                .feeds-checkbox {
+                    margin: 0 0 0 3px !important;
+                }
+            }
         }
         .subscription-link {
             display: flex;
@@ -5433,14 +5447,20 @@ Settings
             @include color($color-contrast-700);
             padding: 13px 16px 13px 8px;
             align-items: center;
+            margin-left: 40px;
             &:hover {
                 text-decoration: none;
+            }
+            @media (max-width: $small-breakpoint) {
+                margin-left: 22px;
+                padding-right: 0;
             }
         }
         .subscription-data-wrap {
             display: flex;
             min-width: 0;
             flex-direction: column;
+            margin-right: 16px;
         }
         .subscription-data {
             display: flex;
@@ -5450,25 +5470,8 @@ Settings
         .subscription-controls {
             display: flex;
             align-items: center;
-            background-size: 12px 18px;
-            width: 170px;
             justify-content: flex-end;
-            .tags {
-                text-align: right;
-                font-size: 12px;
-                @include color($color-contrast-500);
-                display: block;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                max-width: 100%;
-                white-space: nowrap;
-                margin-right: 20px;
-                margin-right: 15px;
-                @include background-color($color-contrast-100);
-                padding: 5px 12px;
-                border-radius: 15px;
-                font-weight: bold;
-            }
+            flex-shrink: 0;
             svg {
                 @include fill($color-contrast-400);
                 transform: scaleX(-1);
@@ -5511,6 +5514,7 @@ Settings
             @include color($color-contrast-400);
         }
         .subscription-meta {
+            min-width: 0;
             margin-left: 28px;
             display: flex;
             .feed-url-wrap {
@@ -5518,6 +5522,7 @@ Settings
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
+                flex-shrink: 1;
             }
         }
         .canvas-wrap {
@@ -5800,10 +5805,18 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
         transform: rotate(360deg);
     }
 }
-.spinner-icon {
-    height: 16px;
-    width: 16px;
+.spinner-container {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.spinner {
+    $size: 16px;
+    height: $size;
+    width: $size;
     position: relative;
+    display: block;
     &:before, &:after {
         position: absolute;
         top: 0;
@@ -5813,8 +5826,8 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
         border-radius: 50%;
         display: block;
         content: "";
-        height: 16px;
-        width: 16px;
+        height: $size;
+        width: $size;
     }
     &:before {
         border: 2px solid transparent;
@@ -5829,6 +5842,16 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
         border-left: 2px solid transparent;
         @include theme("border-left-color", $color-contrast-400);
     }
+    &.large {
+        $size: 32px;
+        height: $size;
+        width: $size;
+        &:before, &:after {
+            border-width: 4px;
+            height: $size;
+            width: $size;
+        }
+    }
 }
 
 .input-with-icon {
@@ -5837,6 +5860,9 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     line-height: 1;
     input {
         padding-left: 40px !important;
+    }
+    &.both-sides input {
+        padding-right: 40px !important;
     }
     .select {
         padding-right: 40px;
@@ -5859,6 +5885,13 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
     svg {
         @include fill($color-icons);
     }
+
+    input + .icon-wrap + .icon-wrap .spinner {
+        display: none;
+    }
+    input.processing + .icon-wrap + .icon-wrap .spinner {
+        display: block;
+    }
     input + .icon-wrap svg {
         @include fill($color-contrast-400);
     }
@@ -5877,6 +5910,13 @@ input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
             @include fill($color-disabled-foreground);
         }
     }
+    @media (max-width: $small-breakpoint) {
+        input, select {
+            width: 100%;
+            max-width: 100% !important;
+        }
+    }
+
 }
 
 label.text-field {
@@ -6507,10 +6547,10 @@ Buttons
 Link Viewer
 ------------------------------------------------------------------------------*/
 .placeholder-content h1:empty, .placeholder-content p:empty {
-    @include background($color-contrast-400);
+    @include background($color-contrast-300);
 }
 .placeholder-content p:empty {
-    height: 14px;
+    height: 12px;
 }
 .placeholder-content p:nth-child(2n) {
     width: 90%;
@@ -6520,12 +6560,6 @@ Link Viewer
 }
 .placeholder-content p:last-child {
     width: 30%;
-}
-.spinner {
-    height: 50px;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    @include background-image($image-spinners);
 }
 
 .view-link-error-container {

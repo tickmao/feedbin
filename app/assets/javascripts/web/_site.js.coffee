@@ -327,6 +327,7 @@ $.extend feedbin,
       feedbin.drawBarChart(line, element.data('values'), element.data('stroke'))
       feedbin.drawBarChartFill(fill, element.data('values'), element.css("backgroundColor"))
     $('.canvas-wrap').removeClass('hidden')
+
   replaceModal: (target, body) ->
     modal = $(".#{target}")
     placeholderHeight = modal.find('.modal-dialog').outerHeight()
@@ -2187,12 +2188,6 @@ $.extend feedbin,
     selectCategory: ->
       $(document).on 'click', '[data-behavior~=selected_category]', (event) ->
         $(@).find('[data-behavior~=categories]').toggleClass('hide')
-
-    resizeGraph: ->
-      if $("[data-behavior~=resize_graph]").length
-        $(window).on 'window:throttledResize', () ->
-          $('[data-behavior~=resize_graph]').each ()->
-            feedbin.drawBarChart(@, $(@).data('values'))
 
     settingsCheckbox: ->
       $(document).on 'change', '[data-behavior~=auto_submit]', (event) ->
