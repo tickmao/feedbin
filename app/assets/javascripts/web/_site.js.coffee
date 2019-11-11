@@ -2438,6 +2438,7 @@ $.extend feedbin,
     showApp: ->
       $('.app-wrap').addClass('show')
       $('.loading-app').addClass('hide')
+      $('.feeds').addClass('show')
 
     jumpTo: ->
       $(document).on 'submit', '[data-behavior~=jump_search]', (event) ->
