@@ -4,7 +4,7 @@
         <%= form_tag settings_subscriptions_path, method: :get, remote: true, class: "feed-settings", data: {behavior: "spinner"} do %>
             <div class="toolbar">
                 <span class="input-with-icon both-sides">
-                    <input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" />
+                    <span class="input"><input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" /></span>
                     <span class="icon-wrap">
                         <%= svg_tag "icon-search" %>
                     </span>

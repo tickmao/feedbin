@@ -134,16 +134,16 @@ module ApplicationHelper
   end
 
   def toggle_switch
-    content_tag :span, class: "toggle-switch-wrap" do
-      content_tag :span, class: "toggle-switch" do
+    content_tag :span, class: "switch" do
+      content_tag :span, class: "switch-inner" do
         svg_tag "icon-check"
       end
     end
   end
 
   def radio_button_control
-    content_tag :span, class: "radio-button-wrap" do
-      content_tag :span, class: "radio-button" do
+    content_tag :span, class: "radio-button" do
+      content_tag :span, class: "radio-button-inner" do
       end
     end
   end

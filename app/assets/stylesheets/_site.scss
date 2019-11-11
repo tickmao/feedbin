@@ -224,6 +224,14 @@ $color-disabled-foreground: (
     midnight: $theme-color-midnight-400,
 );
 
+$color-control-border: (
+    debug:    color-base-light-200,
+    day:      $theme-color-400,
+    sunset:   $theme-color-sunset-400,
+    dusk:     $theme-color-dusk-500,
+    midnight: $theme-color-midnight-500,
+);
+
 
 
 /*------------------------------------------------------------------------------
@@ -305,12 +313,25 @@ body {
 }
 
 a {
-    @include color($color-selected);
+    @include color((
+        debug:    a,
+        day:      $color-accent-blue-600,
+        sunset:   $color-accent-blue-600,
+        dusk:     $theme-color-dusk-700,
+        midnight: $theme-color-midnight-700,
+    ));
     text-decoration: none;
 }
 
+$color-hover: (
+    debug:    color-hover,
+    day:      $color-accent-blue-700,
+    sunset:   $color-accent-blue-700,
+    dusk:     $theme-color-dusk-600,
+    midnight: $theme-color-midnight-600,
+);
 a:hover {
-    @include color($color-selected-hover);
+    @include color($color-hover);
     text-decoration: underline;
 }
 
@@ -428,10 +449,13 @@ textarea {
     @include font-size(16);
     max-width: 100%;
     width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
     display: block;
+}
+
+.input {
+    input {
+
+    }
 }
 
 textarea,
@@ -451,20 +475,32 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
     @include form-control;
-    @include border-color(transparent);
-    @include background-color($color-contrast-200);
-    border-width: 2px;
-    border-style: solid;
+    background-color: transparent;
     padding: 10px 8px;
     display: inline-block;
     vertical-align: middle;
     border-radius: 4px;
     text-align: left;
     margin: 0;
+    position: relative;
+    border: none;
+    border: 3px solid $color-accent-blue-400;
+    &:before {
+        $position: -6px;
+        top: $position;
+        bottom: $position;
+        left: $position;
+        right: $position;
+        content: "";
+        display: block;
+        position: absolute;
+        border: 3px solid transparent;
+        border-radius: 6px;
+        pointer-events: none;
+    }
     &:focus {
         @include color(map-get($color-contrast-700, day));
         @include background-color(#FFF);
-        @include border-color($color-selected);
         outline: none;
     }
     &.small-field {
@@ -515,74 +551,102 @@ label {
     display: block;
 }
 
-.radio {
-    min-height: 20px;
-    padding-left: 20px;
-}
-
-.radio input[type="radio"] {
-    float: left;
-    margin-left: -20px;
-}
-
 .checkbox {
+    padding-left: 24px;
     $size: 16px;
     display: flex;
     align-items: center;
     input[type="checkbox"] {
-        height: $size;
-        width: $size;
-        border-radius: 3px;
-        appearance: none;
-        @include background-color($color-base-light-100);
-        border: 2px solid transparent;
-        @include border-color($color-contrast-400);
-        margin-right: 8px;
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+    }
+    label {
         position: relative;
-        flex-shrink: 0;
         &:before {
-            $position: -5px;
-            top: $position;
-            bottom: $position;
-            left: $position;
-            right: $position;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: -24px;
+            content: "";
+            height: $size;
+            width: $size;
+            @include background-color($color-contrast-200);
+            @include border-color($color-control-border);
+            border-radius: 3px;
+            border: 2px solid transparent;
+        }
+        &:after {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: -28px;
+            height: $size + 8px;
+            width: $size + 8px;
             content: "";
             display: block;
             position: absolute;
-            border: 2px solid transparent;
-            border-radius: 5px;
-            pointer-events: none;
+            border: 3px solid transparent;
+            border-radius: 7px;
         }
-        &:focus:before, &:active:before {
+    }
+    svg {
+        position: absolute;
+        left: -21px;
+        top: 50%;
+        transform: translateY(-50%);
+        @include fill(#FFF);
+        display: none;
+    }
+    :focus ~ label {
+        &:after {
             border-color: $color-accent-blue-400;
         }
-        &:checked {
+    }
+    :checked ~ label {
+        &:before {
             @include border-color(transparent);
             background-color: $color-accent-green-600;
-            background-image: image-url("icon-checkbox.svg");
-            background-position: 50%;
-            background-repeat: no-repeat;
-            background-size: 10px 7px;
         }
-        &:active {
-            @include background-color($color-base-light-200);
-            @include border-color($color-base-dark-300);
-            &:checked {
-                @include background-color($color-accent-green-700);
-                @include border-color(transparent);
-            }
-            &:focus:before {
-                border-color: $color-accent-blue-400;
-            }
-
+        svg {
+            display: block;
         }
-        &[disabled] {
+    }
+    :active ~ label {
+        &:before {
+            @include background-color($color-contrast-300);
+            @include border-color($color-contrast-600);
+        }
+        &:after {
+            border-color: $color-accent-blue-400;
+        }
+    }
+    :checked:active ~ label {
+        &:before {
+            @include background-color($color-accent-green-700);
+            @include border-color(transparent);
+        }
+        &:after {
+            border-color: $color-accent-blue-400;
+        }
+    }
+    [disabled] ~ label {
+        &:before {
             @include background-color($color-contrast-200);
             @include border-color($color-contrast-300);
         }
-        &[disabled]:checked {
+    }
+    [disabled]:checked ~ label {
+        &:before {
             @include background-color($color-contrast-300);
-            background-image: image-url("icon-checkbox-disabled.svg");
+        }
+        svg {
+            @include fill($color-base-light-200);
+        }
+    }
+    [disabled]:active ~ label {
+        &:after {
+            border-color: transparent;
         }
     }
 }
@@ -612,6 +676,182 @@ label {
 
 label select {
     margin-bottom: 0;
+}
+
+$focus-border: 3px;
+
+.switch {
+    $height: 34px;
+    $width: 53px;
+    position: absolute;
+    right: 4px;
+    top: 0;
+    bottom: 0;
+    width: 53px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .switch-inner {
+        width: 43px;
+        height: 24px;
+        display: block;
+        position: relative;
+        border-radius: 24px;
+        @include background-color($color-contrast-400);
+        &:before {
+            height: $height;
+            width: $width;
+            border-radius: $height;
+            border: $focus-border solid transparent;
+            display: block;
+            content: "";
+            z-index: 1;
+            transition: border-width .2s ease;
+            position: absolute;
+            top: -5px;
+            left: -5px;
+        }
+        &:after {
+            $size: 18px;
+            position: absolute;
+            display: block;
+            content: "";
+            height: $size;
+            width: $size;
+            border-radius: $size;
+            @include background-color($color-base-light-100);
+            top: 3px;
+            left: 3px;
+        }
+        &:after {
+            z-index: 2;
+            transition: transform .2s ease;
+            opacity: 1;
+        }
+        svg {
+            position: absolute;
+            transition: transform .2s ease, opacity .3s ease;
+            top: 9px;
+            left: 7px;
+            z-index: 3;
+            opacity: 0;
+            fill: $color-accent-green-600;
+        }
+    }
+    .modal & {
+        right: 24px;
+        @media (max-width: $small-breakpoint) {
+            right: 16px;
+        }
+    }
+}
+label .switch-inner {
+    :checked ~ & {
+        @include background-color($color-accent-green-600);
+        &:after, svg {
+            transform: translateX(19px);
+        }
+        &:after {
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            @include background-color(#FFF);
+        }
+        svg {
+            opacity: 1;
+        }
+    }
+    :focus ~ &, :active ~ & {
+        &:before {
+            border-color: $color-accent-blue-400;
+        }
+    }
+    :active ~ & {
+        &:after {
+            @include background-color(#FFF);
+        }
+    }
+    :checked:active ~ & {
+        @include background-color($color-accent-green-700);
+        svg {
+            @include fill($color-accent-green-700);
+        }
+    }
+}
+.radio-button {
+    $radio-button-size: 28px;
+    position: absolute;
+    right: 7px;
+    top: 0;
+    bottom: 0;
+    width: $radio-button-size;
+    display: flex;
+    align-items: center;
+    .radio-button-inner {
+        border-radius: 50%;
+        height: $radio-button-size;
+        width: $radio-button-size;
+        border: 4px solid transparent;
+        &:before {
+            $size: 18px;
+            position: absolute;
+            display: block;
+            content: "";
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: $size;
+            height: $size;
+            width: $size;
+            border: 2px solid transparent;
+            z-index: 1;
+        }
+        &:after {
+            $size: 8px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+            content: "";
+            border-radius: $size;
+            height: $size;
+            width: $size;
+            z-index: 2;
+        }
+    }
+}
+label .radio-button .radio-button-inner {
+    &:before {
+        @include border-color($color-control-border);
+        @include background-color($color-contrast-200);
+    }
+    :checked ~ & {
+        &:before {
+            @include border-color($color-accent-blue-600);
+            background-color: transparent;
+        }
+        &:after {
+            @include background-color($color-accent-blue-600);
+        }
+    }
+    :active ~ & {
+        @include border-color($color-accent-blue-400);
+        &:before {
+            @include background-color($color-contrast-300);
+            @include border-color($color-contrast-600);
+        }
+    }
+    :focus ~ & {
+        @include border-color($color-accent-blue-400);
+    }
+    :checked:active ~ & {
+        &:before {
+            @include border-color($color-accent-blue-600);
+            background-color: transparent;
+        }
+        &:after {
+            @include background-color($color-accent-blue-600);
+        }
+    }
 }
 
 .field_with_errors input,
@@ -4112,12 +4352,9 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
 .entry-final-content a, .tweet-text a, .micropost-text a, .modal-content .content-styles a {
     text-decoration: underline;
     -webkit-tap-highlight-color: rgba(0,0,0,0.2);
-    @include color((day: black, dusk: white, sunset: black, midnight: white));
-    &:hover, &:active {
-        @include color((day: $color-accent-blue-600, dusk: $theme-color-dusk-500, sunset: $color-accent-blue-600, midnight: $theme-color-midnight-500));
-    }
-    .touch &:hover {
-        @include color((day: black, dusk: white, sunset: black, midnight: white), $root: true);
+    @include color($color-contrast-700);
+    &:hover {
+        @include color($color-hover);
     }
 }
 
@@ -5415,28 +5652,53 @@ Settings
         .feeds-wrap {
             position: relative;
         }
-        .checkbox-wrap {
+        .checkbox {
             position: absolute;
             top: 0;
             bottom: 0;
             left: 0;
             display: flex;
             align-items: flex-start;
-            padding-top: 14px;
+            padding: 0;
             left: 0;
             top: 0;
             bottom: 0;
             width: 40px;
-            .feeds-checkbox {
-                margin: 0 0 0 16px !important;
-            }
-            input {
+            label {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                &:before {
+                    top: 22px;
+                    left: 16px;
+                }
+                &:after {
+                    top: 22px;
+                    left: 12px;
+                }
+                svg {
+                    top: 22px;
+                    left: 19px;
+                }
                 z-index: 10;
             }
             @media (max-width: $small-breakpoint) {
-                width: 22px;
-                .feeds-checkbox {
-                    margin: 0 0 0 3px !important;
+                width: 24px;
+                label {
+                    &:before {
+                        top: 22px;
+                        left: 4px;
+                    }
+                    &:after {
+                        top: 22px;
+                        left: 0px;
+                    }
+                    svg {
+                        top: 22px;
+                        left: 7px;
+                    }
                 }
             }
         }
@@ -5616,173 +5878,7 @@ Settings
         color: #fff;
     }
 }
-input[type="checkbox"] + label .toggle-switch-wrap {
-    position: absolute;
-    right: 4px;
-    top: 0;
-    bottom: 0;
-    width: 43px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .toggle-switch {
-        width: 43px;
-        height: 24px;
-        display: block;
-        position: relative;
-        border-radius: 24px;
-        @include background-color($color-contrast-400);
-        &:before {
-            $size: 32px;
-            height: $size;
-            width: $size;
-            border-radius: $size;
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            display: block;
-            content: "";
-            z-index: 1;
-            transition: transform .2s ease;
-        }
-        &:after {
-            $size: 18px;
-            position: absolute;
-            display: block;
-            content: "";
-            height: $size;
-            width: $size;
-            border-radius: $size;
-            @include background-color((
-                debug:    color-contrast-inverted-100,
-                day:      $theme-color-100,
-                sunset:   $theme-color-sunset-100,
-                dusk:     $theme-color-dusk-600,
-                midnight: $theme-color-midnight-600,
-            ));
-            top: 3px;
-            left: 3px;
-        }
-        &:after {
-            z-index: 2;
-            transition: transform .2s ease;
-            opacity: 1;
-        }
-        svg {
-            position: absolute;
-            transition: transform .2s ease, opacity .3s ease;
-            top: 9px;
-            left: 7px;
-            z-index: 3;
-            opacity: 0;
-            fill: $color-accent-green-600;
-        }
-    }
-    .modal & {
-        right: 24px;
-        @media (max-width: $small-breakpoint) {
-            right: 16px;
-        }
-    }
-}
-input[type="checkbox"]:checked + label .toggle-switch {
-    @include background-color($color-accent-green-600);
-    &:before {
-        transform: translateX(19px);
-    }
-    &:after, svg {
-        transform: translateX(19px);
-    }
-    &:after {
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        @include background-color(#FFF);
-    }
-    svg {
-        opacity: 1;
-    }
-}
-input[type="checkbox"]:focus + label .toggle-switch {
-    &:before {
-        @include background-color($color-accent-blue-600);
-    }
-}
-input[type="radio"] + label .radio-button-wrap {
-    $radio-button-size: 32px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: $radio-button-size;
-    display: flex;
-    align-items: center;
-    .radio-button {
-        border-radius: $radio-button-size;
-        height: $radio-button-size;
-        width: $radio-button-size;
-        &:before {
-            $size: 18px;
-            position: absolute;
-            display: block;
-            content: "";
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: $size;
-            height: $size;
-            width: $size;
-            border: 2px solid transparent;
-            z-index: 1;
-        }
-        &:after {
-            $size: 8px;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-            content: "";
-            border-radius: $size;
-            height: $size;
-            width: $size;
-            @include background-color($color-base);
-            z-index: 2;
-        }
-    }
-}
-input[type="radio"] + label .radio-button-wrap .radio-button {
-    &:before {
-        @include border-color($color-contrast-400);
-        background-color: transparent;
-    }
-}
-input[type="radio"]:checked + label .radio-button-wrap .radio-button {
-    &:before {
-        @include border-color($color-accent-blue-600);
-        background-color: transparent;
-    }
-    &:after {
-        @include background-color($color-accent-blue-600);
-    }
-}
-input[type="radio"]:focus + label .radio-button-wrap .radio-button {
-    @include background-color($color-accent-blue-600);
-    &:before {
-        @include border-color(white);
-        background-color: transparent;
-    }
-    &:after {
-        @include background-color(transparent);
-    }
-}
-input[type="radio"]:checked:focus + label .radio-button-wrap .radio-button {
-    &:before {
-        @include border-color(white);
-        background-color: transparent;
-    }
-    &:after {
-        @include background-color(white);
-    }
-}
+
 .control-group-description, .control-description {
     padding-top: 0;
     @include font-size(14px);
@@ -5945,6 +6041,7 @@ label.text-field {
         @include form-control;
         padding: 16px 0;
         margin: 0;
+        text-decoration: none;
     }
     li > a {
         @include color($color-accent-blue-600);
@@ -6015,9 +6112,6 @@ label.text-field {
     }
     label {
         user-select: none;
-    }
-    a:hover {
-        text-decoration: none;
     }
     textarea {
         line-height: 1.2;
@@ -8891,7 +8985,7 @@ button.close {
                 top: -9999px !important;
                 left: -9999px !important;
             }
-            .toggle-switch {
+            .switch-inner {
                 position: relative;
                 right: auto;
                 top: auto;
@@ -8911,7 +9005,7 @@ button.close {
                 top: -9999px !important;
                 left: -9999px !important;
             }
-            .toggle-switch {
+            .switch-inner {
                 margin-left: 15px;
                 position: relative;
                 display: inline-block;

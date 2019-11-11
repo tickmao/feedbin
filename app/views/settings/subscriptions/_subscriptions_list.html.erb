@@ -5,10 +5,11 @@
         <div class="feed-controls-wrap">
             <div class="feed-controls">
                 <div class="feed-actions toolbar">
-                    <label class="checkbox">
-                        <input type="checkbox" class="feeds-checkbox" data-behavior="toggle_checked" />
-                        Select all
-                    </label>
+
+                    <div class="checkbox">
+                        <input type="checkbox" class="feeds-checkbox" data-behavior="toggle_checked" id="select_all_feeds" />
+                        <label for="select_all_feeds"><%= svg_tag "icon-check" %>Select all</label>
+                    </div>
 
                     <span class="input-with-icon last-control">
                         <%= select_tag :operation, options_for_select([["Actions", nil], ["Unsubscribe", "unsubscribe"], ["Show edits on articles", "show_updates"], ["Hide edits on articles", "hide_updates"], ["Mute Feed", "mute"], ["Unmute Feed", "unmute"]]), class: "select", disabled: true, data: {behavior: "feed_actions enable_control_target"} %>
@@ -22,14 +23,18 @@
             </div>
             <% if @subscriptions.total_entries > @subscriptions.count  %>
                 <div class="select-all-wrap hide" data-behavior="toggle_checked_hidden">
-                    <label class="checkbox">
-                        <%= check_box_tag "include_all", 1, false, data: {behavior: "include_all"} %>
-                        <% if params[:q] %>
-                            Include all <%= number_with_delimiter(@subscriptions.total_entries) %> <%= "feed".pluralize(@subscriptions.total_entries) %> matching this search.
-                        <% else %>
-                            Include all <%= number_with_delimiter(@subscriptions.total_entries) %> <%= "feed".pluralize(@subscriptions.total_entries) %>.
-                        <% end %>
-                    </label>
+
+                    <div class="checkbox">
+                        <%= check_box_tag "include_all", 1, false, data: {behavior: "include_all"}, id: "include_all_feeds" %>
+                        <label for="include_all_feeds">
+                            <%= svg_tag "icon-check" %>
+                            <% if params[:q] %>
+                                Include all <%= number_with_delimiter(@subscriptions.total_entries) %> <%= "feed".pluralize(@subscriptions.total_entries) %> matching this search.
+                            <% else %>
+                                Include all <%= number_with_delimiter(@subscriptions.total_entries) %> <%= "feed".pluralize(@subscriptions.total_entries) %>.
+                            <% end %>
+                        </label>
+                    </div>
                 </div>
             <% end %>
         </div>
@@ -39,9 +44,12 @@
                     <%= fields_for "subscriptions[]", subscription do |f| %>
                         <li class="feeds-wrap <%= subscription_presenter.mute_class %>">
                             <i class="status-flag icon-muted"></i>
-                            <label class="checkbox-wrap checkbox">
-                                <%= check_box_tag "subscription_ids[]", subscription.id, false, id: "subscription_checkbox_#{subscription.id}", class: "checkbox feeds-checkbox", data: {behavior: "enable_control"} %>
-                            </label>
+
+                            <div class="checkbox">
+                                <%= check_box_tag "subscription_ids[]", subscription.id, false, id: "subscription_checkbox_#{subscription.id}", data: {behavior: "enable_control"} %>
+                                <label for="<%= "subscription_checkbox_#{subscription.id}" %>"><%= svg_tag "icon-check" %></label>
+                            </div>
+
                             <%= link_to edit_settings_subscription_path(subscription), class: "subscription-link" do %>
                                 <span class="subscription-data-wrap">
                                     <span class="subscription-data">
@@ -80,5 +88,5 @@
     <%= will_paginate @subscriptions, previous_label: "Previous", next_label: "Next" %>
 </div>
 <script>
-$('.last-updated-wrap').removeClass('hide')
+$('.last-updated-wrap').removeClass('hide');
 </script>
