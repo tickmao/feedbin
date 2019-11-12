@@ -479,28 +479,18 @@ input[type="color"],
 .uneditable-input {
     font-size: 16px;
     @include background-color($color-contrast-200);
-    padding: 8px 8px;
-    border-radius: 8px;
-    border: 3px solid transparent;
-    @include border-color($color-base);
-    @include box-shadow(transparent, inset 0 0 0 1px);
+    padding: 7px 8px;
+    border-radius: 4px;
+    border: none;
     text-align: left;
     margin: 0;
     position: relative;
     line-height: normal;
-    @include box-shadow($color-base, inset 0 0 0 1px);
+    @include color($color-contrast-600);
     &:focus {
         @include color(map-get($color-contrast-700, day));
         @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
         outline: none;
-        border-color: $color-accent-blue-400;
-        border-radius: 8px;
-        background:
-            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M0 0h4v4H0z"/><path fill="#{$theme-color-dusk-700}" d="M0 4a4 4 0 0 1 4-4v4H0z"/></svg>') left 1px top 1px no-repeat,
-            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M4 0v4H0V0z"/><path fill="#{$theme-color-dusk-700}" d="M0 0a4 4 0 0 1 4 4H0V0z"/></svg>') right 1px top 1px no-repeat,
-            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M4 4H0V0h4z"/><path fill="#{$theme-color-dusk-700}" d="M4 0a4 4 0 0 1-4 4V0h4z"/></svg>') right 1px bottom 1px no-repeat,
-            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M0 4V0h4v4z"/><path fill="#{$theme-color-dusk-700}" d="M4 4a4 4 0 0 1-4-4h4v4z"/></svg>') left 1px bottom 1px no-repeat
-        ;
     }
     &.small-field {
         max-width: 340px;
@@ -513,20 +503,16 @@ input[type="color"],
     &:-webkit-autofill:hover {
         -webkit-text-fill-color: map-get($color-contrast-700, day);
         -webkit-box-shadow: none !important;
-        transition: none;
-        border: 3px solid transparent;
+        transition: none !important;
+        border: none !important;
     }
     &:-webkit-autofill:focus,
     &:-webkit-autofill:focus,
     &:-webkit-autofill:focus {
-        @include box-shadow($color-base, inset 0 0 0 1px, $extra: !important);
-        border-color: $color-accent-blue-400;
-        background-color: transparent !important;
-    }
-    &:-webkit-autofill:first-line {
-        color: #797979;
-        background-color: transparent !important;
-        transition-delay: 3600s !important;
+        -webkit-text-fill-color: map-get($color-contrast-700, day);
+        -webkit-box-shadow: none !important;
+        transition: none !important;
+        border: none !important;
     }
 }
 
@@ -681,17 +667,12 @@ label {
     font-size: 16px;
     line-height: normal;
     padding: 7px 8px;
-    border-radius: 6px;
-    border: 3px solid transparent;
-    @include border-color($color-base);
-    @include box-shadow(transparent, inset 0 0 0 1px);
+    border-radius: 4px;
+    border: none;
     &:focus {
         @include color(map-get($color-contrast-700, day));
         @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
         outline: none;
-        border-color: $color-accent-blue-400;
-        border-radius: 4px;
-        @include box-shadow($color-base, inset 0 0 0 1px);
     }
     &[disabled] {
         @include background-color($color-contrast-300);
@@ -705,13 +686,11 @@ label select {
 }
 
 .switch {
-    $height: 34px;
-    $width: 53px;
     position: absolute;
-    right: 4px;
+    right: 0;
     top: 0;
     bottom: 0;
-    width: 53px;
+    width: 43px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -723,9 +702,9 @@ label select {
         border-radius: 24px;
         @include background-color($color-contrast-400);
         &:before {
-            height: $height;
-            width: $width;
-            border-radius: $height;
+            height: 34px;
+            width: 53px;
+            border-radius: 34px;
             border: 4px solid transparent;
             display: block;
             content: "";
@@ -754,18 +733,12 @@ label select {
         }
         svg {
             position: absolute;
-            transition: transform .2s ease, opacity .3s ease;
+            transition: transform .2s ease, opacity .3s ease !important;
             top: 9px;
             left: 7px;
             z-index: 3;
             opacity: 0;
             fill: $color-accent-green-600;
-        }
-    }
-    .modal & {
-        right: 24px;
-        @media (max-width: $small-breakpoint) {
-            right: 16px;
         }
     }
 }
@@ -801,9 +774,9 @@ label .switch-inner {
     }
 }
 .radio-button {
-    $radio-button-size: 28px;
+    $radio-button-size: 18px;
     position: absolute;
-    right: 7px;
+    right: 3px;
     top: 0;
     bottom: 0;
     width: $radio-button-size;
@@ -811,22 +784,22 @@ label .switch-inner {
     align-items: center;
     .radio-button-inner {
         border-radius: 50%;
+        border: 2px solid transparent;
         height: $radio-button-size;
         width: $radio-button-size;
-        border: 4px solid transparent;
         &:before {
-            $size: 18px;
+            $size: 28px;
             position: absolute;
             display: block;
             content: "";
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            border-radius: $size;
+            border-radius: 50%;
             height: $size;
             width: $size;
-            border: 2px solid transparent;
             z-index: 1;
+            border: 4px solid transparent;
         }
         &:after {
             $size: 8px;
@@ -844,38 +817,127 @@ label .switch-inner {
     }
 }
 label .radio-button .radio-button-inner {
-    &:before {
-        @include border-color($color-control-border);
-        @include background-color($color-contrast-200);
-    }
+    @include border-color($color-control-border);
+    @include background-color($color-contrast-200);
     :checked ~ & {
-        &:before {
-            @include border-color($color-accent-blue-600);
-            background-color: transparent;
-        }
+        @include border-color($color-accent-green-600);
+        background-color: transparent;
         &:after {
-            @include background-color($color-accent-blue-600);
+            @include background-color($color-accent-green-600);
         }
     }
     :active ~ & {
-        @include border-color($color-accent-blue-400);
+        @include background-color($color-contrast-300);
+        @include border-color($color-contrast-600);
         &:before {
-            @include background-color($color-contrast-300);
-            @include border-color($color-contrast-600);
+            @include border-color($color-accent-blue-400);
         }
     }
     :focus ~ & {
-        @include border-color($color-accent-blue-400);
+        &:before {
+            @include border-color($color-accent-blue-400);
+        }
     }
     :checked:active ~ & {
-        &:before {
-            @include border-color($color-accent-blue-600);
-            background-color: transparent;
-        }
+        @include border-color($color-accent-green-600);
+        background-color: transparent;
         &:after {
-            @include background-color($color-accent-blue-600);
+            @include background-color($color-accent-green-600);
         }
     }
+}
+
+.input-group {
+    position: relative;
+    display: flex;
+    line-height: 1;
+    .input-helper {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        bottom: -5px;
+        left: -5px;
+        border: 4px solid transparent;
+        border-radius: 9px;
+        pointer-events: none;
+    }
+    &.accessory-left {
+        input {
+            padding-left: 32px !important;
+        }
+    }
+    &.accessory-right {
+        input {
+            padding-right: 32px !important;
+        }
+    }
+    .select {
+        padding-right: 32px;
+    }
+    .accessory {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+        &.right {
+            right: 0;
+            left: auto;
+        }
+    }
+    svg {
+        @include fill($color-icons);
+    }
+    input, select {
+        flex: 1;
+    }
+    input ~ .accessory.right .spinner {
+        display: none;
+    }
+    input.processing ~ .accessory.right .spinner {
+        display: block;
+    }
+    input:focus.processing ~ .accessory.right .spinner {
+        &:before {
+            @include border-color(map-merge($color-contrast-300, (debug: spinner-bg, dusk: $theme-color-dusk-500, midnight: $theme-color-midnight-500)));
+        }
+        &:after {
+            @include theme("border-left-color", map-merge($color-contrast-400, (debug: spinner-foreground, dusk: $theme-color-dusk-200, midnight: $theme-color-midnight-200)));
+        }
+    }
+    input ~ .accessory svg {
+        @include fill($color-contrast-400);
+    }
+    select ~ .accessory svg {
+        @include fill($color-contrast-600);
+    }
+    input:focus ~ .input-helper,
+    select:focus ~ .input-helper {
+        border-color: $color-accent-blue-400;
+    }
+    input:focus ~ .accessory,
+    select:focus ~ .accessory {
+        svg {
+            @include fill($color-selected);
+        }
+    }
+    input[disabled] ~ .accessory,
+    select[disabled] ~ .accessory {
+        svg {
+            @include fill($color-disabled-foreground);
+        }
+    }
+    @media (max-width: $small-breakpoint) {
+        input, select {
+            width: 100%;
+            max-width: 100% !important;
+        }
+    }
+
 }
 
 .field_with_errors input,
@@ -5220,6 +5282,9 @@ Settings
     h4.group-header {
         font-size: 16px;
         @include color($color-contrast-700);
+        .modal & {
+            margin: 0;
+        }
     }
     h3.box-header {
         margin: 0;
@@ -5541,7 +5606,7 @@ Settings
             .graph-wrap {
                 flex: 1 1 auto;
                 padding-top: 25%;
-                @include border-bottom($color-contrast-400);
+                @include border-bottom($color-borders);
                 margin-right: 5px;
                 position: relative;
                 .graph-lines {
@@ -5956,71 +6021,6 @@ Settings
     }
 }
 
-.input-with-icon {
-    position: relative;
-    display: block;
-    line-height: 1;
-    input {
-        padding-left: 40px !important;
-    }
-    &.both-sides input {
-        padding-right: 40px !important;
-    }
-    .select {
-        padding-right: 40px;
-    }
-    .icon-wrap {
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 42px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-        &.right {
-            right: 0;
-            left: auto;
-        }
-    }
-    svg {
-        @include fill($color-icons);
-    }
-
-    input + .icon-wrap + .icon-wrap .spinner {
-        display: none;
-    }
-    input.processing + .icon-wrap + .icon-wrap .spinner {
-        display: block;
-    }
-    input + .icon-wrap svg {
-        @include fill($color-contrast-400);
-    }
-    select + .icon-wrap svg {
-        @include fill($color-contrast-600);
-    }
-    input:focus + .icon-wrap,
-    select:focus + .icon-wrap {
-        svg {
-            @include fill($color-selected);
-        }
-    }
-    input[disabled] + .icon-wrap,
-    select[disabled] + .icon-wrap {
-        svg {
-            @include fill($color-disabled-foreground);
-        }
-    }
-    @media (max-width: $small-breakpoint) {
-        input, select {
-            width: 100%;
-            max-width: 100% !important;
-        }
-    }
-
-}
-
 label.text-field {
     display: block;
     font-weight: bold;
@@ -6038,7 +6038,7 @@ label.text-field {
     padding: 0;
     margin-bottom: 32px;
     @include border-bottom($color-borders);
-    &.no-border {
+    &.no-border, .modal & {
         @include border-bottom(transparent);
     }
     li > label,
@@ -6057,11 +6057,11 @@ label.text-field {
         padding: 0;
         position: relative;
         @include border-top($color-borders);
-        &.no-border {
+        &.no-border, .modal & {
             @include border-top(transparent);
         }
         &.text {
-            padding: 4px 0;
+            padding: 9px 0;
         }
         &.card-meta {
             display: flex;
@@ -6447,7 +6447,7 @@ Icons
 Buttons
 ------------------------------------------------------------------------------*/
 .button {
-    appearance: none !important;
+    appearance: none;
     @include background($color-selected);
     border: none;
     margin: 0;
@@ -6460,27 +6460,41 @@ Buttons
     @include border($color-selected);
     border-width: 2px;
     border-radius: 4px;
-    padding: 7px;
-    min-width: 90px;
+    padding: 5px 8px;
+    min-width: 96px;
     display: inline-block;
     text-align: center;
+    cursor: pointer;
+    position: relative;
+    line-height: 1.3;
+    &:before {
+        content: "";
+        display: block;
+        border: 4px solid transparent;
+        position: absolute;
+        pointer-events: none;
+        top: -7px;
+        right: -7px;
+        bottom: -7px;
+        left: -7px;
+        border-radius: 9px;
+    }
     &:hover {
         text-decoration: none;
+    }
+    &:active {
         @include border-color($color-selected-hover);
         @include background-color($color-selected-hover);
         @include color(#FFF);
         cursor: pointer;
     }
-    &:active {
-        text-decoration: none;
-        @include border-color($color-selected-active);
-        @include background-color($color-selected-active);
-    }
     &:focus {
-        box-shadow: $focus-glow;
+        &:before {
+            border-color: $color-accent-blue-400;
+        }
     }
     &[disabled], &.disabled {
-        @include color($color-contrast-200);
+        @include color($color-base-light-200);
         @include border-color($color-contrast-300);
         @include background-color($color-contrast-300);
         cursor: default;
@@ -6497,20 +6511,14 @@ Buttons
 .button-secondary {
     @include background-color(transparent);
     @include color($color-contrast-600);
-    @include border-color($color-contrast-600);
-    &:hover:not([disabled]) {
-        @include background-color(transparent);
+    @include border-color($color-contrast-300);
+    &:hover {
         @include color($color-contrast-600);
-        .theme-dusk &, .theme-midnight & {
-            color: #fff;
-        }
     }
-    &:active {
+    &:active:not([disabled]) {
         @include background-color(transparent);
-        @include color($color-selected-active);
-        .theme-dusk &, .theme-midnight & {
-            color: #fff;
-        }
+        @include color($color-contrast-700);
+        @include border-color($color-contrast-600);
     }
 }
 
@@ -6520,7 +6528,7 @@ Buttons
     @include border-color(transparent);
     &:hover:not([disabled]) {
         @include background-color(transparent);
-        @include color($color-contrast-600);
+        @include color($color-contrast-700);
         .theme-dusk &, .theme-midnight & {
             color: #fff;
         }
@@ -9404,7 +9412,7 @@ button.close {
 }
 
 
-.modal-purpose-generic, .modal-purpose-subscribe, .modal-purpose-edit, .modal-purpose-search {
+.modal-purpose-generic, .modal-purpose-subscribe, .modal-purpose-search {
     .modal-body {
         padding: 0;
     }
@@ -9439,7 +9447,6 @@ button.close {
 .modal-purpose-edit {
     .modal-footer {
         margin-top: -30px;
-        border-color: transparent;
         .modal-bottom & {
             @include border-color($color-borders);
         }
@@ -9470,7 +9477,7 @@ button.close {
         }
     }
     &.loaded {
-        .modal-content * {
+        .modal-content *:not(.icon-check) {
             opacity: 1;
         }
     }
@@ -9493,11 +9500,6 @@ button.close {
         }
         &:empty {
             border-bottom: none;
-        }
-        .text {
-            padding-left: 15px;
-            padding-right: 15px;
-            margin-bottom: 10px;
         }
         &.tags-target {
             border-bottom: none;

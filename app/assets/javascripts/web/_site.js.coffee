@@ -2402,25 +2402,6 @@ $.extend feedbin,
 
         event.preventDefault()
 
-    tagEditor: ->
-      fieldContent = """
-      <li data-behavior="remove_target" class="text no-border">
-        <input placeholder="Tag" type="text" name="tag_name[]">
-        <button class="icon-delete unstyled" data-behavior="remove_element" type="button">&times;</button>
-      </li>
-      """
-
-      $(document).on 'click', '[data-behavior~=add_tag]', (event) ->
-        field = $(fieldContent)
-        $("[data-behavior~=tags_target]").prepend(field)
-        field.find("input").focus()
-        event.preventDefault()
-
-      $(document).on 'click', '[data-behavior~=remove_element]', (event) ->
-        target = $(@).closest("[data-behavior~=remove_target]")
-        target.remove()
-        event.preventDefault()
-
     disableSubmit: ->
       $(document).on 'submit', '[data-behavior~=disable_on_submit]', (event) ->
         $('[type=submit]', @).attr('disabled', 'disabled')

@@ -8,7 +8,7 @@
                             <div class="pill subscription-pill">
                                 <%= subscription_presenter.favicon(subscription.feed) %>
                                 <h4><%= subscription.title %></h4>
-                                <button class="button button-secondary">Edit</button>
+                                <%= link_to "Edit", edit_subscription_path(subscription.feed), remote: true, class: "button button-secondary", data: {behavior: "open_settings_modal feed_settings", modal_target: "edit"} %>
                             </div>
                             <div class="chart-wrap">
                                 <div class="graph-wrap">

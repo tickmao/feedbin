@@ -3,18 +3,20 @@
         <h2>Subscriptions</h2>
         <%= form_tag settings_subscriptions_path, method: :get, remote: true, class: "feed-settings", data: {behavior: "spinner"} do %>
             <div class="toolbar">
-                <span class="input-with-icon both-sides">
+                <span class="input-group accessory-right accessory-left">
                     <input type="search" class="feed-search" placeholder="Search Feeds" data-behavior="autosubmit" name="q" value="<%= params[:q] %>" />
-                    <span class="icon-wrap">
+                    <span class="input-helper"></span>
+                    <span class="accessory">
                         <%= svg_tag "icon-search" %>
                     </span>
-                    <span class="icon-wrap right">
+                    <span class="accessory right">
                         <span class="spinner"></span>
                     </span>
                 </span>
-                <span class="input-with-icon last-control">
+                <span class="input-group last-control">
                     <%= select_tag :sort, options_for_select([["Sort by Name", "name"], ["Sort by Last Updated", "updated"], ["Sort by Volume", "volume"]], params[:sort]), class: "select", data: {behavior: "autosubmit"} %>
-                    <span class="icon-wrap right">
+                    <span class="input-helper"></span>
+                    <span class="accessory right">
                         <%= svg_tag "icon-caret" %>
                     </span>
                 </span>
