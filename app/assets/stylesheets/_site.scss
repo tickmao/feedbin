@@ -588,14 +588,14 @@ label {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            left: -28px;
-            height: $size + 8px;
-            width: $size + 8px;
+            left: -29px;
+            height: $size + 10px;
+            width: $size + 10px;
             content: "";
             display: block;
             position: absolute;
-            border: 3px solid transparent;
-            border-radius: 7px;
+            border: 4px solid transparent;
+            border-radius: 8px;
         }
     }
     svg {
@@ -1038,7 +1038,7 @@ table {
 .pill-list {
     border-radius: 8px;
     @include border($color-borders);
-    margin: 0 0 30px 0;
+    margin: 0 0 32px 0;
     padding: 0;
     list-style: none;
     @media (max-width: $small-breakpoint) {
@@ -5747,7 +5747,7 @@ Settings
                 }
                 &:after {
                     top: 22px;
-                    left: 12px;
+                    left: 11px;
                 }
                 svg {
                     top: 22px;
@@ -6489,6 +6489,7 @@ Buttons
         cursor: pointer;
     }
     &:focus {
+        outline: none;
         &:before {
             border-color: $color-accent-blue-400;
         }
@@ -6500,6 +6501,9 @@ Buttons
         cursor: default;
         &:focus {
             box-shadow: none;
+            @include color($color-base-light-200);
+            @include border-color($color-contrast-300);
+            @include background-color($color-contrast-300);
         }
         &:hover {
             @include border-color($color-contrast-300);
@@ -6519,6 +6523,11 @@ Buttons
         @include background-color(transparent);
         @include color($color-contrast-700);
         @include border-color($color-contrast-600);
+    }
+    &[disabled], &.disabled, &[disabled]:active, &.disabled:active {
+        @include color($color-base-light-200);
+        @include border-color($color-contrast-300);
+        @include background-color($color-contrast-300);
     }
 }
 
@@ -6565,9 +6574,12 @@ Buttons
         @extend .button;
         @extend .button-secondary;
         min-width: auto;
-        padding-top: 7px;
-        padding-bottom: 7px;
+        padding: 7px 12px;
         margin-bottom: 10px;
+        margin-left: 4px;
+        &:first-child {
+            margin-left: 0;
+        }
         @media (max-width: $small-breakpoint) {
             display: none;
             &.previous_page, &.next_page {
@@ -6575,22 +6587,16 @@ Buttons
             }
         }
         &.current {
-            @include background-color($color-selected);
             font-style: normal;
-            color: #fff !important;
+            @include background-color(transparent);
+            @include color($color-contrast-700);
+            @include border-color($color-contrast-600);
         }
         &.gap {
             border: none;
             color: map-get($color-contrast-400, day) !important;
             padding-left: 7px;
             padding-right: 7px;
-        }
-        &.disabled {
-            background-color: transparent;
-            color: map-get($color-contrast-400, day) !important;
-            &:hover {
-                background-color: transparent;
-            }
         }
     }
 }
