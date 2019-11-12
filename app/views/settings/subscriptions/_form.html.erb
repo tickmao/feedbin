@@ -11,12 +11,14 @@
                                 <button class="button button-secondary">Edit</button>
                             </div>
                             <div class="chart-wrap">
-                                <div class="y-axis">
-                                    <div class="start"><%= subscription_presenter.graph_max %></div>
-                                    <div class="middle"><%= subscription_presenter.graph_mid %></div>
-                                    <div class="end">0</div>
-                                </div>
                                 <div class="graph-wrap">
+                                    <div class="graph-lines">
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
                                     <div class="graph">
                                         <% subscription_presenter.graph_bars.each do |data| %>
                                            <div style="height: <%= data.percent %>%;" title="<%= subscription_presenter.bar_title(data) %>" class="<%= subscription_presenter.bar_class(data) %>"></div>
@@ -28,11 +30,18 @@
                                         <div><%= subscription_presenter.graph_date_end %></div>
                                     </div>
                                 </div>
+                                <div class="y-axis">
+                                    <div><%= subscription_presenter.graph_quarter(4) %></div>
+                                    <div><%= subscription_presenter.graph_quarter(3) %></div>
+                                    <div><%= subscription_presenter.graph_quarter(2) %></div>
+                                    <div><%= subscription_presenter.graph_quarter(1) %></div>
+                                    <div>0</div>
+                                </div>
                             </div>
 
                             <h4 class="group-header">Stats</h4>
 
-                            <table class="table table-rounded">
+                            <table class="table table-rounded stats">
                                 <tbody>
                                     <tr>
                                         <td>

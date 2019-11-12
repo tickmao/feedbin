@@ -11,6 +11,7 @@ $audio-player-height-minimized: 54px;
 $base-button-position: 10px;
 
 /*-- Colors --*/
+$theme-color-base: #FFFFFF;
 $theme-color-100: #F5F5F7;
 $theme-color-200: #E9E9EB;
 $theme-color-300: #BDBFC3;
@@ -19,14 +20,7 @@ $theme-color-500: #656A73;
 $theme-color-600: #39404B;
 $theme-color-700: #0D1623;
 
-$theme-color-dusk-100: #2D2D2D;
-$theme-color-dusk-200: #353535;
-$theme-color-dusk-300: #4D4D4D;
-$theme-color-dusk-400: #707070;
-$theme-color-dusk-500: #9B9B9B;
-$theme-color-dusk-600: #D4D4D4;
-$theme-color-dusk-700: #ffffff;
-
+$theme-color-sunset-base: #f5f2eb;
 $theme-color-sunset-100: #EBE8E2;
 $theme-color-sunset-200: #DFDCD6;
 $theme-color-sunset-300: #B8B6B0;
@@ -35,13 +29,23 @@ $theme-color-sunset-500: #646360;
 $theme-color-sunset-600: #3B3A38;
 $theme-color-sunset-700: #191818;
 
+$theme-color-dusk-base: #262626;
+$theme-color-dusk-100: #2D2D2D;
+$theme-color-dusk-200: #353535;
+$theme-color-dusk-300: #4D4D4D;
+$theme-color-dusk-400: #707070;
+$theme-color-dusk-500: #9B9B9B;
+$theme-color-dusk-600: #D4D4D4;
+$theme-color-dusk-700: #F6F6F6;
+
+$theme-color-midnight-base: #000000;
 $theme-color-midnight-100: #141414;
 $theme-color-midnight-200: #242424;
 $theme-color-midnight-300: #3B3B3B;
 $theme-color-midnight-400: #595959;
 $theme-color-midnight-500: #828282;
 $theme-color-midnight-600: #BABABA;
-$theme-color-midnight-700: #FFFFFF;
+$theme-color-midnight-700: #F5F5F5;
 
 $color-accent-blue-400: #619EEC;
 $color-accent-blue-600: #0867E2;
@@ -56,10 +60,10 @@ $color-accent-red-600: #BB0B2F;
 
 $color-base: (
     debug:    color-base,
-    day:      #FFFFFF,
-    sunset:   #f5f2eb,
-    dusk:     #262626,
-    midnight: #000000,
+    day:      $theme-color-base,
+    sunset:   $theme-color-sunset-base,
+    dusk:     $theme-color-dusk-base,
+    midnight: $theme-color-midnight-base,
 );
 
 $color-contrast-100: (
@@ -457,12 +461,6 @@ textarea {
     display: block;
 }
 
-.input {
-    input {
-
-    }
-}
-
 textarea,
 input[type="text"],
 input[type="password"],
@@ -479,37 +477,56 @@ input[type="search"],
 input[type="tel"],
 input[type="color"],
 .uneditable-input {
-    @include form-control;
-    background-color: transparent;
-    padding: 10px 8px;
-    display: inline-block;
-    vertical-align: middle;
-    border-radius: 4px;
+    font-size: 16px;
+    @include background-color($color-contrast-200);
+    padding: 8px 8px;
+    border-radius: 8px;
+    border: 3px solid transparent;
+    @include border-color($color-base);
+    @include box-shadow(transparent, inset 0 0 0 1px);
     text-align: left;
     margin: 0;
     position: relative;
-    border: none;
-    border: 3px solid $color-accent-blue-400;
-    &:before {
-        $position: -6px;
-        top: $position;
-        bottom: $position;
-        left: $position;
-        right: $position;
-        content: "";
-        display: block;
-        position: absolute;
-        border: 3px solid transparent;
-        border-radius: 6px;
-        pointer-events: none;
-    }
+    line-height: normal;
+    @include box-shadow($color-base, inset 0 0 0 1px);
     &:focus {
         @include color(map-get($color-contrast-700, day));
-        @include background-color(#FFF);
+        @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
         outline: none;
+        border-color: $color-accent-blue-400;
+        border-radius: 8px;
+        background:
+            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M0 0h4v4H0z"/><path fill="#{$theme-color-dusk-700}" d="M0 4a4 4 0 0 1 4-4v4H0z"/></svg>') left 1px top 1px no-repeat,
+            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M4 0v4H0V0z"/><path fill="#{$theme-color-dusk-700}" d="M0 0a4 4 0 0 1 4 4H0V0z"/></svg>') right 1px top 1px no-repeat,
+            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M4 4H0V0h4z"/><path fill="#{$theme-color-dusk-700}" d="M4 0a4 4 0 0 1-4 4V0h4z"/></svg>') right 1px bottom 1px no-repeat,
+            inline-svg('<svg width="4" height="4"><path fill="#{$theme-color-dusk-base}" d="M0 4V0h4v4z"/><path fill="#{$theme-color-dusk-700}" d="M4 4a4 4 0 0 1-4-4h4v4z"/></svg>') left 1px bottom 1px no-repeat
+        ;
     }
     &.small-field {
         max-width: 340px;
+    }
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover {
+        -webkit-text-fill-color: map-get($color-contrast-700, day);
+        -webkit-box-shadow: none !important;
+        transition: none;
+        border: 3px solid transparent;
+    }
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:focus {
+        @include box-shadow($color-base, inset 0 0 0 1px, $extra: !important);
+        border-color: $color-accent-blue-400;
+        background-color: transparent !important;
+    }
+    &:-webkit-autofill:first-line {
+        color: #797979;
+        background-color: transparent !important;
+        transition-delay: 3600s !important;
     }
 }
 
@@ -662,15 +679,19 @@ label {
     @include background-color($color-contrast-200);
     @include color($color-contrast-600);
     font-size: 16px;
-    line-height: 1.1;
-    padding: 0 8px;
-    height: 42px;
-    border: 2px solid transparent;
-    border-radius: 4px;
+    line-height: normal;
+    padding: 7px 8px;
+    border-radius: 6px;
+    border: 3px solid transparent;
+    @include border-color($color-base);
+    @include box-shadow(transparent, inset 0 0 0 1px);
     &:focus {
         @include color(map-get($color-contrast-700, day));
-        background-color: #FFF;
-        border: 2px solid $color-accent-blue-600;
+        @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
+        outline: none;
+        border-color: $color-accent-blue-400;
+        border-radius: 4px;
+        @include box-shadow($color-base, inset 0 0 0 1px);
     }
     &[disabled] {
         @include background-color($color-contrast-300);
@@ -682,8 +703,6 @@ label {
 label select {
     margin-bottom: 0;
 }
-
-$focus-border: 3px;
 
 .switch {
     $height: 34px;
@@ -707,7 +726,7 @@ $focus-border: 3px;
             height: $height;
             width: $width;
             border-radius: $height;
-            border: $focus-border solid transparent;
+            border: 4px solid transparent;
             display: block;
             content: "";
             z-index: 1;
@@ -5518,16 +5537,33 @@ Settings
             line-height: 1;
             display: flex;
             margin-bottom: 32px;
-            padding: 16px 16px 32px 16px;
-            border-radius: 8px;
-            @include background-color($color-contrast-100);
+            padding: 0 0 21px 0;
             .graph-wrap {
                 flex: 1 1 auto;
                 padding-top: 25%;
-                @include border-left($color-contrast-400);
                 @include border-bottom($color-contrast-400);
-                margin-left: 5px;
+                margin-right: 5px;
                 position: relative;
+                .graph-lines {
+                    display: flex;
+                    flex: 0 0 auto;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    text-align: right;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    bottom: 2px;
+                    right: 0;
+                    div {
+                        width: 100%;
+                        @include border-top($color-contrast-200);
+                        border-top-style: dashed;
+                        &:last-child {
+                            visibility: hidden;
+                        }
+                    }
+                }
                 .graph {
                     display: flex;
                     justify-content: space-around;
@@ -5545,6 +5581,9 @@ Settings
                         background-color: $color-accent-green-600;
                         min-height: 1px;
                         border-radius: 2px 2px 0 0;
+                        &:first-child {
+                            margin: 0;
+                        }
                         &.zero {
                             border-radius: 0;
                         }
@@ -5558,6 +5597,24 @@ Settings
             flex-direction: column;
             justify-content: space-between;
             text-align: right;
+            div {
+                position: relative;
+                &:nth-child(1n) {
+                    top: -5px;
+                }
+                &:nth-child(2n) {
+                    top: -3px;
+                }
+                &:nth-child(3n) {
+                    top: -1px;
+                }
+                &:nth-child(4n) {
+                    top: 1px;
+                }
+                &:nth-child(5n) {
+                    top: 3px;
+                }
+            }
         }
         .x-axis {
             position: absolute;
@@ -5571,77 +5628,11 @@ Settings
             @include color($color-contrast-400);
             font-size: 12px;
         }
-        .stats {
-            margin-top: 1px;
-            @include border-bottom($color-borders);
-            padding: 0 0 15px 0;
-            justify-content: space-between;
-            display: flex;
-            margin-bottom: 15px;
-            @media (max-width: $small-breakpoint) {
-                flex-direction: column;
-                text-align: left;
-                padding: 0;
-                border: none;
-                .stat {
-                    margin-bottom: 10px;
-                }
-            }
-            .stat {
-                flex: 1 1 auto;
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-            .stat-title {
-                @media (max-width: $small-breakpoint) {
-                    display: inline;
-                    font-size: 16px;
-                    @include color($color-contrast-700);
-                    text-transform: none;
-                    font-weight: bold;
-                    &:after {
-                        content: ": "
-                    }
-                }
-            }
-            .stat-body {
-                margin: 0;
-                @media (max-width: $small-breakpoint) {
-                    display: inline;
-                    font-weight: normal;
-                }
-            }
-        }
-        .stat-header {
-            margin: 0 0 5px 0;
-            text-transform: uppercase;
-            font-size: 12px;
-            color: map-get($color-contrast-400, day);
-        }
-        .recent-articles {
-            padding-top: 20px;
-            margin-bottom: 15px;
-            ul {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-                li {
-                    display: flex;
-                    justify-content: space-between;
-                    color: map-get($color-contrast-400, day);
-                    border-top: 1px solid map-get($color-borders, day);
-                    a {
-                        padding: 10px 0;
-                        margin-right: 10px;
-                        text-decoration: none;
-                    }
-                    time {
-                        padding: 10px 0;
-                        margin-right: 10px;
-                    }
-                }
-            }
+        .stats td {
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .profile-images {
             .image {
@@ -7138,23 +7129,7 @@ Login and Sign Up
         text-align: center;
         color: #999;
     }
-    input:-webkit-autofill,
-    input:-webkit-autofill:hover,
-    textarea:-webkit-autofill,
-    textarea:-webkit-autofill:hover
-    select:-webkit-autofill,
-    select:-webkit-autofill:hover {
-        -webkit-text-fill-color: map-get($color-contrast-700, day);
-        -webkit-box-shadow: 0 0 0px 1000px map-get($color-contrast-200, day) inset;
-        transition: none;
-        border: 2px solid map-get($color-contrast-200, day);
-    }
-    select:-webkit-autofill:focus,
-    textarea:-webkit-autofill:focus,
-    input:-webkit-autofill:focus {
-        -webkit-box-shadow: 0 0 0px 1000px #FFF inset;
-        border: 2px solid $color-accent-blue-600;
-    }
+
 }
 
 

@@ -29,21 +29,12 @@ class SubscriptionPresenter < BasePresenter
     end
   end
 
-  def graph_max
-    max = counts.max
-    if max == 0
+  def graph_quarter(quarter)
+    count = counts.max.to_f / 4.to_f
+    if count == 0 || (quarter != 4 && counts.max < 4)
       nil
     else
-      max
-    end
-  end
-
-  def graph_mid
-    mid = counts.max / 2
-    if mid == 0
-      nil
-    else
-      mid
+      (count * quarter).round
     end
   end
 
