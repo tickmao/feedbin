@@ -2,7 +2,11 @@ class SubscriptionPresenter < BasePresenter
   presents :subscription
 
   def graph_volume
-    @template.number_with_delimiter(counts.sum)
+    @template.number_with_delimiter(total_posts)
+  end
+
+  def total_posts
+    counts.sum
   end
 
   def graph_date_start

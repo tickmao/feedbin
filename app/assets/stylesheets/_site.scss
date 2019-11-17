@@ -6552,19 +6552,23 @@ Buttons
 }
 
 .button-huge {
-    background-color: #E6F0FC;
-    border: 1px dashed $color-accent-blue-600;
+    @include color($color-contrast-600);
+    @include background-color($color-contrast-200);
+    border: 1px dashed transparent;
+    @include border-color($color-contrast-500);
     width: 100%;
     border-radius: 4px;
     padding: 16px;
     display: block;
     text-align: center;
     font-weight: bold;
-    @include color($color-accent-blue-600);
     &:hover {
-        @include color($color-accent-blue-700);
+        @include color($color-contrast-700);
+        @include background-color($color-contrast-200);
+        border: 1px dashed transparent;
+        @include border-color($color-contrast-600);
+
         text-decoration: none;
-        border-color: $color-accent-blue-700;
     }
 }
 
@@ -6771,7 +6775,7 @@ select {
 .alert-info,
 .alert-danger,
 .alert-error {
-    background-color: #d61f33;
+    background-color: $color-accent-red-600;
 }
 
 .alert-block {
@@ -7116,23 +7120,14 @@ Login and Sign Up
             padding: 36px;
         }
     }
-    input[type="email"],
-    input[type="password"],
-    input[type="text"] {
-        width: 100%;
-        max-width: 100%;
-        padding: 14px 10px 12px 10px;
-        margin: 0;
-    }
-    input[type="submit"] {
-        padding: 15px 0;
+    button[type="submit"] {
         font-size: 20px;
         width: 100%;
         display: block;
         color: #fff;
     }
-    input + input {
-        margin-top: 10px !important;
+    .input-group {
+        margin-bottom: 16px;
     }
     .field_with_errors + input {
         margin-top: 10px !important;
