@@ -66,9 +66,9 @@
                                         <td>
                                             <%= subscription_presenter.graph_volume %>
                                             <% if subscription.feed.twitter_feed? %>
-                                                tweets / month
+                                                <%= 'tweet'.pluralize(subscription_presenter.graph_volume) %> / month
                                             <% else %>
-                                                articles / month
+                                                <%= 'article'.pluralize(subscription_presenter.total_posts) %> / month
                                             <% end %>
                                         </td>
                                     </tr>
