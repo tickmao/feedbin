@@ -2515,6 +2515,21 @@ $.extend feedbin,
     drawBarCharts: ->
       feedbin.drawBarCharts()
 
+    copy: ->
+      $(document).on 'click', '[data-behavior~=copy]', (event) ->
+        button = $(@)
+        input = button.siblings('input')
+        input.focus()
+        if input.length > 0
+          input.select()
+          try
+            document.execCommand('copy');
+          catch error
+            if 'console' of window
+              console.log error
+        event.preventDefault()
+
+
 
 $.each feedbin.preInit, (i, item) ->
   item()

@@ -12,6 +12,9 @@ class SVGIcon
     name = File.basename(file, ".svg")
     markup = File.read(file)
     width, height = extract_dimensions(markup)
+    if !width || !height
+      raise "width or height missing from #{file}"
+    end
     new(name, markup, width, height)
   end
 

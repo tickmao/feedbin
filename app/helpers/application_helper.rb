@@ -62,6 +62,9 @@ module ApplicationHelper
     options.delete(:size)
 
     icon = Feedbin::Application.config.icons[name]
+    if !icon
+      raise "Icon missing #{name}"
+    end
     options[:width] = icon.width
     options[:height] = icon.height
 

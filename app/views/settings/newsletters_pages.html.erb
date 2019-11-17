@@ -9,17 +9,38 @@
         </div>
         <ul class="pill-list">
             <li>
-                <%= mail_to @user.newsletter_address %>
-                <p class="control-group-description">
-                    Use this address to <a href="https://feedbin.com/blog/2016/02/03/subscribe-to-email-newsletters-in-feedbin/">receive emails</a> in Feedbin.
-                </p>
+                <div class="toolbar">
+                    <div>
+                        Newsletter Address
+                        <p class="control-group-description">
+                            Use this address to <a href="https://feedbin.com/blog/2016/02/03/subscribe-to-email-newsletters-in-feedbin/">receive emails</a> in Feedbin.
+                        </p>
+                    </div>
+                    <div class="input-group accessory-right last-control">
+                        <input type="text" value="<%= @user.newsletter_address %>" readonly />
+                        <span class="input-helper"></span>
+                        <button class="accessory right icon" data-behavior="copy" title="Copy to clipboard">
+                            <%= svg_tag "icon-clipboard" %>
+                        </button>
+                    </div>
+                </div>
             </li>
             <li>
-                Default Tag
-                <%= f.select :newsletter_tag, tag_options, {}, {class: "select", data: {behavior: "auto_submit"}} %>
-                <p class="control-group-description">
-                    Automatically put incoming newsletters in this tag.
-                </p>
+                <div class="toolbar">
+                    <div>
+                        Default Tag
+                        <p class="control-group-description">
+                            Automatically put incoming newsletters in this tag.
+                        </p>
+                    </div>
+                    <div class="input-group accessory-right last-control">
+                        <%= f.select :newsletter_tag, tag_options, {}, {class: "select", data: {behavior: "auto_submit"}} %>
+                        <span class="input-helper"></span>
+                        <span class="accessory right">
+                            <%= svg_tag "icon-caret" %>
+                        </span>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
@@ -30,10 +51,25 @@
         </div>
         <ul class="pill-list">
             <li>
-                Bookmarklet: <%= bookmarklet %>
-                <p class="control-group-description">
-                    Drag this to your bookmarks bar. Use it to <a href="https://feedbin.com/blog/2019/08/20/save-webpages-to-read-later/">save articles from the web</a> to Feedbin.
-                </p>
+                <div class="toolbar">
+                    <div>
+                        Bookmarklet
+                        <p class="control-group-description">
+                            Drag this to your bookmarks bar. Use it to <a href="https://feedbin.com/blog/2019/08/20/save-webpages-to-read-later/">save articles from the web</a> to Feedbin.
+                        </p>
+                    </div>
+                    <div class="last-control">
+                        <div class="input-group accessory-left accessory-right">
+                            <%= bookmarklet %>
+                            <span class="accessory">
+                                <%= svg_tag "favicon-saved" %>
+                            </span>
+                            <span class="accessory right grabber-icon">
+                                <%= svg_tag "icon-grabber" %>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </li>
         </ul>
     </div>
