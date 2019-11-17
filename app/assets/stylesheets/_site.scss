@@ -301,12 +301,7 @@ body, html {
     -webkit-text-size-adjust: none;
 }
 
-html {
-    overflow: hidden;
-}
-
 body {
-    overflow: auto;
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
     font-family: $font-stack;
@@ -337,14 +332,15 @@ body {
     }
 }
 
-a {
-    @include color((
-        debug:    a,
-        day:      $color-accent-blue-600,
-        sunset:   $color-accent-blue-600,
-        dusk:     $theme-color-dusk-700,
-        midnight: $theme-color-midnight-700,
-    ));
+$color-link: (
+    debug:    a,
+    day:      $color-accent-blue-600,
+    sunset:   $color-accent-blue-600,
+    dusk:     $theme-color-dusk-700,
+    midnight: $theme-color-midnight-700,
+);
+a, .link {
+    @include color($color-link);
     text-decoration: none;
 }
 
@@ -928,7 +924,7 @@ label .radio-button .radio-button-inner {
     svg {
         @include fill($color-icons);
     }
-    input, select {
+    input, select, textarea {
         flex: 1;
     }
     input ~ .accessory.right .spinner {
@@ -952,7 +948,9 @@ label .radio-button .radio-button-inner {
         @include fill($color-contrast-600);
     }
     input:focus ~ .input-helper,
-    select:focus ~ .input-helper {
+    textarea:focus ~ .input-helper,
+    select:focus ~ .input-helper,
+    .StripeElement--focus ~ .input-helper {
         border-color: $color-accent-blue-400;
     }
     input:focus ~ .accessory,
@@ -1069,6 +1067,18 @@ table {
     border-radius: 8px;
     padding: 16px;
     display: flex;
+    &.form {
+        justify-content: flex-end;
+        flex-direction: column;
+        .form-control {
+            margin-top: 16px;
+            flex: 1;
+            display: flex;
+            button {
+                margin-left: auto;
+            }
+        }
+    }
 }
 
 .pill-list {
@@ -1102,21 +1112,17 @@ table {
                 @media (max-width: $small-breakpoint) {
                     padding-right: 20px;
                 }
-                &:after {
-                    content: "";
-                    display: block;
-                    position: absolute;
-                    background: image-url("icon-arrow.svg") 0 50% no-repeat;
-                    background-size: 12px 22px;
-                    width: 12px;
-                    right: 15px;
-                    top: 0;
-                    bottom: 0;
-                    @media (max-width: $small-breakpoint) {
-                        right: 5px;
-                    }
-                }
             }
+            a:hover .link {
+                text-decoration: underline;
+            }
+            .icon-arrow {
+                @include fill($color-contrast-400);
+                transform: scaleX(-1);
+            }
+        }
+        .description {
+            margin-right: 48px;
         }
         .status-flag {
             display: none;
@@ -1124,6 +1130,19 @@ table {
         &.error  {
             .status-flag {
                 display: block;
+            }
+        }
+    }
+    &.segmented {
+        border: none;
+        li {
+            margin-bottom: 16px;
+            border: none;
+            &.linked a {
+                border-radius: 8px;
+                padding-left: 16px;
+                padding-right: 16px;
+                @include border($color-borders);
             }
         }
     }
@@ -5027,7 +5046,6 @@ Settings
 
 .settings-nav {
     flex-direction: column;
-    order: 1;
     width: 310px;
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
@@ -5211,14 +5229,28 @@ Settings
         display: flex;
         flex: 1;
         align-items: center;
+        > :first-child {
+            margin-right: 16px
+        }
         .last-control {
+            display: flex;
+            align-items: center;
             margin-left: auto;
         }
         @media (max-width: $small-breakpoint) {
             flex-direction: column;
+            align-items: stretch;
             .last-control {
                 margin-left: unset;
                 margin-top: 16px;
+            }
+            &.row {
+                flex-direction: row;
+                .last-control {
+                    margin-left: auto;
+                    margin-top: unset;
+                    align-items: center;
+                }
             }
         }
     }
@@ -5232,7 +5264,6 @@ Settings
         flex-shrink: 0;
     }
     .settings-content {
-        order: 2;
         position: relative;
         padding: 0;
         @include background-color($color-base);
@@ -5747,7 +5778,6 @@ Settings
             border-radius: 0;
         }
         li {
-            clear: both;
             position: relative;
             padding: 0;
         }
@@ -5932,38 +5962,6 @@ Settings
         }
 
     }
-    .modal-purpose-action_preview {
-        .action-description {
-            border-radius: 8px;
-            margin-bottom: 15px;
-            border-left-width: 1px;
-            border-right-width: 1px;
-        }
-        .content {
-            padding: 15px;
-        }
-    }
-    .action-description {
-        border: 1px solid map-get($color-borders, day);
-        border-width: 1px 0 1px 0;
-    }
-    .action-preview-entries {
-        position: static;
-        margin-left: auto;
-        margin-right: auto;
-        ul li .entries-inner-wrap {
-            margin-left: 25px;
-        }
-        .entries-inner-wrap {
-            padding-right: 0;
-        }
-        .entry-image {
-            display: none;
-        }
-        a, div {
-            pointer-events: none;
-        }
-    }
     .pagination {
         padding-bottom: 40px;
         .previous_page {
@@ -5978,6 +5976,39 @@ Settings
         border-radius: 8px;
         padding: 10px;
         color: #fff;
+    }
+}
+
+.modal-purpose-action_preview {
+    .action-description {
+        border-radius: 8px;
+        margin-bottom: 16px;
+        border-left-width: 1px;
+        border-right-width: 1px;
+    }
+    .content {
+        padding: 16px;
+    }
+}
+.action-description {
+    @include border($color-borders);
+    border-width: 1px 0 1px 0;
+}
+.action-preview-entries {
+    position: static;
+    margin-left: auto;
+    margin-right: auto;
+    ul li .entries-inner-wrap {
+        margin-left: 25px;
+    }
+    .entries-inner-wrap {
+        padding-right: 0;
+    }
+    .entry-image {
+        display: none;
+    }
+    a, div {
+        pointer-events: none;
     }
 }
 
@@ -6093,15 +6124,29 @@ label.text-field {
         }
         &.text {
             padding: 9px 0;
+            label {
+                padding: 0;
+            }
+            &:last-child {
+                padding-bottom: 0;
+            }
+        }
+        &.text-label {
+            label {
+                padding: 0;
+            }
         }
         &.card-meta {
             display: flex;
             margin-bottom: 10px;
-            input {
+            .input-group {
                 flex: 1;
                 width: 50%;
                 max-width: auto;
-                margin: 0 10px 0 0;
+                margin: 0 16px 0 0;
+                &:last-child {
+                    margin: 0;
+                }
             }
             select {
                 flex: 1;
@@ -6109,8 +6154,6 @@ label.text-field {
                 border: none;
                 @include background-color($color-contrast-200);
                 @include font-size(16);
-                border-radius: 8px;
-                height: 52px;
                 padding: 0 15px;
                 line-height: 1.1;
                 border: none;
@@ -6131,16 +6174,10 @@ label.text-field {
             }
         }
         #card-element {
-            border-width: 2px;
-            border-style: solid;
-            border-color: transparent;
+            flex: 1;
             border-radius: 4px;
-            padding: 17px 15px;
+            padding: 6px 8px 7px 8px;
             @include background-color($color-contrast-200);
-            &.StripeElement--focus {
-                border-color: $color-accent-blue-600;
-                background-color: #FFF;
-            }
         }
     }
     .table {
@@ -6265,34 +6302,45 @@ table.small td {
 }
 
 .filter-wrap {
-    padding: 12px 0 0 0;
-    background-color: #FFF;
-    border-top: 1px solid map-get($color-borders, day);
-    border-bottom: 1px solid map-get($color-borders, day);
-    margin-bottom: 30px;
+    @include border($color-borders);
+    border-radius: 8px;
+    margin-bottom: 32px;
+    &.separate-header {
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+    }
+    @media (max-width: $small-breakpoint) {
+        border: none;
+        &.separate-header {
+            .pill-list {
+                border-top: none;
+            }
+        }
+    }
 }
 .filter {
     overflow-y: auto;
     overflow-x: hidden;
     resize: vertical;
-    height: 134px;
-    padding-left: 30px;
-    padding-right: 30px;
-    @media (max-width: $small-breakpoint) {
-        padding-left: 15px;
-        padding-right: 15px;
+    height: 200px;
+    .pill-list {
+        border: none;
+        li {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+        li:first-child {
+            border-top: none;
+        }
     }
-    .checkbox {
-        resize: none;
-        float: none;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        display: block;
-        line-height: 1;
-        input {
-            margin-top: 0;
+    @media (max-width: $small-breakpoint) {
+        .pill-list {
+            @include border-top($color-borders);
+            @include border-bottom($color-borders);
+            li {
+                padding-left: 0;
+                padding-right: 0;
+            }
         }
     }
 }
@@ -6499,6 +6547,9 @@ Buttons
     position: relative;
     white-space: nowrap;
     line-height: 1.3;
+    &.flex {
+        width: 100%;
+    }
     &:before {
         content: "";
         display: block;
@@ -6595,6 +6646,7 @@ Buttons
     display: block;
     text-align: center;
     font-weight: bold;
+    margin-bottom: 48px;
     &:hover {
         @include color($color-contrast-700);
         @include background-color($color-contrast-200);
@@ -6671,21 +6723,6 @@ Buttons
     line-height: 0;
 }
 
-.button-text-secondary {
-    appearance: none !important;
-    background: none;
-    border: none;
-    margin: 0;
-    padding: 0;
-    font-weight: normal;
-    font-family: $font-stack;
-    color: map-get($color-contrast-400, day);
-    &:hover {
-        text-decoration: underline;
-        color: map-get($color-contrast-400, day);
-    }
-}
-
 .button::-moz-focus-inner {
     border: 0;
     padding: 0;
@@ -6694,14 +6731,9 @@ Buttons
 }
 
 .button-wrap {
-    text-align: right;
-    vertical-align: middle;
-    button {
-        margin-left: 5px;
-    }
-    input {
-        margin-left: 5px;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .button-toggle-content.active * {
@@ -6969,10 +7001,12 @@ input[type="text"].hide {
 
 .muted {
     @include color($color-contrast-600);
+    @include native-theme("color", $color-contrast-600);
 }
 
 .extra-muted {
     @include color($color-contrast-500);
+    @include native-theme("color", $color-contrast-500);
 }
 
 .danger {
@@ -7125,21 +7159,28 @@ a:hover.danger {
 Login and Sign Up
 ------------------------------------------------------------------------------*/
 .login {
-    background-color: map-get($color-contrast-100, day);
+    @include native-theme("background-color", $color-contrast-100)
     padding: 15px;
     display: flex;
     align-items: center;
+    a {
+        @include native-theme("color", $color-link);
+    }
     .login-wrap {
         margin: auto;
         width: 400px;
     }
     .logo {
-        background: image-url('logo-full.svg') no-repeat scroll top left;
         display: block;
-        width: 205px;
-        height: 44px;
-        background-size: 205px 44px !important;
-        margin: 0 auto 30px auto;
+        margin: 0 auto 32px auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        svg {
+            width: 180px !important;
+            height: auto !important;
+            @include native-theme("fill", $color-contrast-700);
+        }
     }
     .content {
         position: static;
@@ -7148,14 +7189,16 @@ Login and Sign Up
     .box-header {
         font-size: 18px;
         font-weight: normal;
-        color: #333;
         text-align: center;
         margin: 0 0 15px 0;
+        @include native-theme("color", $color-contrast-700);
     }
     .box {
-        border: 1px solid map-get($color-borders, day);
+        border: 1px solid transparent;
+        @include native-theme("border-color", $color-borders);
         border-radius: 4px;
         background-color: #FFF;
+        @include native-theme("background-color", $color-base);
         margin: 0 auto 14px auto;
         width: 100%;
         max-width: 400px;
@@ -7167,12 +7210,6 @@ Login and Sign Up
             padding: 36px;
         }
     }
-    button[type="submit"] {
-        font-size: 20px;
-        width: 100%;
-        display: block;
-        color: #fff;
-    }
     .input-group {
         margin-bottom: 16px;
     }
@@ -7183,7 +7220,7 @@ Login and Sign Up
         display: block;
         margin: 10px 0 0 0;
         text-align: center;
-        color: #999;
+        @include native-theme("color", $color-contrast-500);
     }
 
 }

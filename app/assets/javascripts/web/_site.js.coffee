@@ -22,6 +22,10 @@ $.extend feedbin,
     lightness: [.3,.4,.5,.6,.7]
     saturation: [.7,.8]
 
+  tabindex: ->
+    $('.settings-content :focusable').each (index, element) ->
+      $(element).attr('tabindex', index + 1)
+
   reveal: (element, callback = null) ->
     hideFeed = false
     hideTag = false
@@ -2515,6 +2519,9 @@ $.extend feedbin,
     drawBarCharts: ->
       feedbin.drawBarCharts()
 
+    tabindex: ->
+      feedbin.tabindex()
+
     copy: ->
       $(document).on 'click', '[data-behavior~=copy]', (event) ->
         button = $(@)
@@ -2528,7 +2535,6 @@ $.extend feedbin,
             if 'console' of window
               console.log error
         event.preventDefault()
-
 
 
 $.each feedbin.preInit, (i, item) ->

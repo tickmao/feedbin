@@ -7,14 +7,13 @@
             <div class="inset-content">
                 <h4 class="group-header">Email</h4>
             </div>
-            <ul class="control-group no-border">
-                <li class="text no-border">
+            <div class="pill form">
+                <div class="input-group">
                     <%= f.email_field :email, placeholder: 'Email' %>
-                </li>
-            </ul>
-            <div class="description-inset">
-                <div class="button-wrap">
-                    <%= f.submit "Update", class: "button no-margin" %>
+                    <span class="input-helper"></span>
+                </div>
+                <div class="form-control">
+                    <button type="submit" class="button">Update</button>
                 </div>
             </div>
         <% end %>
@@ -26,10 +25,16 @@
             </div>
             <ul class="control-group no-border">
                 <li class="text no-border">
-                    <%= f.password_field :old_password, placeholder: 'Old Password' %>
+                    <div class="input-group">
+                        <%= f.password_field :old_password, placeholder: 'Old Password' %>
+                        <span class="input-helper"></span>
+                    </div>
                 </li>
                 <li class="text no-border">
-                    <%= f.password_field :password, placeholder: 'New Password' %>
+                    <div class="input-group">
+                        <%= f.password_field :password, placeholder: 'New Password' %>
+                        <span class="input-helper"></span>
+                    </div>
                 </li>
             </ul>
             <div class="description-inset">
