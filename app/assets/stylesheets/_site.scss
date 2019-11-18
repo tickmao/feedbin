@@ -7050,7 +7050,7 @@ input[type="text"].hide {
 }
 
 .danger {
-    color: red;
+    @include color($color-accent-red-600);
 }
 
 a:hover.danger {
@@ -9659,23 +9659,14 @@ button.close {
 }
 
 /* tooltips */
-$tooltip-max-width:                 200px !default;
-$tooltip-color:                     white !default;
-$tooltip-bg:                        black !default;
-$tooltip-border-radius:             4px !default;
-$tooltip-margin:                    0 !default;
-
-$tooltip-arrow-width:               .8rem !default;
-$tooltip-arrow-height:              .4rem !default;
-$tooltip-arrow-color:               $tooltip-bg !default;
-
-$zindex-tooltip:                    1070 !default;
+$tooltip-arrow-width: 12px;
+$tooltip-arrow-height: 6px;
 
 .tooltip {
     position: absolute;
-    z-index: $zindex-tooltip;
+    z-index: 1070;
     display: block;
-    margin: $tooltip-margin;
+    margin: 0;
     font-family: $font-stack;
     font-size: 12px;
     word-wrap: break-word;
@@ -9764,7 +9755,7 @@ $zindex-tooltip:                    1070 !default;
 
 // Wrapper for the tooltip content
 .tooltip-inner {
-    max-width: $tooltip-max-width;
+    max-width: 200px;
     padding: 8px 8px;
     color: #FFF;
     text-align: center;
