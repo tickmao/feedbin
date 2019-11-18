@@ -184,7 +184,8 @@ $color-arrow-shadow: $color-borders;
 $selected: #0867E2;
 $inset-bg-color: #f4f6f8;
 $box-shadow-dropdown: 0px 4px 6px 0 rgba(0, 0, 0, 0.1);
-$focus-glow: 0px 0px 10px 0 rgba($theme-color-500, 0.6);
+$focus-glow: 0px 0px 0px 4px $color-accent-blue-400;
+$focus-glow-inset: inset $focus-glow;
 $subtle-focus-glow: 0px 0px 1px 0 rgba($selected, 1);
 
 
@@ -357,9 +358,8 @@ a:hover {
 }
 
 a:focus {
-    outline: thin dotted #333;
-    outline: 5px auto -webkit-focus-ring-color;
-    outline-offset: -2px;
+    outline: none;
+    box-shadow: $focus-glow;
 }
 
 a:hover,
@@ -473,6 +473,12 @@ textarea {
     display: block;
 }
 
+@mixin focus {
+    @include color($color-contrast-700);
+    @include background-color($color-contrast-100);
+    outline: none;
+}
+
 textarea,
 input[type="text"],
 input[type="password"],
@@ -500,9 +506,7 @@ input[type="color"],
     line-height: normal;
     @include color($color-contrast-600);
     &:focus {
-        @include color(map-get($color-contrast-700, day));
-        @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
-        outline: none;
+        @include focus;
     }
     &.small-field {
         max-width: 340px;
@@ -686,9 +690,7 @@ label {
         display: none;
     }
     &:focus {
-        @include color(map-get($color-contrast-700, day));
-        @include background-color((debug: input, day: $theme-color-100, sunset: $theme-color-sunset-100, dusk: $theme-color-dusk-700, midnight: $theme-color-midnight-700));
-        outline: none;
+        @include focus;
     }
     &[disabled] {
         @include background-color($color-contrast-300);
@@ -945,7 +947,7 @@ label .radio-button .radio-button-inner {
         @include fill($color-contrast-400);
     }
     select ~ .accessory svg {
-        @include fill($color-contrast-600);
+        @include fill($color-contrast-500);
     }
     input:focus ~ .input-helper,
     textarea:focus ~ .input-helper,
@@ -956,7 +958,7 @@ label .radio-button .radio-button-inner {
     input:focus ~ .accessory,
     select:focus ~ .accessory {
         svg {
-            @include fill($color-selected);
+            @include fill($color-link);
         }
     }
     input[disabled] ~ .accessory,
@@ -1030,15 +1032,6 @@ table {
     background-color: transparent;
 }
 
-.table-condensed thead > tr > th,
-.table-condensed tbody > tr > th,
-.table-condensed tfoot > tr > th,
-.table-condensed thead > tr > td,
-.table-condensed tbody > tr > td,
-.table-condensed tfoot > tr > td {
-    padding: 5px;
-}
-
 .table-bordered {
     @include border($color-borders);
 }
@@ -1052,7 +1045,7 @@ table {
     @include border($color-borders);
 }
 
-.table-rounded  {
+.table-striped  {
     tr:first-child th,
     tr:first-child td {
         border: none !important;
@@ -1060,6 +1053,7 @@ table {
     td, th {
         padding: 11px !important;
     }
+    border-bottom: none !important;
 }
 
 .pill {
@@ -1143,6 +1137,9 @@ table {
                 padding-left: 16px;
                 padding-right: 16px;
                 @include border($color-borders);
+                &:focus {
+                    box-shadow: 0 0 0 1px $theme-color-dusk-base, $focus-glow;
+                }
             }
         }
     }
@@ -5049,6 +5046,9 @@ Settings
     width: 310px;
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
+    a:focus {
+        box-shadow: $focus-glow-inset;
+    }
     .logo {
         padding: 39px 0 0 21px;
         display: block;
@@ -6016,15 +6016,15 @@ Settings
     padding-top: 0;
     @include font-size(14px);
     @include color($color-contrast-500);
-    margin: 8px 0 0 0;
     white-space: normal;
+    margin: 0;
     a {
         text-decoration: underline;
     }
 }
-.control-description {
-    position: relative;
-    top: -24px;
+
+.control-group-description {
+    margin: 8px 0 0 0;
 }
 
 @keyframes spin {
@@ -6097,12 +6097,19 @@ label.text-field {
     margin-bottom: 30px;
 }
 
+.has-description {
+    margin-bottom: 32px;
+}
+
 .control-group {
     list-style: none;
     margin: 0;
     padding: 0;
     margin-bottom: 32px;
     @include border-bottom($color-borders);
+    .has-description & {
+        margin-bottom: 8px;
+    }
     &.no-border, .modal & {
         @include border-bottom(transparent);
     }
@@ -6126,7 +6133,7 @@ label.text-field {
             @include border-top(transparent);
         }
         &.text {
-            padding: 9px 0;
+            padding: 0;
             label {
                 padding: 0;
             }
@@ -6135,49 +6142,6 @@ label.text-field {
             label {
                 padding: 0;
             }
-        }
-        &.card-meta {
-            display: flex;
-            margin-bottom: 10px;
-            .input-group {
-                flex: 1;
-                width: 50%;
-                max-width: auto;
-                margin: 0 16px 0 0;
-                &:last-child {
-                    margin: 0;
-                }
-            }
-            select {
-                flex: 1;
-                width: 50%;
-                border: none;
-                @include background-color($color-contrast-200);
-                @include font-size(16);
-                padding: 0 15px;
-                line-height: 1.1;
-                border: none;
-                appearance: none;
-                @include color($color-contrast-700);
-                position: relative;
-
-            }
-            @media (max-width: $small-breakpoint) {
-                flex-direction: column;
-                input, select {
-                    width: auto;
-                    flex: 0;
-                }
-                input {
-                    margin: 0 0 10px 0;
-                }
-            }
-        }
-        #card-element {
-            flex: 1;
-            border-radius: 4px;
-            padding: 6px 8px 7px 8px;
-            @include background-color($color-contrast-200);
         }
     }
     .table {
@@ -6217,6 +6181,53 @@ label.text-field {
         td input {
             margin: 0;
         }
+    }
+}
+
+.card-meta {
+    display: flex;
+    margin-bottom: 10px;
+    .input-group {
+        flex: 1;
+        width: 50%;
+        max-width: auto;
+        margin: 0 16px 0 0;
+        &:last-child {
+            margin: 0;
+        }
+    }
+    select {
+        flex: 1;
+        width: 50%;
+        border: none;
+        @include background-color($color-contrast-200);
+        @include font-size(16);
+        padding: 0 15px;
+        line-height: 1.1;
+        border: none;
+        appearance: none;
+        @include color($color-contrast-700);
+        position: relative;
+
+    }
+    @media (max-width: $small-breakpoint) {
+        flex-direction: column;
+        input, select {
+            width: auto;
+            flex: 0;
+        }
+        input {
+            margin: 0 0 10px 0;
+        }
+    }
+}
+#card-element {
+    flex: 1;
+    border-radius: 4px;
+    padding: 6px 8px 7px 8px;
+    @include background-color($color-contrast-200);
+    &.StripeElement--focus {
+        @include focus;
     }
 }
 
@@ -6574,6 +6585,7 @@ Buttons
     }
     &:focus {
         outline: none;
+        box-shadow: none;
         &:before {
             border-color: $color-accent-blue-400;
         }
@@ -6657,18 +6669,30 @@ Buttons
     }
 }
 
+
 .grabber {
     cursor: move;
     @include border-color($color-contrast-700);
     @include background-color($color-contrast-700);
-    @include color($color-base-light-200);
+    @include color($color-contrast-100);
+    &:hover {
+        @include color($color-contrast-100);
+    }
+    &:active {
+        @include border-color($color-contrast-700);
+        @include background-color($color-contrast-700);
+        @include color($color-contrast-100);
+    }
+    ~ .accessory svg {
+        @include fill($color-contrast-400);
+    }
 }
 
 .grabber-icon {
     @include background-color($color-contrast-600);
     border-radius: 0 4px 4px 0;
     svg {
-        @include fill($color-contrast-500);
+        @include fill($color-contrast-300);
     }
 }
 
@@ -6731,10 +6755,28 @@ Buttons
     margin-bottom: -3px;
 }
 
+.stacked-form {
+    .input-group + .input-group {
+        margin-top: 16px;
+    }
+}
+
+.button-wrap-inline {
+    .button + .button,
+    .button + .input-group,
+    .input-group + .input-group,
+    .input-group + button {
+        margin-left: 16px;
+    }
+}
 .button-wrap {
+    margin-top: 16px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    .button + .button {
+        margin-left: 16px;
+    }
 }
 
 .button-toggle-content.active * {

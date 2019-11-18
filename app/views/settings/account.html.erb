@@ -11,7 +11,7 @@
                 <%= f.email_field :email, placeholder: 'Email' %>
                 <span class="input-helper"></span>
             </div>
-            <div class="form-control">
+            <div class="button-wrap">
                 <button type="submit" class="button">Update</button>
             </div>
         <% end %>
@@ -21,24 +21,18 @@
             <div class="inset-content">
                 <h4 class="group-header">Update Password</h4>
             </div>
-            <ul class="control-group no-border">
-                <li class="text no-border">
-                    <div class="input-group">
-                        <%= f.password_field :old_password, placeholder: 'Old Password' %>
-                        <span class="input-helper"></span>
-                    </div>
-                </li>
-                <li class="text no-border">
-                    <div class="input-group">
-                        <%= f.password_field :password, placeholder: 'New Password' %>
-                        <span class="input-helper"></span>
-                    </div>
-                </li>
-            </ul>
-            <div class="description-inset">
-                <div class="button-wrap">
-                    <%= f.submit "Update", class: "button  no-margin" %>
+            <div class="stacked-form">
+                <div class="input-group">
+                    <%= f.password_field :old_password, placeholder: 'Old Password' %>
+                    <span class="input-helper"></span>
                 </div>
+                <div class="input-group">
+                    <%= f.password_field :password, placeholder: 'New Password' %>
+                    <span class="input-helper"></span>
+                </div>
+            </div>
+            <div class="button-wrap">
+                <button type="submit" class="button">Update</button>
             </div>
         <% end %>
     </div>
@@ -60,10 +54,8 @@
                     </li>
                 </ul>
             <% end %>
-            <div class="description-inset">
-                <div class="button-wrap">
-                    <p><%= f.submit "Cancel Account", class: "button button-secondary", data: { confirm: "Are you sure?" } %></p>
-                </div>
+            <div class="button-wrap">
+                <p><%= f.submit "Cancel Account", class: "button button-secondary", data: { confirm: "Are you sure?" } %></p>
             </div>
         <% end %>
     </div>
