@@ -5344,9 +5344,6 @@ Settings
     h4.group-header {
         font-size: 16px;
         @include color($color-contrast-700);
-        .modal & {
-            margin: 0;
-        }
     }
     h3.box-header {
         margin: 0;
