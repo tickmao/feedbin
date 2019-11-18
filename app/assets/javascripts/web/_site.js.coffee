@@ -1578,17 +1578,6 @@ $.extend feedbin,
           feedbin.feedXhr = xhr
         return
 
-    tooltips: ->
-      $(document).on 'mouseenter mouseleave', '[data-behavior~=tooltip]', (event) ->
-        tooltip = $(this).tooltip
-          delay: 0
-          animation: false
-        if 'mouseenter' == event.type
-          tooltip.tooltip('show')
-        else
-          tooltip.tooltip('hide')
-        return
-
     loadEntries: ->
       link = $('[data-behavior~=feeds_target] li:visible').first().find('a')
       mobile = $('body').hasClass('mobile')
@@ -2005,18 +1994,6 @@ $.extend feedbin,
           setTimeout ( ->
             container.addClass('hide')
           ), 4000
-
-    toggle: ->
-      $(document).on 'click', '[data-toggle]', ->
-        toggle = $(@).data('toggle')
-        if toggle['class']
-          $(@).toggleClass(toggle['class'])
-        if toggle['title']
-          if toggle['title'][0] == $(@).attr('title')
-            title = toggle['title'][1]
-          else
-            title = toggle['title'][0]
-          $(@).attr('title', title)
 
     feedsSearch: ->
       $(document).on 'submit', '[data-behavior~=feeds_search]', ->
@@ -2534,6 +2511,10 @@ $.extend feedbin,
 
     drawBarCharts: ->
       feedbin.drawBarCharts()
+
+    tooltips: ->
+      console.log 'run'
+      $('[data-toggle="tooltip"]').tooltip()
 
     copy: ->
       $(document).on 'click', '[data-behavior~=copy]', (event) ->
