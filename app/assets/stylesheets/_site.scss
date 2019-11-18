@@ -5198,7 +5198,7 @@ Settings
     }
     small {
         font-size: 13px;
-        color: #999;
+        @include color($color-contrast-500);
     }
     code {
         padding: 0;
@@ -6015,9 +6015,12 @@ Settings
 .control-group-description, .control-description {
     padding-top: 0;
     @include font-size(14px);
-    @include color($color-contrast-400);
+    @include color($color-contrast-500);
     margin: 8px 0 0 0;
     white-space: normal;
+    a {
+        text-decoration: underline;
+    }
 }
 .control-description {
     position: relative;
@@ -6126,9 +6129,6 @@ label.text-field {
             padding: 9px 0;
             label {
                 padding: 0;
-            }
-            &:last-child {
-                padding-bottom: 0;
             }
         }
         &.text-label {
@@ -6659,15 +6659,16 @@ Buttons
 
 .grabber {
     cursor: move;
-    @include border-color($color-base-dark-700);
-    @include background-color($color-base-dark-700);
+    @include border-color($color-contrast-700);
+    @include background-color($color-contrast-700);
+    @include color($color-base-light-200);
 }
 
 .grabber-icon {
-    @include background-color($color-base-dark-600);
+    @include background-color($color-contrast-600);
     border-radius: 0 4px 4px 0;
     svg {
-        @include fill(#FFF);
+        @include fill($color-contrast-500);
     }
 }
 
