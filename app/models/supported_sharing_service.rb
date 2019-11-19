@@ -223,6 +223,10 @@ class SupportedSharingService < ApplicationRecord
     options["completions"] || []
   end
 
+  def [](key)
+    info[key]
+  end
+
   def update_completions(new_completions)
     old_completions = completions
     final_completions = old_completions.concat(new_completions).uniq

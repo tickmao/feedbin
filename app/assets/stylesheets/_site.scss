@@ -1165,8 +1165,6 @@ table {
     li {
         padding: 0;
         border-radius: 8px;
-        padding: 16px;
-        padding-bottom: 0;
         margin-bottom: 16px;
         @include border($color-borders);
         &:last-child {
@@ -1178,6 +1176,7 @@ table {
             justify-content: center;
             flex-shrink: 0;
             width: 25px;
+            margin-right: 16px;
         }
         svg {
             @include fill($color-icons);
@@ -1187,10 +1186,17 @@ table {
     .service-header {
         display: flex;
         align-items: center;
-        margin-bottom: 16px;
+        padding: 16px;
         .last-control {
             margin-left: auto;
         }
+        .control-group-description {
+            margin-left: 41px;
+            margin-top: 1px;
+        }
+    }
+    .header {
+        display: flex;
     }
     .service-options-wrap {
         position: relative;
@@ -1198,7 +1204,6 @@ table {
         transition: height .2s ease, opacity .2s ease;
         opacity: 0;
         overflow: hidden;
-        margin-top: 16px;
         &.open {
             opacity: 1;
         }
@@ -1206,7 +1211,8 @@ table {
             overflow: visible;
         }
         .service-options {
-            padding-bottom: 16px;
+            padding: 16px;
+            @include border-top($color-borders);
         }
     }
     .share-help {
@@ -1214,14 +1220,10 @@ table {
             padding-top: 20px;
         }
     }
-    .list-action {
-        margin-left: auto;
-    }
     .service-title {
         @include color($color-contrast-700);
         font-size: 16px;
         margin: 0;
-        padding: 0 0 0 16px;
         overflow: visible;
     }
     .service-error {
@@ -1245,9 +1247,6 @@ table {
         &.sub-head {
             padding-left: 0;
             max-width: 100%;
-        }
-        &.show-service-options {
-            margin-left: 40px;
         }
     }
     .half {

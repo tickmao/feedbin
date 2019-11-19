@@ -1,24 +1,19 @@
-<% if status == :active %>
-    <div class="service-header">
-        <div>
-            <div class="toolbar">
-                <%= render partial: "supported_sharing_services/icon", locals: {sharing_service: sharing_service} %>
-                <p class="service-title"><%= sharing_service.label %></p>
-            </div>
-            <p class="control-group-description">Emails will be sent from <%= sharing_service.email_name %> &lt;<%= (sharing_service.email_address.present?) ? sharing_service.email_address : @user.email %>&gt;</p>
-        </div>
-        <%= render partial: "supported_sharing_services/delete_supported_service", locals: {editable: true, sharing_service: sharing_service} %>
-    </div>
-<% else %>
-    <div class="service-header">
-        <%= render partial: "supported_sharing_services/icon", locals: {sharing_service: sharing_service} %>
-        <p class="service-title"><%= sharing_service[:label] %></p>
-        <%= button_tag 'Activate', class: 'list-action show-service-options button-text', data: {behavior: "toggle_service_options"} %>
-    </div>
-<% end %>
-
 <% record = (status == :active) ? sharing_service : record %>
-
+<div class="service-header">
+    <div>
+        <%= render partial: "supported_sharing_services/header", locals: {sharing_service: sharing_service} %>
+        <% if status == :active %>
+            <p class="control-group-description">Emails will be sent from <%= sharing_service.email_name %> &lt;<%= (sharing_service.email_address.present?) ? sharing_service.email_address : @user.email %>&gt;</p>
+        <% end %>
+    </div>
+    <div class="last-control button-wrap-inline">
+        <% if status == :active %>
+            <%= render partial: "supported_sharing_services/delete_supported_service", locals: {editable: true, sharing_service: sharing_service} %>
+        <% else %>
+            <%= button_tag 'Activate', class: 'button-text', data: {behavior: "toggle_service_options"} %>
+        <% end %>
+    </div>
+</div>
 <div class="service-options-wrap">
     <div class="service-options">
         <%= form_for(record) do |f| %>

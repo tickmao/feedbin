@@ -1,9 +1,5 @@
-<div class="last-control button-wrap-inline">
-    <% if local_assigns[:editable] %>
-        <a href="#" class="button-text" data-behavior="toggle_service_options">Edit</a>
-    <% end %>
+<% if local_assigns[:editable] %>
+    <a href="#" class="button-text" data-behavior="toggle_service_options">Edit</a>
+<% end %>
 
-    <%= link_to 'Deactivate', supported_sharing_service_path(sharing_service), class: 'list-action show-service-options button-text', method: :delete %>
-</div>
-
-
+<%= link_to 'Deactivate', supported_sharing_service_path(sharing_service), class: 'button-text', method: :delete %>
