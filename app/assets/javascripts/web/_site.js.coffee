@@ -2069,20 +2069,26 @@ $.extend feedbin,
         feedbin.toggleDiff()
 
     serviceOptions: ->
-      $(document).on 'click', '[data-behavior~=show_service_options]', (event) ->
-        height = $(@).parents('li').find('.service-options').outerHeight()
-        $(@).parents('li').find('.service-options-wrap').addClass('open').css
+      open = (container, height) ->
+        callback = -> container.addClass('fully-open')
+        setTimeout callback, 200
+        container.addClass('open').css
           height: height
-        $(@).parents('li').find('.show-service-options').addClass('hide')
-        event.preventDefault()
-        return
 
-      $(document).on 'click', '[data-behavior~=hide_service_options]', (event) ->
-        $(@).parents('li').find('.service-options-wrap').removeClass('open').css
+      close = (container, height) ->
+        container.removeClass('fully-open')
+        container.removeClass('open')
+        container.css
           height: 0
-        $(@).parents('li').find('.show-service-options').removeClass('hide')
+
+      $(document).on 'click', '[data-behavior~=toggle_service_options]', (event) ->
+        height = $(@).parents('li').find('.service-options').outerHeight()
+        container = $(@).closest('li').find('.service-options-wrap')
+        if container.hasClass('open')
+          close(container, height)
+        else
+          open(container, height)
         event.preventDefault()
-        return
 
     selectText: ->
       $(document).on 'mouseup', '[data-behavior~=select_text]', (event) ->

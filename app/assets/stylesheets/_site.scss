@@ -1161,8 +1161,17 @@ table {
 
 .sharing-services {
     @extend .pill-list;
+    border: none;
     li {
         padding: 0;
+        border-radius: 8px;
+        padding: 16px;
+        padding-bottom: 0;
+        margin-bottom: 16px;
+        @include border($color-borders);
+        &:last-child {
+            @include border($color-borders);
+        }
         .icon-wrap {
             display: flex;
             align-items: center;
@@ -1176,21 +1185,28 @@ table {
         }
     }
     .service-header {
-        @include settings-row;
         display: flex;
         align-items: center;
+        margin-bottom: 16px;
+        .last-control {
+            margin-left: auto;
+        }
     }
     .service-options-wrap {
         position: relative;
         height: 0;
-        transition: height .2s ease;
+        transition: height .2s ease, opacity .2s ease;
+        opacity: 0;
         overflow: hidden;
+        margin-top: 16px;
+        &.open {
+            opacity: 1;
+        }
+        &.fully-open {
+            overflow: visible;
+        }
         .service-options {
             padding-bottom: 16px;
-            overflow: hidden;
-            form {
-                max-width: 300px;
-            }
         }
     }
     .share-help {
@@ -1199,9 +1215,7 @@ table {
         }
     }
     .list-action {
-        position: absolute;
-        right: 0;
-        top: 16px;
+        margin-left: auto;
     }
     .service-title {
         @include color($color-contrast-700);
@@ -6759,10 +6773,13 @@ Buttons
 }
 
 .button-wrap-inline {
+    display: flex;
+    align-items: center;
     .button + .button,
     .button + .input-group,
     .input-group + .input-group,
-    .input-group + button {
+    .input-group + button,
+    .button-text + .button-text {
         margin-left: 16px;
     }
 }

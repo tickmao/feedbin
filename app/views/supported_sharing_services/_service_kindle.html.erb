@@ -2,14 +2,14 @@
     <div class="service-header">
         <%= render partial: "supported_sharing_services/icon", locals: {sharing_service: sharing_service} %>
         <%= render partial: "supported_sharing_services/delete_supported_service", locals: {sharing_service: sharing_service} %>
-        <small class="show-service-options pad-top">Articles will be sent to <%= sharing_service.kindle_address %>, <a href="#" data-behavior="show_service_options">edit</a>.</small>
+        <small class="show-service-options pad-top">Articles will be sent to <%= sharing_service.kindle_address %>, <a href="#" data-behavior=""">edit</a>.</small>
     </div>
     <%= render partial: "supported_sharing_services/kindle_form", locals: {sharing_service: sharing_service, record: sharing_service} %>
 <% else %>
     <div class="service-header">
         <%= render partial: "supported_sharing_services/icon", locals: {sharing_service: sharing_service} %>
         <p class="service-title"><%= sharing_service[:label] %></p>
-        <%= button_tag 'Activate', class: 'list-action show-service-options button-text', data: {behavior: "show_service_options"} %>
+        <%= button_tag 'Activate', class: 'list-action show-service-options button-text', data: {behavior: "toggle_service_options"} %>
     </div>
     <%= render partial: "supported_sharing_services/kindle_form", locals: {sharing_service: sharing_service, record: record} %>
 <% end %>
