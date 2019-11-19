@@ -1,3 +1,8 @@
-<p class="control-group-description">
-    Starred feed: <a href="<%= starred_url(user.starred_token, format: :xml) %>" style="word-break: break-all;"><%= starred_url(user.starred_token, format: :xml) %></a>
-</p>
+<div class="starred-feed-wrap">
+    <%= render "shared/input", class: "accessory-right" do %>
+        <input type="text" value="<%= starred_url(user.starred_token, format: :xml) %>" readonly />
+        <button class="accessory right icon" data-behavior="copy" title="Copy to clipboard" data-toggle="tooltip">
+            <%= svg_tag "icon-clipboard" %>
+        </button>
+    <% end %>
+</div>

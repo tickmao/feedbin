@@ -2412,7 +2412,7 @@ $.extend feedbin,
     showContainer: ->
       $(document).on 'click', '[data-behavior~=show_container]', (event) ->
         target = $(@).data('target')
-        $("[data-container~=#{target}]").slideDown("fast")
+        $("[data-container~=#{target}]").slideToggle("fast")
         event.preventDefault()
 
     toggleSearch: ->

@@ -79,12 +79,16 @@
                 <li>
                     <%= f.check_box :starred_feed_enabled, data: {behavior: "auto_submit"} %>
                     <%= f.label :starred_feed_enabled do %>
-                        Starred article feed <%= toggle_switch %>
+                        Starred article feed
                         <div data-behavior="starred_feed_url">
                             <% if @user.setting_on?(:starred_feed_enabled) %>
                                 <%= render partial: 'shared/starred_feed_url', locals: {user: @user} %>
                             <% end %>
                         </div>
+                        <%= toggle_switch %>
+                        <p class="control-group-description">
+                            For <a href="https://feedbin.com/blog/2013/04/10/starred-entry-feed/">integrating with other services</a>.
+                        </p>
                     <% end %>
                 </li>
             </ul>
