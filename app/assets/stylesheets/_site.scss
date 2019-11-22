@@ -334,7 +334,7 @@ body {
 }
 
 $color-link: (
-    debug:    a,
+    debug:    color-link,
     day:      $color-accent-blue-600,
     sunset:   $color-accent-blue-600,
     dusk:     $theme-color-dusk-700,
@@ -532,32 +532,9 @@ input[type="color"],
     }
 }
 
-input::-webkit-input-placeholder {
+input::placeholder,
+input:focus::placeholder {
     @include color($color-contrast-400);
-}
-input:focus::-webkit-input-placeholder {
-    @include color(map-get($color-contrast-400, day));
-}
-
-input:-moz-placeholder {
-    @include color($color-contrast-400);
-}
-input:focus:-moz-placeholder {
-    @include color(map-get($color-contrast-400, day));
-}
-
-input::-moz-placeholder {
-    @include color($color-contrast-400);
-}
-input:focus::-moz-placeholder {
-    @include color(map-get($color-contrast-400, day));
-}
-
-input:-ms-input-placeholder {
-    @include color($color-contrast-400);
-}
-input:focus:-ms-input-placeholder {
-    @include color(map-get($color-contrast-400, day));
 }
 
 input.processing {
@@ -973,7 +950,22 @@ label .radio-button .radio-button-inner {
             max-width: 100% !important;
         }
     }
-
+    &.tag-input {
+        margin-bottom: 8px;
+        input {
+            cursor: pointer;
+        }
+        input::placeholder {
+            @include color($color-contrast-600);
+            text-align: center;
+            font-weight: bold;
+        }
+        input:focus::placeholder {
+            text-align: left;
+            font-weight: normal;
+            @include color($color-contrast-400);
+        }
+    }
 }
 
 .field_with_errors input,
@@ -5443,7 +5435,7 @@ Settings
         }
     }
     .theme-background {
-        padding: 10px;
+        padding: 16px;
         @include background-color($color-contrast-100);
         border-radius: 4px;
     }
@@ -9113,7 +9105,7 @@ button.close {
         align-items: stretch;
         margin-bottom: 35px;
         .title {
-            flex-grow: 1;
+            flex: 1;
             position: relative;
             display: flex;
             justify-content: center;
@@ -9135,8 +9127,10 @@ button.close {
         .action {
             display: flex;
             align-items: center;
-            margin: 0 0 0 20px;
+            margin: 0 0 0 24px;
             position: relative;
+            flex-shrink: 0;
+            width: 43px;
             [type=checkbox] {
                 position: absolute !important;
                 top: -9999px !important;
@@ -9501,16 +9495,17 @@ button.close {
 .modal-body {
     position: relative;
     flex: 1 1 auto;
-    padding: 16px;
+    padding: 24px;
+    @media (max-width: $small-breakpoint) {
+        padding: 16px;
+    }
 }
 
 .modal-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    padding: 16px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 16px 24px;
     @include border-top($color-borders);
     &.hide {
         display: none;
@@ -9571,7 +9566,7 @@ button.close {
 }
 
 
-.modal-purpose-generic, .modal-purpose-subscribe, .modal-purpose-search {
+.modal-purpose-generic, .modal-purpose-search {
     .modal-body {
         padding: 0;
     }

@@ -11,7 +11,9 @@
                 <%= fields_for "feeds[]", feed do |pf| %>
                     <div class="subscription-option" data-behavior="subscription_option">
                         <div class="title">
-                            <%= pf.text_field :title, placeholder: feed.title %>
+                            <%= render "shared/input" do %>
+                                <%= pf.text_field :title, placeholder: feed.title %>
+                            <% end %>
                             <p class="feed-url" title="Feed URL"><%= feed.feed_url %></p>
                         </div>
                         <div class="action <%= (feeds.length == 1) ? 'hide' : '' %>">
@@ -40,6 +42,6 @@
             <h4 class="group-header">Tags</h4>
         </div>
         <%= render partial: "shared/tag_fields", locals: {tag_editor: tag_editor} %>
-        <%= submit_tag("Submit", class: "visually-hidden", data: {behavior: "submit_add"}) %>
+        <%= submit_tag("Submit", class: "visually-hidden", tabindex: "-1", data: {behavior: "submit_add"}) %>
     </div>
 <% end %>
