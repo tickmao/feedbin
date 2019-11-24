@@ -843,6 +843,14 @@ label .radio-button .radio-button-inner {
     }
 }
 
+.input-group-wrap {
+    margin-bottom: 16px;
+    label {
+        display: block;
+        padding-bottom: 8px;
+    }
+}
+
 .input-group {
     position: relative;
     display: flex;
@@ -3905,7 +3913,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
 
 .share-form {
     @include background-color($color-contrast-100);
-    padding: 17px 20px;
+    padding: 24px 16px;
     @include border-bottom($color-borders);
     @include arrow(
         $x-position: 241px,
@@ -3924,12 +3932,23 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     .share-form-inner {
         max-width: 620px;
         margin: 0 auto;
+        svg {
+            @include fill($color-icons);
+        }
     }
     h2 {
         @include font-size(16);
         @include color($color-contrast-700);
         font-weight: bold;
-        margin: 0 0 15px 0;
+        margin: 0 0 0 0;
+    }
+    .share-header {
+        display: flex;
+        align-items: center;
+        :last-child {
+            margin-left: auto
+        }
+        margin-bottom: 16px;
     }
     .field-cluster {
         margin-bottom: 15px;
@@ -3944,40 +3963,10 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         }
     }
     .share-controls {
-        overflow: hidden;
-        margin-bottom: 10px;
-        .checkbox, .radio, .control {
-            float: left;
-            margin-left: 15px;
-            @include font-size(14);
-            @include color($color-contrast-700);
-            &:first-child {
-                margin-left: 0
-            }
-            input {
-                margin-top: 2px;
-            }
+        margin-bottom: 16px;
+        .checkbox {
+            margin-bottom: 8px;
         }
-    }
-    .icon-share-email {
-        background: image-url("icon-share-email.svg") 100% 0 no-repeat;
-        background-size: 24px 16px;
-    }
-    .icon-share-evernote {
-        background: image-url("icon-share-evernote.svg") 100% 0 no-repeat;
-        background-size: 20px 25px;
-    }
-    .icon-share-tumblr {
-        background: image-url("icon-share-tumblr.svg") 100% 0 no-repeat;
-        background-size: 14px 24px;
-    }
-    .icon-share-pinboard {
-        background: image-url("icon-share-pinboard.svg") 100% 0 no-repeat;
-        background-size: 25px 25px;
-    }
-    .icon-share-micro-blog {
-        background: image-url("icon-share-micro-blog.svg") 100% 0 no-repeat;
-        background-size: 23px 23px;
     }
 }
 
@@ -5226,14 +5215,14 @@ Settings
         }
     }
     .starred-feed-wrap {
-        position: absolute;
-        right: 59px;
-        top: 0;
-        bottom: 0;
-        width: 250px;
+        width: 100%;
+        max-width: 480px;
         display: flex;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: flex-start;
+        .input-group {
+            flex: 1;
+        }
     }
     .toolbar {
         display: flex;
@@ -6770,8 +6759,9 @@ Buttons
     margin-bottom: -3px;
 }
 
-.stacked-form {
-    .input-group + .input-group {
+.stacked-form, .field-cluster {
+    .input-group + .input-group,
+    .autocomplete-parent + .input-group {
         margin-top: 16px;
     }
 }
@@ -9229,15 +9219,16 @@ button.close {
 .autocomplete-parent {
     position: relative;
     .autocomplete-suggestions {
-        background-color: #FFF;
-        border: 1px solid map-get($color-borders, day);
         border-radius: 4px;
+        @include border($color-borders);
+        @include background-color($color-base-alt);
         box-shadow: $box-shadow-dropdown;
     }
     .autocomplete-suggestion {
-        color: map-get($color-contrast-700, day);
-        border-color: map-get($color-borders, day);
-        padding: 10px 11px;
+        @include color($color-contrast-700);
+        @include border-color($color-borders);
+        padding: 12px 16px;
+        cursor: pointer;
         &:hover, &.autocomplete-selected {
             @include background-color($color-selected, $extra: !important);
             color: #fff !important;
@@ -9254,7 +9245,7 @@ button.close {
     .share-autocomplete {
         z-index: 2;
         position: absolute;
-        top: 41px;
+        top: 32px;
         left: 7px;
         width: 100%;
         max-width: 400px;

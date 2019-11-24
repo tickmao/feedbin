@@ -1109,7 +1109,13 @@ $.extend feedbin,
 
     description = feedbin.getSelectedText()
     url = $('#source_link').attr('href')
-    $('.share-form .description-placeholder').val("#{description} #{url}")
+    $('.share-form .description-placeholder').val("#{description}")
+
+    if description != ""
+      $('[data-basement-panel-target="micro_blog_share_panel"] .share-form .description-placeholder').val("#{description} #{url}")
+    else
+      $('[data-basement-panel-target="micro_blog_share_panel"] .share-form .description-placeholder').val("#{url}")
+
 
     source = $('.entry-header .author').first().text()
     if source == ""
@@ -2143,9 +2149,10 @@ $.extend feedbin,
     generalAutocomplete: ->
       $(document).on 'focus', '[data-behavior~=autocomplete_field]', (event) ->
         field = $(event.currentTarget)
+        console.log field
         field.autocomplete
           serviceUrl: field.data('autocompletePath')
-          appendTo: field.parent("[data-behavior~=autocomplete_parent]").find("[data-behavior=autocomplete_target]")
+          appendTo: field.closest("[data-behavior~=autocomplete_parent]").find("[data-behavior=autocomplete_target]")
           delimiter: /(,)\s*/
           deferRequestBy: 50
           autoSelectFirst: true
@@ -2175,11 +2182,11 @@ $.extend feedbin,
         description = $(@).find("option:selected").data('description-name')
         typeText = $(@).find("option:selected").text()
         if type == 'quote'
-          $('.share-form .source-placeholder').removeClass('hide')
-          $('.share-form .title-placeholder').addClass('hide')
+          $('.share-form .source-placeholder-wrap').removeClass('hide')
+          $('.share-form .title-placeholder-wrap').addClass('hide')
         else
-          $('.share-form .source-placeholder').addClass('hide')
-          $('.share-form .title-placeholder').removeClass('hide')
+          $('.share-form .source-placeholder-wrap').addClass('hide')
+          $('.share-form .title-placeholder-wrap').removeClass('hide')
 
         $('.share-form .type-text').text(typeText)
         $('.share-form .description-placeholder').attr('placeholder', description)
