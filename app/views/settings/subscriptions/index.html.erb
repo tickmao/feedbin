@@ -12,13 +12,12 @@
                         <span class="spinner"></span>
                     </span>
                 <% end %>
-                <span class="input-group last-control">
+                <%= render "shared/input", class: "last-control" do %>
                     <%= select_tag :sort, options_for_select([["Sort by Name", "name"], ["Sort by Last Updated", "updated"], ["Sort by Volume", "volume"]], params[:sort]), class: "select", data: {behavior: "autosubmit"} %>
-                    <span class="input-helper"></span>
                     <span class="accessory right">
                         <%= svg_tag "icon-caret" %>
                     </span>
-                </span>
+                <% end %>
             </div>
         <% end %>
     </div>

@@ -56,10 +56,10 @@
                         <label for="include_all_feeds"><%= svg_tag "icon-check" %>Include all</label>
                     </div>
 
-                    <span class="input-group last-control">
+
+                    <%= render "shared/input", class: "last-control" do %>
                         <input type="text" class="small-field" data-behavior="feed_search" placeholder="Filter" />
-                        <span class="input-helper"></span>
-                    </span>
+                    <% end %>
 
                 </div>
             </div>

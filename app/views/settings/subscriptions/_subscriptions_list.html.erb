@@ -11,13 +11,12 @@
                         <label for="select_all_feeds"><%= svg_tag "icon-check" %>Select all</label>
                     </div>
 
-                    <span class="input-group last-control">
-                        <%= select_tag :operation, options_for_select([["Actions", nil], ["Unsubscribe", "unsubscribe"], ["Show edits on articles", "show_updates"], ["Hide edits on articles", "hide_updates"], ["Mute Feed", "mute"], ["Unmute Feed", "unmute"]]), class: "select", disabled: true, data: {behavior: "feed_actions enable_control_target"} %><span class="input-helper"></span>
-                        <span class="input-helper"></span>
+                    <%= render "shared/input", class: "last-control" do %>
+                        <%= select_tag :operation, options_for_select([["Actions", nil], ["Unsubscribe", "unsubscribe"], ["Show edits on articles", "show_updates"], ["Hide edits on articles", "hide_updates"], ["Mute Feed", "mute"], ["Unmute Feed", "unmute"]]), class: "select", disabled: true, data: {behavior: "feed_actions enable_control_target"} %>
                         <span class="accessory right">
                             <%= svg_tag "icon-caret" %>
                         </span>
-                    </span>
+                    <% end %>
 
 
                 </div>
