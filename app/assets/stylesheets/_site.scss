@@ -358,8 +358,9 @@ a:hover {
 }
 
 a:focus {
-    outline: none;
-    box-shadow: $focus-glow;
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
 }
 
 a:hover,
@@ -1129,9 +1130,6 @@ table {
                 padding-left: 16px;
                 padding-right: 16px;
                 @include border($color-borders);
-                &:focus {
-                    box-shadow: 0 0 0 1px $theme-color-dusk-base, $focus-glow;
-                }
             }
         }
     }
@@ -5051,9 +5049,6 @@ Settings
     width: 310px;
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
-    a:focus {
-        box-shadow: $focus-glow-inset;
-    }
     .logo {
         padding: 39px 0 0 21px;
         display: block;
@@ -8973,6 +8968,7 @@ button.close {
 }
 
 .modal-header-input {
+    $icon-width: 64px;
     position: relative;
     top: 0;
     z-index: 100;
@@ -8989,10 +8985,11 @@ button.close {
         top: 0;
         bottom: 0;
         left: 0;
-        width: 50px;
+        width: $icon-width;
         display: flex;
         align-items: center;
         justify-content: center;
+        pointer-events: none;
         svg {
             @include fill($color-icons);
         }
@@ -9016,9 +9013,10 @@ button.close {
     }
     .favicon-wrap {
         position: absolute;
-        right: 15px;
+        right: 24px;
     }
     input {
+        border-radius: 8px;
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         margin: 0;
@@ -9026,7 +9024,7 @@ button.close {
         margin: 0;
         width: 100%;
         max-width: 100%;
-        padding: 20px 60px 20px 47px;
+        padding: 20px 60px 20px $icon-width - 8px;
         font-size: 24px;
         @include color($color-contrast-700);
         @include background-color($color-contrast-100);
@@ -9600,16 +9598,19 @@ button.close {
 
 .modal-purpose-edit {
     .modal-footer {
-        margin-top: -30px;
+        border-top: none;
         .modal-bottom & {
             @include border-color($color-borders);
         }
     }
-    .tags-form .modal-footer {
-        margin-top: 0;
-    }
     .modal-body {
-        padding-bottom: 16px;
+        padding-bottom: 32px;
+    }
+    .modal-body + .modal-footer {
+        @include border-top($color-borders);
+    }
+    .control-group {
+        margin-bottom: 0;
     }
 }
 

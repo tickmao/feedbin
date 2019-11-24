@@ -7,10 +7,9 @@
             <div class="inset-content">
                 <h4 class="group-header">Email</h4>
             </div>
-            <div class="input-group">
+            <%= render "shared/input" do %>
                 <%= f.email_field :email, placeholder: 'Email' %>
-                <span class="input-helper"></span>
-            </div>
+            <% end %>
             <div class="button-wrap">
                 <button type="submit" class="button">Update</button>
             </div>
@@ -22,14 +21,12 @@
                 <h4 class="group-header">Update Password</h4>
             </div>
             <div class="stacked-form">
-                <div class="input-group">
+                <%= render "shared/input" do %>
                     <%= f.password_field :old_password, placeholder: 'Old Password' %>
-                    <span class="input-helper"></span>
-                </div>
-                <div class="input-group">
+                <% end %>
+                <%= render "shared/input" do %>
                     <%= f.password_field :password, placeholder: 'New Password' %>
-                    <span class="input-helper"></span>
-                </div>
+                <% end %>
             </div>
             <div class="button-wrap">
                 <button type="submit" class="button">Update</button>

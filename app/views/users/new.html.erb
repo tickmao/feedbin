@@ -36,13 +36,11 @@
             <% end %>
             <%= f.hidden_field :stripe_token, data: { behavior: 'stripe_token' } %>
 
-            <div class="input-group">
+            <%= render "shared/input" do %>
                 <%= f.email_field :email, autofocus: true, placeholder: 'Email', tabindex: 1 %>
-                <span class="input-helper"></span>
             </div>
-            <div class="input-group">
+            <%= render "shared/input" do %>
                 <%= f.password_field :password, placeholder: 'Password', tabindex: 2 %>
-                <span class="input-helper"></span>
             </div>
 
             <button type="submit" class="button flex" tabindex="3">Sign Up</button>

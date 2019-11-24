@@ -5,10 +5,9 @@
                 <h4 class="group-header">
                     <label for="action_params_title">Action Name</label>
                 </h4>
-                <div class="input-group">
+                <%= render "shared/input" do %>
                     <%= form.text_field :title, placeholder: "Name" %>
-                    <span class="input-helper"></span>
-                </div>
+                <% end %>
             </li>
         </ul>
         <ul class="control-group no-border">
@@ -16,10 +15,9 @@
                 <h4 class="group-header">
                     <label for="action_params_query">Article Matches Search</label>
                 </h4>
-                <div class="input-group">
+                <%= render "shared/input" do %>
                     <%= form.search_field :query, placeholder: "Search" %>
-                    <span class="input-helper"></span>
-                </div>
+                <% end %>
             </li>
         </ul>
 

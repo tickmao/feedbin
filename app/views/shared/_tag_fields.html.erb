@@ -1,9 +1,8 @@
 <%= content_tag :ul, class: "control-group" do  -%>
     <li class="text">
-        <div class="input-group tag-input">
+        <%= render "shared/input", class: "tag-input" do %>
             <input placeholder="+ New Tag" type="text" name="tag_name[]">
-            <span class="input-helper"></span>
-        </div>
+        <% end %>
     </li>
     <% tag_editor.tags.each do |tag| %>
     <li>
