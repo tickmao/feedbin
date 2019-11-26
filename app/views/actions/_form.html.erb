@@ -3,20 +3,20 @@
         <ul class="control-group no-border">
             <li class="text-label no-border">
                 <h4 class="group-header">
-                    <label for="action_params_title">Action Name</label>
+                    <%= form.label :title, "Name" %>
                 </h4>
                 <%= render "shared/input" do %>
-                    <%= form.text_field :title, placeholder: "Name" %>
+                    <%= form.text_field :title %>
                 <% end %>
             </li>
         </ul>
         <ul class="control-group no-border">
             <li class="text-label no-border">
                 <h4 class="group-header">
-                    <label for="action_params_query">Article Matches Search</label>
+                    <%= form.label :query, "Search Terms" %>
                 </h4>
                 <%= render "shared/input" do %>
-                    <%= form.search_field :query, placeholder: "Search" %>
+                    <%= form.search_field :query, placeholder: 'For example: title:"[Sponsor]"' %>
                 <% end %>
             </li>
         </ul>

@@ -21,9 +21,12 @@
             <%= f.hidden_field :service_id, value: sharing_service[:service_id] %>
             <%= f.hidden_field :operation, value: '' %>
             <div class="stacked-form">
-                <%= render "shared/input" do %>
-                    <%= f.text_field :kindle_address, placeholder: 'Kindle Email Address', class: 'no-margin' %>
-                <% end %>
+                <div class="input-group-wrap">
+                    <%= f.label :kindle_address, "Kindle Email Address" %>
+                    <%= render "shared/input" do %>
+                        <%= f.text_field :kindle_address %>
+                    <% end %>
+                </div>
             </div>
             <div class="button-wrap">
                 <%= button_tag 'Cancel', type: "button", class: 'button button-secondary button-inline', data: {behavior: "toggle_service_options"} %>

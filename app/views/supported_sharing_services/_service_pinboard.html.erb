@@ -7,9 +7,12 @@
             <%= f.hidden_field :service_id, value: sharing_service[:service_id] %>
             <%= f.hidden_field :operation, value: 'authorize' %>
             <div class="stacked-form">
-                <%= render "shared/input" do %>
-                    <%= password_field_tag 'password', '', placeholder: 'API Token', class: 'no-margin' %>
-                <% end %>
+                <div class="input-group-wrap">
+                    <label for="pinboard_token">API Token</label>
+                    <%= render "shared/input" do %>
+                        <%= password_field_tag 'password', '', id: 'pinboard_token' %>
+                    <% end %>
+                </div>
             </div>
             <div class="button-wrap">
                 <%= button_tag 'Cancel', type: "button", class: 'button button-secondary button-inline', data: {behavior: "toggle_service_options"} %>

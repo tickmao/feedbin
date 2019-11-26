@@ -20,12 +20,19 @@
             <%= f.hidden_field :service_id, value: sharing_service[:service_id] %>
             <%= f.hidden_field :operation, value: "" %>
             <div class="stacked-form">
-                <%= render "shared/input" do %>
-                    <% f.text_field :email_name, placeholder: "Full Name" %>
-                <% end %>
-                <%= render "shared/input" do %>
-                    <% f.email_field :email_address, placeholder: "Reply-To" %>
-                <% end %>
+                <div class="input-group-wrap">
+                    <%= f.label :email_name, "Full Name" %>
+                    <%= render "shared/input" do %>
+                        <% f.text_field :email_name %>
+                    <% end %>
+                </div>
+                <div class="input-group-wrap">
+                    <%= f.label :email_address, "Reply-To" %>
+                    <%= render "shared/input" do %>
+                        <% f.email_field :email_address %>
+                    <% end %>
+                </div>
+
             </div>
             <div class="button-wrap">
                 <%= button_tag "Cancel", type: "button", class: "button button-secondary", data: {behavior: "toggle_service_options"} %>

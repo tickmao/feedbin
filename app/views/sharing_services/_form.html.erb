@@ -4,12 +4,18 @@
     </div>
     <div class="pill form">
         <div class="stacked-form">
-            <%= render "shared/input" do %>
-                <%= f.text_field :label, placeholder: 'Label' %>
-            <% end %>
-            <%= render "shared/input" do %>
-                <%= f.url_field :url, placeholder: 'URL' %>
-            <% end %>
+            <div class="input-group-wrap">
+                <%= f.label :label, "Label" %>
+                <%= render "shared/input" do %>
+                    <%= f.text_field :label %>
+                <% end %>
+            </div>
+            <div class="input-group-wrap">
+                <%= f.label :url, "URL" %>
+                <%= render "shared/input" do %>
+                    <%= f.url_field :url %>
+                <% end %>
+            </div>
         </div>
         <p class="control-group-description">Create your own sharing service. <a href="https://feedbin.com/help/sharing-read-it-later-services/">How does this work</a>?</p>
         <div class="button-wrap">

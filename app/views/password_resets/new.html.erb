@@ -1,16 +1,20 @@
 <% @class = 'login' %>
 <div class="login-wrap">
-    <a href="/" class="logo hide-text">Feedbin</a>
+    <a href="/" class="logo">
+        <%= svg_tag "logo-full" %>
+    </a>
     <div class="box">
         <%= render partial: 'shared/flash', locals: {flash: flash} %>
         <h3 class="box-header">Reset Password</h3>
         <%= form_tag password_resets_path, novalidate: 'novalidate' do %>
-            <p>
+            <div class="input-group-wrap">
+                <label for="email">Account email</label>
                 <%= render "shared/input" do %>
-                    <%= email_field_tag :email, params[:email], placeholder: 'Email' %>
+                    <%= email_field_tag :email, params[:email] %>
                 <% end %>
-            </p>
-            <button class="button">Send</button>
+            </div>
+            <button class="button flex">Send</button>
         <% end %>
     </div>
 </div>
+<%= render partial: 'shared/svg' %>
