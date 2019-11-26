@@ -476,7 +476,7 @@ textarea {
 
 @mixin focus {
     @include color($color-contrast-700);
-    @include background-color($color-base);
+    @include background-color($color-contrast-100);
     outline: none;
 }
 
@@ -1197,11 +1197,27 @@ table {
         display: flex;
     }
     .service-options-wrap {
+        @include background-color($color-contrast-100);
         position: relative;
         height: 0;
         transition: height .2s ease, opacity .2s ease;
         opacity: 0;
         overflow: hidden;
+        border-radius: 0 0 8px 8px;
+        @include arrow(
+            $x-position: 24px,
+            $y-position: 0,
+            $arrow-color: $color-base,
+            $shadow-color: $color-arrow-shadow,
+            $origin: left)
+        {
+            z-index: 10;
+            visibility: hidden;
+        }
+        &.open:after,
+        &.open:before {
+            visibility: visible;
+        }
         p {
             @include color($color-contrast-500);
         }
@@ -6628,6 +6644,7 @@ Buttons
     &:active {
         @include background-color(transparent);
         @include color($color-selected-active);
+        @include border-color(transparent);
         .theme-dusk &, .theme-midnight & {
             color: #fff;
         }
