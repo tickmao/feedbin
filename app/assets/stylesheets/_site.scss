@@ -7190,7 +7190,7 @@ a:hover.danger {
         &:before {;
             background-color: $color-accent-red-600;
             background-image: image-url("icon-bang.svg");
-            background-position: 5px 3px;
+            background-position: 4px 3px;
             background-size: 4px 10px;
         }
         .status-muted & {
