@@ -11,7 +11,7 @@ $audio-player-height-minimized: 54px;
 $base-button-position: 10px;
 
 /*-- Colors --*/
-$theme-color-base: #FFFFFF;
+$theme-color-base: white;
 $theme-color-100: #F5F5F7;
 $theme-color-200: #E9E9EB;
 $theme-color-300: #BDBFC3;
@@ -38,7 +38,7 @@ $theme-color-dusk-500: #9B9B9B;
 $theme-color-dusk-600: #D4D4D4;
 $theme-color-dusk-700: #F6F6F6;
 
-$theme-color-midnight-base: #000000;
+$theme-color-midnight-base: black;
 $theme-color-midnight-100: #141414;
 $theme-color-midnight-200: #242424;
 $theme-color-midnight-300: #3B3B3B;
@@ -76,7 +76,7 @@ $color-contrast-100: (
 
 $color-base-alt: (
     debug:    color-base-alt,
-    day:      #FFFFFF,
+    day:      white,
     sunset:   #f5f2eb,
     dusk:     $theme-color-dusk-100,
     midnight: $theme-color-midnight-100,
@@ -597,7 +597,7 @@ label {
         left: -21px;
         top: 50%;
         transform: translateY(-50%);
-        @include fill(#FFF);
+        @include fill(white);
         display: none;
     }
     :focus ~ label {
@@ -746,7 +746,7 @@ label .switch-inner {
         }
         &:after {
             box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-            @include background-color(#FFF);
+            @include background-color(white);
         }
         svg {
             opacity: 1;
@@ -759,7 +759,7 @@ label .switch-inner {
     }
     :active ~ & {
         &:after {
-            @include background-color(#FFF);
+            @include background-color(white);
         }
     }
     :checked:active ~ & {
@@ -902,11 +902,11 @@ label .radio-button .radio-button-inner {
         &:active {
             @include border-color($color-selected-hover);
             @include background-color($color-selected-hover);
-            @include color(#FFF);
+            @include color(white);
             cursor: pointer;
         }
         svg {
-            @include fill(#FFF, $extra: !important);
+            @include fill(white, $extra: !important);
         }
     }
     svg {
@@ -1730,7 +1730,7 @@ $hamburger-dot: 4px;
     }
     .icon-subscribe {
         $size: 38px;
-        @include color(#FFF);
+        @include color(white);
         @include background-color($color-icons);
         user-select: none;
         line-height: 1;
@@ -2070,7 +2070,7 @@ $hamburger-dot: 4px;
             }
             &.selected {
                 .feed-action-button {
-                    @include color(#FFF);
+                    @include color(white);
                 }
                 .clear-form {
                     display: block;
@@ -2112,7 +2112,7 @@ $hamburger-dot: 4px;
             &.selected {
                 .feed-action-button {
                     svg {
-                        @include fill(#FFF);
+                        @include fill(white);
                     }
                 }
                 .clear-form {
@@ -2130,9 +2130,9 @@ $hamburger-dot: 4px;
                 .feed-link {
                     background-color: transparent !important;
                     .rename-feed-input {
-                        color: #FFF !important;
+                        color: white !important;
                         &.disabled {
-                            color: #FFF !important;
+                            color: white !important;
                         }
                     }
                 }
@@ -2182,11 +2182,11 @@ $hamburger-dot: 4px;
 
 .feeds:not(.dragging) .selected > a {
     @include background-color($color-selected-off);
-    color: #fff !important;
+    color: white !important;
     .rename-feed-input {
         color: map-get($color-contrast-700, day);
         &.disabled {
-            color: #fff;
+            color: white;
         }
     }
 }
@@ -2285,7 +2285,7 @@ $hamburger-dot: 4px;
 .favicon-wrap {
     height: 20px;
     width: 20px;
-    background-color: #FFF;
+    background-color: white;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2307,7 +2307,7 @@ $hamburger-dot: 4px;
         }
     }
     .entries & {
-        @include background-color((day: transparent, dusk: #FFF, sunset: transparent, midnight: #FFF));
+        @include background-color((day: transparent, dusk: white, sunset: transparent, midnight: white));
         $shadow: (
             day: none,
             dusk: 0px 1px 1px 0px rgba(0, 0, 0, 0.1),
@@ -2325,7 +2325,7 @@ $hamburger-dot: 4px;
 }
 
 li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
-    @include background-color(#FFF);
+    @include background-color(white);
     @include box-shadow(rgba(0, 0, 0, 0.1), 0px 1px 1px 0px);
     .feeds &.collection-favicon {
         background: transparent;
@@ -2357,7 +2357,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     svg {
         @include fill($color-icons);
         li.selected > .feed-link &, li.selected.feed-link &, .entries li.selected & {
-            fill: #FFF;
+            fill: white;
         }
     }
     .entries & {
@@ -2671,7 +2671,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         border-radius: $dot/2;
         content: '';
         display: inline-block;
-        background-color: #FFF;
+        background-color: white;
     }
     .icon-entry-actions {
         position: absolute;
@@ -2752,19 +2752,19 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             border-bottom-color: transparent;
         }
         .title, .feed-title, .quoted-summary, .body {
-            color: #FFFFFF !important;
+            color: white !important;
         }
         .title-inner span, .time {
-            color: rgba(#FFFFFF, .5) !important;
+            color: rgba(white, .5) !important;
         }
         .icon-retweet, .icon-media {
-            fill: rgba(#FFFFFF, .5);
+            fill: rgba(white, .5);
         }
         .icon-star {
-            fill: #FFFFFF;
+            fill: white;
         }
         .quoted-summary {
-            border-color: rgba(#FFFFFF, .3) !important;
+            border-color: rgba(white, .3) !important;
         }
         .feed-title {
             margin-right: 26px;
@@ -3056,8 +3056,8 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         }
         .favicon-wrap {
             position: static;
-            background-color: #FFF;
-            @include background-color((day: transparent, dusk: #FFF, sunset: transparent, midnight: #FFF));
+            background-color: white;
+            @include background-color((day: transparent, dusk: white, sunset: transparent, midnight: white));
             $shadow: (
                 day: none,
                 dusk: 0px 1px 1px 0px rgba(0, 0, 0, 0.1),
@@ -3192,7 +3192,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             top: 23px;
             pointer-events: none;
             .theme-dusk &, .theme-midnight & {
-                border-top-color: #FFF;
+                border-top-color: white;
             }
         }
     }
@@ -3256,7 +3256,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                 content: "";
                 display: block;
                 width: 18px;
-                background-color: #000;
+                background-color: black;
             }
             &:before {
                 top: 8px;
@@ -3293,7 +3293,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             &:after,
             .theme-button-inner:before,
             .theme-button-inner:after {
-                background-color: #FFF;
+                background-color: white;
             }
             .theme-dusk & {
                 @include border-color($color-selected);
@@ -3305,7 +3305,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             &:after,
             .theme-button-inner:before,
             .theme-button-inner:after {
-                background-color: #FFF;
+                background-color: white;
             }
             .theme-midnight & {
                 @include border-color($color-selected);
@@ -3633,9 +3633,6 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             top: 35px;
         }
     }
-    .button-settings {
-        color: #333;
-    }
 }
 
 .account-toolbar {
@@ -3657,7 +3654,6 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #ddd;
     z-index: 2;
     appearance: none;
     border: none;
@@ -3762,11 +3758,11 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                 }
                 &:hover, &.selected {
                     @include background-color($color-selected, $extra: !important);
-                    color: #fff  !important;
+                    color: white  !important;
                     text-decoration: none;
                     &.with-icon {
                         svg {
-                            @include fill(#FFF);
+                            @include fill(white);
                         }
                     }
                     .favicon-unread-active {
@@ -3776,7 +3772,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                         display: none;
                     }
                     .share-keyboard {
-                        color: #FFF;
+                        color: white;
                     }
                 }
                 &.no-border {
@@ -4170,7 +4166,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     video, audio {
         display: block;
         width: 100%;
-        background-color: #000;
+        background-color: black;
         max-width: 100%;
     }
 
@@ -4237,7 +4233,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         .favicon-wrap {
             margin-right: 8px;
             position: static;
-            background-color: #FFF;
+            background-color: white;
             flex: 0 0 auto;
         }
         .meta-wrap {
@@ -4367,7 +4363,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         position: relative;
         height: 0;
         width: 100%;
-        background: #f0f0f0;
+        background: black;
         .inner {
             cursor: pointer;
             background-color: black;
@@ -4476,7 +4472,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
                 position: absolute;
                 max-width: 100%;
                 max-height: 100%;
-                fill: #FFF;
+                fill: white;
             }
         }
     }
@@ -4973,7 +4969,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         height: $height;
         line-height: $height;
         top: -$height;
-        color: #fff;
+        color: white;
         font-size: 16px;
         padding: 0 10px;
         margin: 0 auto;
@@ -4989,11 +4985,11 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
             top: 0;
         }
         &.error {
-            background-color: #d61f33;
+            background-color: $color-accent-red-600;
         }
         &:hover {
             text-decoration: none;
-            color: #FFF;
+            color: white;
         }
         &[href=""] {
             cursor: default;
@@ -5027,7 +5023,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     }
     li.selected {
         @include background-color($color-selected);
-        color: #fff !important;
+        color: white !important;
     }
     .feed-list {
         padding-bottom: 22px;
@@ -5047,7 +5043,7 @@ Settings
 .content-inner {
     margin-top: 20px;
     padding: 4px 20px 12px 20px;
-    background-color: #FFF;
+    background-color: white;
     border: 1px solid map-get($color-borders, day);
     border-radius: 4px;
 }
@@ -5129,7 +5125,7 @@ Settings
             padding-right: $nav-padding;
         }
         body:not(.touch) &:hover {
-            color: #FFF;
+            color: white;
             text-decoration: none;
             @include background-color($color-selected-off);
         }
@@ -5146,7 +5142,7 @@ Settings
         a {
             @include color($color-contrast-700);
             &.active {
-                @include color(#FFF);
+                @include color(white);
             }
         }
         .nav-header {
@@ -5421,19 +5417,19 @@ Settings
     }
     .theme-day {
         .theme-button-day {
-            background-color: #FFF;
+            background-color: white;
             @include border-color($color-selected);
         }
     }
     .theme-sunset {
         .theme-button-sunset {
-            background-color: #FFF;
+            background-color: white;
             @include border-color($color-selected);
         }
     }
     .theme-dusk {
         .theme-button-dusk {
-            background-color: #FFF;
+            background-color: white;
             @include border-color($color-selected);
         }
     }
@@ -5620,7 +5616,7 @@ Settings
         border: none;
         display: inline-block;
         &.button-caret {
-            color: #000;
+            color: black;
             position: relative;
             padding-right: 15px;
             &:before {
@@ -5633,7 +5629,7 @@ Settings
                 height: 0;
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-top: 5px solid #000;
+                border-top: 5px solid black;
             }
         }
         &.no-margin {
@@ -5995,7 +5991,7 @@ Settings
         background-color: $color-accent-red-600;
         border-radius: 8px;
         padding: 10px;
-        color: #fff;
+        color: white;
     }
 }
 
@@ -6246,7 +6242,7 @@ label.text-field {
     text-align: center;
     border-radius: 4px;
     box-shadow: 1px 1px 1px rgba(black, .4);
-    background-color: #FFF;
+    background-color: white;
     color: map-get($color-contrast-700, day);
 }
 
@@ -6291,7 +6287,7 @@ table.small td {
         @include border-bottom($color-borders);
     }
     .autocomplete-suggestion {
-        color: #000;
+        color: black;
         padding: 5px;
         pointer-events: none;
         border-bottom: none;
@@ -6367,10 +6363,10 @@ table.small td {
 
 .push-options {
     font-size: 13px;
-    color: #999;
+    @include color($color-contrast-600);
     line-height: 1.2;
-    border: 1px solid map-get($color-borders, day);
-    background: map-get($color-contrast-100, day);
+    @include border($color-borders);
+    @include background-color($color-contrast-100);
     margin: 0 0 15px 0;
     padding: 8px 6px;
     button {
@@ -6412,7 +6408,7 @@ table.small td {
     }
 }
 .highlight-positive {
-    color: #6AB042;
+    color: $color-accent-green-600;
     font-weight: bold;
 }
 
@@ -6547,7 +6543,7 @@ Buttons
     @include font-size(14);
     font-weight: bold;
     font-family: $font-stack;
-    @include color(#FFF);
+    @include color(white);
     text-decoration: none !important;
     @include border($color-selected);
     border-width: 2px;
@@ -6577,12 +6573,12 @@ Buttons
     }
     &:hover {
         text-decoration: none;
-        @include color(#FFF);
+        @include color(white);
     }
     &:active {
         @include border-color($color-selected-hover);
         @include background-color($color-selected-hover);
-        @include color(#FFF);
+        @include color(white);
         cursor: pointer;
     }
     &:focus {
@@ -6638,7 +6634,7 @@ Buttons
         @include background-color(transparent);
         @include color($color-contrast-700);
         .theme-dusk &, .theme-midnight & {
-            color: #fff;
+            color: white;
         }
     }
     &:active {
@@ -6646,7 +6642,7 @@ Buttons
         @include color($color-selected-active);
         @include border-color(transparent);
         .theme-dusk &, .theme-midnight & {
-            color: #fff;
+            color: white;
         }
     }
 }
@@ -6678,7 +6674,7 @@ Buttons
     cursor: move;
     @include border-color($color-contrast-700);
     @include background-color($color-contrast-700);
-    @include color($color-contrast-100);
+    @include color($color-base);
     text-decoration: none !important;
     &:hover {
         @include color($color-contrast-100);
@@ -6879,7 +6875,7 @@ select {
     padding: 8px 35px 8px 14px;
     margin-bottom: 20px;
     @include background-color($color-selected);
-    color: #FFF;
+    color: white;
 }
 
 .alert:empty {
@@ -6887,7 +6883,7 @@ select {
 }
 
 .alert h4 {
-    color: #FFF;
+    color: white;
     margin: 0;
 }
 
@@ -7065,7 +7061,7 @@ input[type="text"].hide {
 }
 
 a:hover.danger {
-    color: #b80000;
+    color: $color-accent-red-600;
 }
 
 .xs-hide {
@@ -7248,7 +7244,7 @@ Login and Sign Up
         border: 1px solid transparent;
         @include native-theme("border-color", $color-borders);
         border-radius: 4px;
-        background-color: #FFF;
+        background-color: white;
         @include native-theme("background-color", $color-base);
         margin: 0 auto 14px auto;
         width: 100%;
@@ -7394,7 +7390,7 @@ Media Players
         justify-content: center;
         @include background-color($color-contrast-200);
         position: relative;
-        border: 2px solid #FFF;
+        border: 2px solid white;
         box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.1);
         .image-container {
             line-height: 0;
@@ -7742,7 +7738,7 @@ Media Players
     }
     .mejs_empty__time {
         box-sizing: content-box;
-        color: #fff;
+        color: white;
         font-size: 11px;
         font-weight: bold;
         height: 24px;
@@ -7954,7 +7950,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__container {
-    background: #000;
+    background: black;
     box-sizing: border-box;
     font-family: 'Helvetica', Arial, serif;
     position: relative;
@@ -8002,7 +7998,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__embed,
 .mejs__embed body {
-    background: #000;
+    background: black;
     height: 100%;
     margin: 0;
     overflow: hidden;
@@ -8196,7 +8192,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 /* Start: Time (Current / Duration) */
 .mejs__time {
     box-sizing: content-box;
-    color: #fff;
+    color: white;
     font-size: 11px;
     font-weight: bold;
     height: 24px;
@@ -8230,7 +8226,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     height: 0px;
     border-style: solid;
     border-width: 9px 0 9px 15px;
-    border-color: transparent transparent transparent #FFF;
+    border-color: transparent transparent transparent white;
     content: "";
     position: absolute;
     top: 11px;
@@ -8247,7 +8243,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
     top: 11px;
     left: 5px;
     pointer-events: none;
-    background-color: #FFF;
+    background-color: white;
 }
 
 .mejs__controls .mejs__pause button:before {
@@ -8462,7 +8458,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__broadcast {
-    color: #fff;
+    color: white;
     height: 10px;
     position: absolute;
     top: 15px;
@@ -8639,7 +8635,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__captions-selector-list-item,
 .mejs__chapters-selector-list-item {
-    color: #fff;
+    color: white;
     cursor: pointer;
     display: block;
     list-style-type: none !important;
@@ -8684,7 +8680,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 
 .mejs__captions-layer {
     bottom: 0;
-    color: #fff;
+    color: white;
     font-size: 16px;
     left: 0;
     line-height: 20px;
@@ -8693,7 +8689,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 
 .mejs__captions-layer a {
-    color: #fff;
+    color: white;
     text-decoration: underline;
 }
 
@@ -8739,7 +8735,7 @@ Reference: http://blog.rrwd.nl/2015/04/04/the-screen-reader-text-class-why-and-h
 }
 .mejs__cannotplay,
 .mejs__cannotplay a {
-    color: #fff;
+    color: white;
     font-size: 0.8em;
 }
 
@@ -9212,7 +9208,7 @@ button.close {
     }
     &:hover, &.autocomplete-selected {
         @include background-color($color-selected);
-        color: #fff;
+        color: white;
     }
 }
 
@@ -9231,7 +9227,7 @@ button.close {
         cursor: pointer;
         &:hover, &.autocomplete-selected {
             @include background-color($color-selected, $extra: !important);
-            color: #fff !important;
+            color: white !important;
         }
     }
     .autocomplete-suggestion:first-child {
@@ -9778,7 +9774,7 @@ $tooltip-arrow-height: 6px;
 .tooltip-inner {
     max-width: 200px;
     padding: 8px 8px;
-    color: #FFF;
+    color: white;
     text-align: center;
     @include background-color($color-base-dark-700);
     border-radius: 4px;
