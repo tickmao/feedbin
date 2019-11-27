@@ -6,7 +6,7 @@
             <h4 class="group-header"><%= "Feed".pluralize(feeds.length) %></h4>
         </div>
 
-        <div class="inset-content" style="margin-bottom: 50px;">
+        <div class="inset-content" style="margin-bottom: 51px;">
             <% feeds.each_with_index do |feed, index| %>
                 <%= fields_for "feeds[]", feed do |pf| %>
                     <div class="subscription-option" data-behavior="subscription_option">
@@ -25,15 +25,14 @@
                         <p class="feed-url" title="Feed URL"><%= feed.feed_url %></p>
                     </div>
                     <% if feed.twitter_feed? %>
-                        <div class="subscription-preferences">
-                            <label>
-                                Tweets with media and links only
-                                <%= pf.check_box :media_only, checked: true, data: {behavior: "check_toggle"} %>
-                                <%= pf.label :media_only do %>
-                                    <%= toggle_switch %>
-                                <% end %>
-                            </label>
-                        </div>
+                    <ul class="control-group">
+                        <li class="right">
+                            <%= pf.check_box :media_only, checked: false %>
+                            <%= pf.label :media_only do %>
+                                Tweets with media and links only <%= toggle_switch %>
+                            <% end %>
+                        </li>
+                    </ul>
                     <% end %>
                 <% end %>
             <% end %>

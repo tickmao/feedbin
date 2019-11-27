@@ -478,7 +478,7 @@ textarea {
     @include color($color-contrast-700);
     @include background-color($color-contrast-100);
     outline: none;
-    @include border($color-contrast-500);
+    @include border(transparent);
 }
 
 textarea,
@@ -1145,6 +1145,10 @@ table {
                 padding-left: 16px;
                 padding-right: 16px;
                 @include border($color-borders);
+            }
+            .status-flag {
+                border-radius: 8px 0 0 0;
+                left: -1px;
             }
         }
     }
@@ -6157,6 +6161,9 @@ label.text-field {
                 padding: 0;
             }
         }
+        &.right {
+            text-align: right;
+        }
     }
     .table {
         @include border-top($color-borders);
@@ -7183,7 +7190,7 @@ a:hover.danger {
         &:before {;
             background-color: $color-accent-red-600;
             background-image: image-url("icon-bang.svg");
-            background-position: 4px 3px;
+            background-position: 5px 3px;
             background-size: 4px 10px;
         }
         .status-muted & {
@@ -9001,10 +9008,6 @@ button.close {
             }
         }
     }
-    .favicon-wrap {
-        position: absolute;
-        right: 24px;
-    }
     input {
         border-radius: 8px;
         border-bottom-left-radius: 0;
@@ -9039,11 +9042,12 @@ button.close {
     display: flex;
     input {
         border-radius: $modal-border-radius;
-        padding-left: 20px;
+        padding-left: 16px;
+
     }
     .favicon-target {
         position: absolute;
-        right: 15px;
+        right: 22px;
         top: 0;
         bottom: 0;
         display: flex;
@@ -9070,7 +9074,7 @@ button.close {
         justify-content: center;
         flex-direction: column;
         text-align: center;
-        padding-left: 15px;
+        padding-left: 24px;
         font-size: 18px;
         padding-top: 5px;
     }
@@ -9102,7 +9106,7 @@ button.close {
         }
         .feed-url {
             position: absolute;
-            bottom: -40px;
+            bottom: -22px;
             left: 8px;
             font-size: 12px;
             @include color($color-contrast-500);
@@ -9111,6 +9115,7 @@ button.close {
             white-space: nowrap;
             max-width: 90%;
             padding-right: 5px;
+            margin: 0;
         }
         .action {
             display: flex;
@@ -9134,26 +9139,6 @@ button.close {
             }
         }
     }
-    .subscription-preferences {
-        label {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            [type=checkbox] {
-                position: absolute !important;
-                top: -9999px !important;
-                left: -9999px !important;
-            }
-            .switch-inner {
-                margin-left: 15px;
-                position: relative;
-                display: inline-block;
-                right: 0 !important;
-                top: 0;
-            }
-        }
-
-    }
     .feed-url {
         display: none;
     }
@@ -9162,6 +9147,7 @@ button.close {
     }
 }
 .modal-footer-message {
+    @include font-size(14);
     margin-right: auto !important;
     @media (max-width: 600px) {
         display: none !important;
@@ -9505,11 +9491,7 @@ button.close {
 }
 
 .modal-footer > :not(:first-child) {
-    margin-left: .25rem;
-}
-
-.modal-footer > :not(:last-child) {
-    margin-right: .25rem;
+    margin-left: 16px;
 }
 
 .modal-scrollbar-measure {

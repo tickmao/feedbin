@@ -1256,6 +1256,17 @@ $.extend feedbin,
       $.ajax(xhr)
     )
 
+  hideSubscribeResults: ->
+    $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').hide()
+    $('.modal-purpose-subscribe .modal-dialog').removeClass('done');
+    $('[data-behavior~=feeds_search_favicon_target]').html('')
+
+  showSubscribeResults: ->
+    $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').slideDown(200)
+    $('.modal-purpose-subscribe .modal-dialog').addClass('done');
+    $('.modal-purpose-subscribe [data-behavior~=submit_add]').removeAttr('disabled');
+    $('.modal-purpose-subscribe .title').first().find("input").focus();
+
   showModal: (target, title = null) ->
     modal = $("#modal")
     classes = modal[0].className.split(/\s+/)
@@ -2003,9 +2014,7 @@ $.extend feedbin,
 
     feedsSearch: ->
       $(document).on 'submit', '[data-behavior~=feeds_search]', ->
-        $('.modal-purpose-subscribe .feed-search-results').hide()
-        $('[data-behavior~=feeds_search_favicon_target]').html('')
-        $('.modal-purpose-subscribe .modal-dialog').removeClass('done');
+        feedbin.hideSubscribeResults()
 
     formProcessing: ->
       $(document).on 'submit', '[data-behavior~=spinner], [data-behavior~=subscription_form], [data-behavior~=search_form], [data-behavior~=feeds_search]', ->
