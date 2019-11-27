@@ -146,16 +146,6 @@ class SupportedSharingService < ApplicationRecord
     @service ||= klass.constantize.new(self)
   end
 
-  def active?
-    if requires_auth? && auth_present?
-      true
-    elsif requires_auth?
-      false
-    else
-      true
-    end
-  end
-
   def link_options(entry)
     service_info = SupportedSharingService.info!(service_id)
     klass = service_info[:klass].constantize.new(self)

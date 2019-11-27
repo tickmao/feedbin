@@ -4,31 +4,31 @@
             <h2>Post <span class="type-text">Link</span> to Tumblr</h2>
             <%= svg_tag "icon-share-tumblr" %>
         </div>
-        <%= form_tag('', remote: true) do %>
-            <%= hidden_field_tag :url, '', class: 'url-placeholder' %>
+        <%= form_tag("", remote: true) do %>
+            <%= hidden_field_tag :url, "", class: "url-placeholder" %>
             <div class="field-cluster">
                 <div class="input-group-wrap" class="title-placeholder-wrap">
                     <label for="tumblr_title">Title</label>
                     <%= render "shared/input" do %>
-                        <%= text_field_tag :title, '', placeholder: 'Title', class: 'title-placeholder', id: "tumblr_title" %>
+                        <%= text_field_tag :title, "", class: "title-placeholder", id: "tumblr_title" %>
                     <% end %>
                 </div>
                 <div class="input-group-wrap">
                     <label for="tumblr_description">Description</label>
                     <%= render "shared/input" do %>
-                        <%= text_area_tag :description, '', rows: 5, placeholder: 'Description', class: 'description-placeholder', id: "tumblr_description" %>
+                        <%= text_area_tag :description, "", rows: 5, class: "description-placeholder", id: "tumblr_description" %>
                     <% end %>
                 </div>
                 <div class="input-group-wrap" class="source-placeholder-wrap hide">
                     <label for="tumblr_source">Source</label>
                     <%= render "shared/input" do %>
-                        <%= text_field_tag :source, '', placeholder: 'Source', class: 'source-placeholder', id: "tumblr_source" %>
+                        <%= text_field_tag :source, "", class: "source-placeholder", id: "tumblr_source" %>
                     <% end %>
                 </div>
                 <div class="input-group-wrap">
                     <label for="tumblr_tags">Tags</label>
                     <%= render "shared/input" do %>
-                        <%= text_field_tag :tags, '', placeholder: 'Tags (comma separated)', id: "tumblr_tags" %>
+                        <%= text_field_tag :tags, "", placeholder: "comma separated", id: "tumblr_tags" %>
                     <% end %>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="input-group-wrap">
                     <label for="format">Format</label>
                     <%= render "shared/input" do %>
-                        <%= select_tag "format", options_for_select({'Markdown' => 'markdown', 'HTML' => 'html'}, "markdown"), class: "select" %>
+                        <%= select_tag "format", options_for_select({"Markdown" => "markdown", "HTML" => "html"}, "markdown"), class: "select" %>
                         <span class="accessory right">
                             <%= svg_tag "icon-caret" %>
                         </span>
@@ -68,7 +68,7 @@
                 <div class="input-group-wrap">
                     <label for="state">Status</label>
                     <%= render "shared/input" do %>
-                        <%= select_tag "state", options_for_select({'Published' => 'published', 'Draft' => 'draft', 'Queue' => 'queue', 'Private' => 'private'}, "published"), class: "select" %>
+                        <%= select_tag "state", options_for_select({"Published" => "published", "Draft" => "draft", "Queue" => "queue", "Private" => "private"}, "published"), class: "select" %>
                         <span class="accessory right">
                             <%= svg_tag "icon-caret" %>
                         </span>
@@ -76,8 +76,8 @@
                 </div>
             </div>
             <div class="button-wrap">
-                <%= button_tag "Cancel", type: "button", class: 'button button-secondary', data: {behavior: 'close_entry_basement'} %>
-                <%= submit_tag "Post", class: 'button' %>
+                <%= button_tag "Cancel", type: "button", class: "button button-secondary", data: {behavior: "close_entry_basement"} %>
+                <%= submit_tag "Post", class: "button" %>
             </div>
         <% end %>
     </div>

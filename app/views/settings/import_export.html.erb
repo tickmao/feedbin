@@ -41,12 +41,12 @@
                             Subscriptions
                         </div>
                         <div class="last-control button-wrap-inline">
-                            <span class="input-group">
+                            <%= render "shared/input" do %>
                                 <%= select_tag :tag, options_for_select(@download_options), class: "select" %>
                                 <span class="accessory right">
                                     <%= svg_tag "icon-caret" %>
                                 </span>
-                            </span>
+                            <% end %>
                             <button class="button">Download</button>
                         </div>
                     </div>

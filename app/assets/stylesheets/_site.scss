@@ -121,7 +121,7 @@ $color-contrast-600: (
     dusk:     $theme-color-dusk-600,
     midnight: $theme-color-midnight-600,
 );
-$color-icons: map-merge($color-contrast-600, (debug: color-icons, midnight: white));
+$color-icons: $color-contrast-600;
 
 $color-contrast-700: (
     debug:    color-contrast-700,
@@ -478,6 +478,7 @@ textarea {
     @include color($color-contrast-700);
     @include background-color($color-contrast-100);
     outline: none;
+    @include border($color-contrast-500);
 }
 
 textarea,
@@ -506,6 +507,7 @@ input[type="color"],
     position: relative;
     line-height: normal;
     @include color($color-contrast-600);
+    border: 1px solid transparent;
     &:focus {
         @include focus;
     }
@@ -521,7 +523,7 @@ input[type="color"],
         -webkit-text-fill-color: map-get($color-contrast-700, day);
         -webkit-box-shadow: none !important;
         transition: none !important;
-        border: none !important;
+        @include border(transparent);
     }
     &:-webkit-autofill:focus,
     &:-webkit-autofill:focus,
@@ -529,12 +531,17 @@ input[type="color"],
         -webkit-text-fill-color: map-get($color-contrast-700, day);
         -webkit-box-shadow: none !important;
         transition: none !important;
-        border: none !important;
+        @include focus;
+    }
+    &::-webkit-contacts-auto-fill-button {
+        @include background-color($color-contrast-600);
     }
 }
 
 input::placeholder,
-input:focus::placeholder {
+input:focus::placeholder,
+textarea::placeholder,
+textarea:focus::placeholder {
     @include color($color-contrast-400);
 }
 
@@ -658,11 +665,11 @@ label {
     border: none;
     @include background-color($color-contrast-200);
     @include color($color-contrast-600);
+    @include border(transparent);
     font-size: 16px;
     line-height: normal;
     padding: 7px 8px;
     border-radius: 4px;
-    border: none;
     flex-shrink: 0;
     &::-ms-expand {
         display: none;
@@ -862,7 +869,7 @@ label .radio-button .radio-button-inner {
         bottom: -5px;
         left: -5px;
         border: 4px solid transparent;
-        border-radius: 8px;
+        border-radius: 9px;
         pointer-events: none;
     }
     &.accessory-left {
@@ -1197,39 +1204,28 @@ table {
         display: flex;
     }
     .service-options-wrap {
-        @include background-color($color-contrast-100);
         position: relative;
         height: 0;
         transition: height .2s ease, opacity .2s ease;
         opacity: 0;
         overflow: hidden;
         border-radius: 0 0 8px 8px;
-        @include arrow(
-            $x-position: 24px,
-            $y-position: 0,
-            $arrow-color: $color-base,
-            $shadow-color: $color-arrow-shadow,
-            $origin: left)
-        {
-            z-index: 10;
-            visibility: hidden;
-        }
-        &.open:after,
-        &.open:before {
-            visibility: visible;
-        }
         p {
             @include color($color-contrast-500);
-        }
-        &.open {
-            opacity: 1;
         }
         &.fully-open {
             overflow: visible;
         }
         .service-options {
+            display: none;
             padding: 16px;
             @include border-top($color-borders);
+        }
+        &.open {
+            .service-options {
+                display: block;
+            }
+            opacity: 1;
         }
     }
     .share-help {
@@ -3088,6 +3084,8 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     top: $toolbar-height;
     left: 0;
     width: 100%;
+    bottom: 0;
+    overflow-y: scroll;
     &.foreground {
         z-index: 5;
     }
@@ -3099,7 +3097,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     @include border-bottom($color-borders);
     @include background-color($color-contrast-100);
     @include arrow(
-        $x-position: 63px,
+        $x-position: 62px,
         $y-position: -1px,
         $arrow-color: $color-base,
         $shadow-color: $color-arrow-shadow,
@@ -6221,6 +6219,7 @@ label.text-field {
     border-radius: 4px;
     padding: 6px 8px 7px 8px;
     @include background-color($color-contrast-200);
+    @include border(transparent);
     &.StripeElement--focus {
         @include focus;
     }
@@ -6630,20 +6629,17 @@ Buttons
     @include background-color(transparent);
     @include color($color-contrast-600);
     @include border-color(transparent);
-    &:hover:not([disabled]) {
+    &:hover {
         @include background-color(transparent);
-        @include color($color-contrast-700);
-        .theme-dusk &, .theme-midnight & {
-            color: white;
-        }
+        @include color($color-contrast-600);
     }
     &:active {
         @include background-color(transparent);
-        @include color($color-selected-active);
+        @include color($color-contrast-700);
         @include border-color(transparent);
-        .theme-dusk &, .theme-midnight & {
-            color: white;
-        }
+    }
+    &[disabled] {
+        @include color($color-contrast-400);
     }
 }
 
@@ -6742,6 +6738,7 @@ Buttons
     border-radius: 2px;
     padding: 1px;
     font-size: 14px;
+    text-decoration: underline;
 }
 
 .button-empty {
@@ -7030,6 +7027,13 @@ input[type="text"].hide {
     border: 0;
 }
 
+.truncated {
+    display: block;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
 .text-left {
     text-align: left;
 }
@@ -7235,7 +7239,7 @@ Login and Sign Up
     }
     .box-header {
         font-size: 18px;
-        font-weight: normal;
+        font-weight: bold;
         text-align: center;
         margin: 0 0 15px 0;
         @include native-theme("color", $color-contrast-700);
@@ -9006,7 +9010,7 @@ button.close {
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         margin: 0;
-        border: none;
+        @include border(transparent);
         margin: 0;
         width: 100%;
         max-width: 100%;
@@ -9022,7 +9026,7 @@ button.close {
         }
         &:focus {
             @include color($color-contrast-700);
-            border-color: transparent !important;
+            @include border(transparent);
             @include background-color($color-contrast-100);
         }
     }

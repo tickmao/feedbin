@@ -2149,7 +2149,6 @@ $.extend feedbin,
     generalAutocomplete: ->
       $(document).on 'focus', '[data-behavior~=autocomplete_field]', (event) ->
         field = $(event.currentTarget)
-        console.log field
         field.autocomplete
           serviceUrl: field.data('autocompletePath')
           appendTo: field.closest("[data-behavior~=autocomplete_parent]").find("[data-behavior=autocomplete_target]")
@@ -2526,7 +2525,6 @@ $.extend feedbin,
       feedbin.drawBarCharts()
 
     tooltips: ->
-      console.log 'run'
       $('[data-toggle="tooltip"]').tooltip()
 
     copy: ->

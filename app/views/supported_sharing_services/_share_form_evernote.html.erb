@@ -4,19 +4,19 @@
             <h2>Save to Evernote</h2>
             <%= svg_tag "icon-share-evernote" %>
         </div>
-        <%= form_tag('', remote: true) do %>
-            <%= hidden_field_tag :readability, 'off', class: 'readability-placeholder' %>
+        <%= form_tag("", remote: true) do %>
+            <%= hidden_field_tag :readability, "off", class: "readability-placeholder" %>
             <div class="field-cluster">
                 <div class="input-group-wrap">
                     <label for="evernote_title">Title</label>
                     <%= render "shared/input" do %>
-                        <%= text_field_tag :title, '', placeholder: 'Title', class: 'title-placeholder', id: "evernote_title" %>
+                        <%= text_field_tag :title, "", class: "title-placeholder", id: "evernote_title" %>
                     <% end %>
                 </div>
                 <div class="input-group-wrap">
                     <label for="evernote_tags">Tags</label>
                     <%= render "shared/input" do %>
-                        <%= text_field_tag :tags, '', placeholder: 'Tags (comma separated)', id: "evernote_tags" %>
+                        <%= text_field_tag :tags, "", placeholder: "Tags (comma separated)", id: "evernote_tags" %>
                     <% end %>
                 </div>
             </div>
@@ -32,8 +32,8 @@
                 </div>
             </div>
             <div class="button-wrap">
-                <%= button_tag "Cancel", type: "button", class: 'button button-secondary', data: {behavior: 'close_entry_basement'} %>
-                <%= button_tag "Send", type: "submit", class: 'button' %>
+                <%= button_tag "Cancel", type: "button", class: "button button-secondary", data: {behavior: "close_entry_basement"} %>
+                <%= button_tag "Send", type: "submit", class: "button" %>
             </div>
         <% end %>
     </div>
