@@ -5335,11 +5335,6 @@ Settings
                 display: none;
             }
         }
-        .twitter-profile-image img {
-            width: 32px;
-            height: 32px;
-            border-radius: 32px;
-        }
     }
     .subscription-title {
         position: relative;
@@ -5819,16 +5814,17 @@ Settings
                 left: 0;
                 right: 0;
                 bottom: 0;
+                $top: 23px;
                 &:before {
-                    top: 22px;
+                    top: $top;
                     left: 16px;
                 }
                 &:after {
-                    top: 22px;
+                    top: $top;
                     left: 11px;
                 }
                 svg {
-                    top: 22px;
+                    top: $top;
                     left: 19px;
                 }
                 z-index: 10;
@@ -5895,8 +5891,6 @@ Settings
             width: 20px;
             margin-right: 8px;
             .favicon-wrap {
-                position: relative;
-                top: -1px;
                 left: 0;
                 box-shadow: none;
             }
@@ -5978,7 +5972,11 @@ Settings
             white-space: nowrap;
 
         }
-
+        .twitter-profile-image, .twitter-profile-image img {
+            width: 32px;
+            height: 32px;
+            border-radius: 32px;
+        }
     }
     .pagination {
         padding-bottom: 40px;

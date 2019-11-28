@@ -99,7 +99,7 @@ class SupportedSharingService < ApplicationRecord
       service_id: "micro_blog",
       label: "Micro.blog",
       requires_auth: true,
-      service_type: "micro_blog",
+      service_type: "xauth",
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "micro_blog_share_panel"}},
       klass: "Share::MicroBlog",
       has_share_sheet: true,
