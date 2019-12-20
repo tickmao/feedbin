@@ -1,8 +1,7 @@
 module Api
   module V2
     class FeedsEntriesController < ApiController
-      respond_to :json
-      before_action :correct_user
+            before_action :correct_user
 
       def index
         @user = current_user

@@ -1,13 +1,11 @@
 source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem "rails", "= 6.0.0.rc2"
+gem "rails", "= 6.0.2.1"
 
-gem "rails-deprecated_sanitizer"
 gem "rails-controller-testing"
 gem "rails_autolink"
 
-gem "nokogumbo"
 
 group :development do
   gem "capistrano"
@@ -49,8 +47,8 @@ gem "grocer-pushpackager", github: "feedbin/grocer-pushpackager", ref: "6b01b4e"
 gem "html_diff", github: "feedbin/html_diff", ref: "c7c15ce"
 gem "carrierwave_direct", github: "feedbin/carrierwave_direct", ref: "a0bc323"
 
+gem "sass-rails"
 gem "mini_racer"
-gem "sassc-rails"
 gem "coffee-rails"
 gem "uglifier", "= 4.1.11"
 gem "autoprefixer-rails"
@@ -82,7 +80,6 @@ gem "evernote_oauth"
 gem "rmagick", require: false
 gem "reverse_markdown"
 gem "htmlentities"
-gem "responders", "~> 2.0"
 gem "dotenv-rails"
 gem "kramdown"
 gem "premailer-rails"

@@ -1,8 +1,7 @@
 module Api
   module V2
     class InAppPurchasesController < ApiController
-      respond_to :json
-
+      
       before_action :validate_content_type, only: [:create]
       skip_before_action :valid_user
 

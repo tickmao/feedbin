@@ -1,8 +1,7 @@
 module Api
   module V2
     class IconsController < ApiController
-      respond_to :json
-
+      
       def index
         @user = current_user
         feed_ids = @user.subscriptions.pluck(:feed_id)

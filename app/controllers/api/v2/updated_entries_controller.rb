@@ -1,8 +1,7 @@
 module Api
   module V2
     class UpdatedEntriesController < ApiController
-      respond_to :json
-
+      
       def index
         @user = current_user
         render json: @user.updated_entries.order(updated_at: :desc).limit(100).pluck(:entry_id).compact.to_json

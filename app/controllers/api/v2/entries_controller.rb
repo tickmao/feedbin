@@ -3,8 +3,7 @@ module Api
     class EntriesController < ApiController
       include RedisCache
 
-      respond_to :json
-      before_action :correct_user, only: [:show]
+            before_action :correct_user, only: [:show]
       before_action :limit_ids, only: [:index]
       skip_before_action :authorize, only: [:text]
 
