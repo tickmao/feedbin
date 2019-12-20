@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   def append_info_to_payload(payload)
     super
     payload[:feedbin_request_id] = request.headers["X-Feedbin-Request-ID"]
+    payload[:request_start] = request.headers["X-Request-Start"]
   end
 
   def update_selected_feed!(type, data = nil)
@@ -114,19 +115,23 @@ class ApplicationController < ActionController::Base
     end
 
     @user = current_user
+    @page_feed = @user.feeds.pages.first
 
     excluded_feeds = @user.taggings.distinct.pluck(:feed_id)
+    excluded_feeds += [@page_feed&.id]
     @feeds = @user.feeds.where.not(id: excluded_feeds).includes(:favicon)
 
     @count_data = {
       unread_entries: @user.unread_entries.pluck("feed_id, entry_id").each_slice(10_000).to_a,
       starred_entries: @user.starred_entries.pluck("feed_id, entry_id").each_slice(10_000).to_a,
       updated_entries: @user.updated_entries.pluck("feed_id, entry_id").each_slice(10_000).to_a,
-      tag_map: @user.taggings.build_map,
+      tag_map: @user.taggings.build_tag_map,
+      feed_map: @user.taggings.build_feed_map,
       entry_sort: @user.entry_sort,
     }
     @feed_data = {
       feeds: @feeds,
+      page_feed: @page_feed,
       collections: get_collections,
       tags: @user.tag_group,
       saved_searches: @user.saved_searches.order(Arel.sql("lower(name)")),

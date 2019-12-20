@@ -29,8 +29,8 @@ class SendStats
   end
 
   def queue_depth
-    socket = "/tmp/unicorn.sock"
-    if File.exist?(socket)
+    socket = ENV["UNICORN_SOCKET"]
+    if socket && File.exist?(socket)
       result = Raindrops::Linux.unix_listener_stats([socket])
       stats = result.values.first
       Librato.measure "server_queue_depth.active", stats.active, source: Socket.gethostname
@@ -56,10 +56,12 @@ class SendStats
       servers = Rails.cache.stats
       servers.each do |server, stats|
         server_name = server.gsub(/[^A-Za-z0-9]+/, "_")
+        hit_rate = (stats["get_misses"].to_f / stats["get_hits"].to_f).round(3)
         Librato.group "memcached.#{server_name}" do |group|
           group.measure("gets", stats["cmd_get"].to_f)
           group.measure("sets", stats["cmd_set"].to_f)
           group.measure("hits", stats["get_hits"].to_f)
+          group.measure("hit_rate", hit_rate)
           group.measure("items", stats["curr_items"].to_f)
           group.measure("connections", stats["curr_connections"].to_i)
         end

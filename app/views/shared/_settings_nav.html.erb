@@ -1,5 +1,7 @@
 <div class="settings-nav">
-    <a href="/" class="logo"><%= render partial: "shared/svg/logo" %></a>
+    <a href="/" class="logo">
+        <%= svg_tag "logo-full" %>
+    </a>
     <ul class="nav">
         <li class="nav-header">
             <div class="icon-wrap"><%= svg_tag "icon-settings-general", size: "22x22" %></div>
@@ -21,7 +23,11 @@
                 Subscriptions
             <% end %>
         </li>
-
+        <li>
+            <%= link_to settings_newsletters_pages_path, class: is_active?("settings", "newsletters_pages") do %>
+                Newsletters & Pages
+            <% end %>
+        </li>
 
         <li class="nav-header">
             <div class="icon-wrap"><%= svg_tag "icon-settings-tools", size: "22x22" %></div>

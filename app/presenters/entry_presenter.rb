@@ -437,7 +437,7 @@ class EntryPresenter < BasePresenter
       @template.content_tag(:span, "", class: "title-inner") do
         "#{entry.micropost.author_name} #{@template.content_tag(:span, entry.micropost.author_display_username)}".html_safe
       end
-    elsif entry.feed.webpage?
+    elsif entry.feed.pages?
       @template.content_tag(:span, "", class: "title-inner") do
         entry.hostname
       end
@@ -453,7 +453,7 @@ class EntryPresenter < BasePresenter
   end
 
   def entry_header_title
-    if entry.feed.webpage?
+    if entry.feed.pages?
       @template.content_tag(:span, "", class: "entry-feed-title") do
         entry.hostname
       end
@@ -552,9 +552,9 @@ class EntryPresenter < BasePresenter
   end
 
   # Sizes: normal, bigger
-  def tweet_profile_image_uri(tweet, size = "bigger")
+  def tweet_profile_image_uri(tweet, size = :bigger)
     if tweet.user.profile_image_uri? && tweet.user.profile_image_uri_https(size)
-      @template.camo_link(tweet.user.profile_image_uri_https("bigger"))
+      @template.camo_link(tweet.user.profile_image_uri_https(size))
     else
       @template.image_url("favicon-profile-default.png")
     end
@@ -650,6 +650,28 @@ class EntryPresenter < BasePresenter
     end
   end
 
+  def tweet_author_description(tweet)
+    @template.content_tag(:p, class: "tweet-text") do
+      Twitter::TwitterText::Autolink.auto_link(tweet.user.description).html_safe
+    end
+  end
+
+  def tweet_author_verified?(tweet)
+    tweet.user.verified?
+  end
+
+  def tweet_author_joined(tweet)
+    "#{tweet.user.created_at.strftime("%b")} #{tweet.user.created_at.year}"
+  end
+
+  def tweet_author_location(tweet)
+    tweet.user.location? ? tweet.user.location : nil
+  end
+
+  def tweet_author_location?(tweet)
+    tweet.user.location?
+  end
+
   def quoted_status?
     entry.main_tweet.quoted_status?
   end
@@ -659,12 +681,12 @@ class EntryPresenter < BasePresenter
   end
 
   def feed_wrapper(subscriptions, &block)
-    if entry.feed.webpage?
+    if entry.feed.pages?
       @template.content_tag :span, class: "feed-button" do
         yield
       end
     elsif subscriptions.include?(entry.feed.id)
-      @template.link_to @template.edit_subscription_path(entry.feed), remote: true, class: "feed-button link", data: {behavior: "open_settings_modal"} do
+      @template.link_to @template.edit_subscription_path(entry.feed, app: true), remote: true, class: "feed-button link", data: {behavior: "open_settings_modal"} do
         yield
       end
     else

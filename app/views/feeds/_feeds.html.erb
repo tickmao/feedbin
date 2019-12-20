@@ -1,4 +1,20 @@
-<%= render partial: 'collections/collection', collection: collections %>
+<%= render partial: "collections/collection", collection: collections %>
+
+<% if page_feed.present? %>
+    <% present page_feed do |feed_presenter| %>
+        <%= content_tag :li, class: "collection-pages", data: {feed_id: page_feed.id } do %>
+            <%= feed_presenter.feed_link(link: pages_feed_path(page_feed), behavior: "selectable show_entries open_item feed_link") do %>
+                <%= feed_presenter.favicon(page_feed) %>
+                <span class="collection-label-wrap" >
+                    <span class="collection-label">Pages</span>
+                </span>
+                <span class="count-wrap">
+                    <%= content_tag :span, "", class: "count", data: {behavior: "needs_count", count_group: "byFeed", count_group_id: page_feed.id} %>
+                </span>
+            <% end %>
+        <% end %>
+    <% end %>
+<% end %>
 
 <% if saved_searches.present? %>
     <li class="source-section section-saved-searches">
@@ -7,7 +23,7 @@
         </span>
         Searches
     </li>
-    <%= render partial: 'saved_searches/saved_search', collection: saved_searches %>
+    <%= render partial: "saved_searches/saved_search", collection: saved_searches %>
 <% end %>
 
 <% if tags.present? %>
@@ -17,7 +33,7 @@
         </span>
         Tags
     </li>
-    <%= render partial: 'tags/tag', collection: tags %>
+    <%= render partial: "tags/tag", collection: tags %>
 <% end %>
 
 <% if feeds.present? %>
@@ -27,5 +43,5 @@
         </span>
         Feeds
     </li>
-    <%= render feeds %>
+    <%= render partial: "feeds/feed", collection: feeds, cached: true %>
 <% end %>

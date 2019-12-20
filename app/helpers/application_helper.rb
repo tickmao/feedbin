@@ -58,7 +58,15 @@ module ApplicationHelper
     options = options.symbolize_keys
 
     name = name.sub(".svg", "")
-    options[:width], options[:height] = extract_dimensions(options.delete(:size)) if options[:size]
+
+    options.delete(:size)
+
+    icon = Feedbin::Application.config.icons[name]
+    if !icon
+      raise "Icon missing #{name}"
+    end
+    options[:width] = icon.width
+    options[:height] = icon.height
 
     options[:class] = [name, options[:class]].compact.join(" ")
 
@@ -117,4 +125,34 @@ module ApplicationHelper
     pipeline = HTML::Pipeline::CamoFilter.new(nil, options, nil)
     pipeline.asset_proxy_url(url.to_s)
   end
+
+  def business_address(format = nil)
+    address = ENV["BUSINESS_ADDRESS"] || ""
+    address = address.split("\n")
+    if format == :text
+      address.join("\n")
+    else
+      address.join("<br>").html_safe
+    end
+  end
+
+  def toggle_switch
+    content_tag :span, class: "switch" do
+      content_tag :span, class: "switch-inner" do
+        svg_tag "icon-check"
+      end
+    end
+  end
+
+  def radio_button_control
+    content_tag :span, class: "radio-button" do
+      content_tag :span, class: "radio-button-inner" do
+      end
+    end
+  end
+
+  def short_number(number)
+    number_to_human(number, format: '%n%u', precision: 2, units: { thousand: 'K', million: 'M', billion: 'B' })
+  end
+
 end

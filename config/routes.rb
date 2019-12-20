@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
   post "/emails" => "emails#create"
   post "/newsletters" => "newsletters#create"
+  get "bookmarklet/:cache_buster", to: "bookmarklet#script", as: "bookmarklet"
 
   match "/404", to: "errors#not_found", via: :all
   get "/starred/:starred_token", to: "starred_entries#index", as: "starred"
@@ -124,10 +125,11 @@ Rails.application.routes.draw do
       post :toggle_updates
       get :modal_edit
       get :edit_tags
+      get :pages, to: "pages_entries#index"
     end
   end
 
-  resources :entries, only: [:show, :index] do
+  resources :entries, only: [:show, :index, :destroy] do
     member do
       post :content
       post :unread_entries, to: "unread_entries#update"
@@ -167,6 +169,7 @@ Rails.application.routes.draw do
     get :payment_details
     get :import_export
     get :appearance
+    get :newsletters_pages
     post :update_credit_card
     post :update_plan
     post :font
@@ -222,7 +225,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :pages, only: [:create]
+  match "pages", to: "pages#create", via: [:post]
+  match "pages", to: "pages#options", via: [:options]
+  match "pages", to: "pages#fallback", via: [:get]
 
   constraints subdomain: "api" do
     namespace :api, path: nil do
