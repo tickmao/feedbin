@@ -5,6 +5,7 @@ gem "rails", "= 6.0.2.1"
 
 gem "rails-controller-testing"
 gem "rails_autolink"
+gem "responders"
 
 
 group :development do

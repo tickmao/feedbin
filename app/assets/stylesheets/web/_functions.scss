@@ -1,12 +1,3 @@
-
-@function max($numbers...) {
-    @return m#{a}x(#{$numbers})
-}
-
-@function min($numbers...) {
-    @return m#{i}n(#{$numbers})
-}
-
 @function map-set($map, $key, $value) {
     $new: ($key: $value);
     @return map-merge($map, $new);
