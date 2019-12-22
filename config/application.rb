@@ -39,7 +39,7 @@ module Feedbin
 
     config.middleware.use BasicAuthentication
 
-    config.middleware.use TLDLength
+    config.middleware.use TldLength
 
     config.exceptions_app = routes
 
