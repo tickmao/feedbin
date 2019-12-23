@@ -27,13 +27,13 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress CSS using a preprocessor.
-  # config.assets.css_compressor = :sass
+  config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = "feedbin.com"
+  config.action_controller.asset_host = ENV["ASSET_HOST"]
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
@@ -49,6 +49,7 @@ Rails.application.configure do
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
+  config.ssl_options = {hsts: {subdomains: false}}
 
   # Less verbose logs
   config.lograge.enabled = true
@@ -65,9 +66,12 @@ Rails.application.configure do
     custom_options
   end
 
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  config.log_level = :error
+  # Set to :debug to see everything in the log.
+  config.log_level = :info
+  config.logger = Logger.new(STDOUT)
+
+  # Recommended by http://help.papertrailapp.com/kb/configuration/unicorn
+  config.logger.level = Logger.const_get("INFO")
 
   # Prepend all log lines with the following tags.
   config.log_tags = [:subdomain, :uuid]
