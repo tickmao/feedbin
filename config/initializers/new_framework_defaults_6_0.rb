@@ -14,7 +14,7 @@
 #
 # This option is not backwards compatible with earlier Rails versions.
 # It's best enabled when your entire app is migrated and stable on 6.0.
-Rails.application.config.action_dispatch.use_cookies_with_metadata = true
+Rails.application.config.action_dispatch.use_cookies_with_metadata = false
 
 # Return false instead of self when enqueuing is aborted from a callback.
 # Rails.application.config.active_job.return_false_on_aborted_enqueue = true

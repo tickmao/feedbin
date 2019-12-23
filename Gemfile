@@ -97,5 +97,5 @@ gem "unicode-emoji"
 gem "rack-attack"
 
 # Stripe
-gem "stripe"
+gem "stripe", "~> 4.24.0"
 gem "stripe_event"
