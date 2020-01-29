@@ -67,5 +67,67 @@
             </li>
         </ul>
     </div>
+
+    <div class="inset">
+        <h4 class="group-header">Advanced</h4>
+        <ul class="sharing-services">
+            <li>
+                <div class="service-header">
+                    <div>
+                        <div class="header">
+                            <p class="service-title">Newsletter Senders</p>
+                        </div>
+                        <p class="control-group-description" style="margin-left: 0;">These are the senders of every newsletter you have received. Messages from a sender that has been deactivated will not be visible.</p>
+                    </div>
+                    <div class="last-control button-wrap-inline">
+                        <%= button_tag "Show Senders", class: 'button button-secondary', data: {behavior: "toggle_service_options", toggle_text: "Hide Senders"} %>
+                    </div>
+                </div>
+                <div class="service-options-wrap">
+                    <div class="service-options nested-controls">
+                        <ul class="control-group">
+                            <% @user.newsletter_senders.each do |newsletter_sender| %>
+                                <%= fields_for "newsletter_sender[]", newsletter_sender do |f| %>
+                                   <li>
+                                       <%= f.check_box :active, data: {behavior: "auto_submit"} %>
+                                       <%= f.label :active do %>
+                                           <%= newsletter_sender.name %> <span class="extra-muted">&lt;<%= newsletter_sender.email %>&gt;</span> <%= toggle_switch %>
+                                           <% if newsletter_sender.full_token != newsletter_sender.token %>
+                                               <p class="control-group-description">
+                                                   <%= "Sent to #{newsletter_sender.full_token}@newsletters.feedbin.com" %>
+                                               </p>
+                                           <% end %>
+                                       <% end %>
+                                   </li>
+                                   <li>
+                                       <%= f.check_box :active, data: {behavior: "auto_submit"} %>
+                                       <%= f.label :active do %>
+                                           <%= newsletter_sender.name %> <span class="extra-muted">&lt;<%= newsletter_sender.email %>&gt;</span> <%= toggle_switch %>
+                                           <% if newsletter_sender.full_token != newsletter_sender.token %>
+                                               <p class="control-group-description">
+                                                   <%= "Sent to #{newsletter_sender.full_token}@newsletters.feedbin.com" %>
+                                               </p>
+                                           <% end %>
+                                       <% end %>
+                                   </li>
+                                   <li>
+                                       <%= f.check_box :active, data: {behavior: "auto_submit"} %>
+                                       <%= f.label :active do %>
+                                           <%= newsletter_sender.name %> <span class="extra-muted">&lt;<%= newsletter_sender.email %>&gt;</span> <%= toggle_switch %>
+                                           <% if newsletter_sender.full_token != newsletter_sender.token %>
+                                               <p class="control-group-description">
+                                                   <%= "Sent to #{newsletter_sender.full_token}@newsletters.feedbin.com" %>
+                                               </p>
+                                           <% end %>
+                                       <% end %>
+                                   </li>
+                                <% end %>
+                            <% end %>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 <% end %>

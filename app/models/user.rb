@@ -100,6 +100,10 @@ class User < ApplicationRecord
   validates_uniqueness_of :email, case_sensitive: false
   validates_presence_of :password, on: :create
 
+  def newsletter_senders
+    NewsletterSender.where(token: newsletter_token)
+  end
+
   def generate_newsletter_token
     generate_token(:newsletter_token, 4)
     authentication_tokens.new(purpose: :newsletters, token: newsletter_token)

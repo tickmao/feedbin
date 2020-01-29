@@ -2642,6 +2642,14 @@ $.extend feedbin,
         else
           feedbin.changeContentView('default')
 
+    toggleText: ->
+      $(document).on 'click', '[data-toggle-text]', (event) ->
+        button = $(@)
+        text = button.text()
+        newText = button.data('toggle-text')
+        button.text(newText)
+        button.data('toggle-text', text)
+
     copy: ->
       $(document).on 'click', '[data-behavior~=copy]', (event) ->
         button = $(@)

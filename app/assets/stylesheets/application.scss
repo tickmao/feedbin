@@ -1222,12 +1222,35 @@ table {
             display: none;
             padding: 16px;
             @include border-top($color-borders);
+            &.nested-controls {
+                padding: 0;
+            }
         }
         &.open {
             .service-options {
                 display: block;
             }
             opacity: 1;
+        }
+        .control-group {
+            margin: 0;
+            padding: 0;
+            border: none;
+            li {
+                border: none;
+                @include border-bottom($color-borders);
+                border-radius: 0;
+            }
+            li:last-child {
+                border: none;
+            }
+            li > label {
+                padding-left: $two-units;
+                padding-right: $two-units;
+            }
+            .switch {
+                right: $two-units;
+            }
         }
     }
     .share-help {
@@ -1577,6 +1600,9 @@ Structure
     display: flex;
     align-items: center;
     justify-content: center;
+    svg {
+        @include fill($color-icons);
+    }
 }
 
 $hamburger-dot: 4px;
