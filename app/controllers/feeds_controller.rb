@@ -22,6 +22,11 @@ class FeedsController < ApplicationController
 
   def auto_update
     get_feeds_list
+    @assets = [
+      ActionController::Base.helpers.asset_path("lib/lib.js"),
+      ActionController::Base.helpers.asset_path("application.js"),
+      ActionController::Base.helpers.asset_path("application.css")
+    ]
   end
 
   def push

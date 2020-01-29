@@ -25,6 +25,9 @@ $.extend feedbin,
     lightness: [.3,.4,.5,.6,.7]
     saturation: [.7,.8]
 
+  updateAssets: (assets) ->
+    asdf
+
   changeContentView: (view) ->
     currentView = $('[data-behavior~=content_option]:not(.hide)')
     nextView = $("[data-behavior~=content_option][data-content-option=#{view}]")
