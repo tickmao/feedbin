@@ -157,6 +157,7 @@ Rails.application.routes.draw do
     resources :subscriptions, only: [:index, :edit, :destroy, :update] do
       collection do
         patch :update_multiple
+        post :newsletter_senders
       end
       member do
         post :refresh_favicon

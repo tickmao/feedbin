@@ -65,6 +65,28 @@ class Settings::SubscriptionsController < ApplicationController
     redirect_to settings_subscriptions_url, notice: notice
   end
 
+  def newsletter_senders
+    @user = current_user
+
+    feeds = params[:feeds] || []
+
+    valid = @user.newsletter_senders.pluck(:feed_id)
+    requested = feeds.map(&:to_i)
+    have = @user.subscriptions.pluck(:feed_id)
+    want = valid & requested
+
+    create_subscriptions = want - have
+    destroy_subscriptions = (valid - want) &  have
+
+    create_subscriptions.each do |id|
+      @user.subscriptions.create!(feed_id: id)
+    end
+
+    destroy_subscriptions.each do |id|
+      @user.subscriptions.where(feed_id: id).destroy_all
+    end
+  end
+
   private
 
   def subscription_params

@@ -139,7 +139,10 @@ $.extend feedbin,
       numbers: []
     jQuery.timeago.settings.strings = strings
     jQuery.timeago.settings.allowFuture = true
-    $("time.timeago").timeago()
+    $("time.timeago").each ->
+      element = $(@)
+      element.timeago()
+      element.removeClass('hide')
 
   panelCount: ->
     body = $('body')
