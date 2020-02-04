@@ -76,7 +76,7 @@ class Settings::SubscriptionsController < ApplicationController
     want = valid & requested
 
     create_subscriptions = want - have
-    destroy_subscriptions = (valid - want) &  have
+    destroy_subscriptions = (valid - want) & have
 
     create_subscriptions.each do |id|
       @user.subscriptions.create!(feed_id: id)
