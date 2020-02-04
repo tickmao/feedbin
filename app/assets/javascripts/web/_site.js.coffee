@@ -20,6 +20,7 @@ $.extend feedbin,
   jumpResultTemplate: null
   extractCache: {}
   previousContentView: 'default'
+  formatMenu: null
   hasShadowDOM: typeof(document.createElement("div").attachShadow) == "function"
   colorHash: new ColorHash
     lightness: [.3,.4,.5,.6,.7]
@@ -95,7 +96,7 @@ $.extend feedbin,
     ($(".modal.modal-purpose-search").data('bs.modal') || {})._isShown
 
   isRelated: (selector, element) ->
-    !!($(element).is(selector) || $(element).parents(selector).length)
+    !!($(element).is(selector) || $(element).closest(selector).length)
 
   showSearch: (val = '') ->
     $('body').addClass('search')
@@ -228,8 +229,9 @@ $.extend feedbin,
     "rgba(#{data.data[0]}, #{data.data[1]}, #{data.data[2]}, #{data.data[3]})"
 
   setNativeTheme: (calculateOverlay = false, timeout = 1) ->
-    if feedbin.native && feedbin.data && feedbin.data.theme
-      statusBar = if $("body").hasClass("theme-dusk") || $("body").hasClass("theme-midnight") then "lightContent" else "default"
+    if feedbin.native && feedbin.data && feedbin.theme
+      result = window.matchMedia('(prefers-color-scheme: dark)');
+      statusBar = if $("body").hasClass("theme-dusk") || $("body").hasClass("theme-midnight") || result.matches == true then "lightContent" else "default"
       message = {
         action: "titleColor",
         statusBar: statusBar
@@ -353,16 +355,6 @@ $.extend feedbin,
 
     feedbin.jumpOptions = options
 
-  drawBarCharts: ->
-    $('[data-behavior~=line_graph]').each ()->
-      element = $(@)
-      fill = element.find("canvas")[0]
-      line = element.find("canvas")[1]
-
-      feedbin.drawBarChart(line, element.data('values'), element.data('stroke'))
-      feedbin.drawBarChartFill(fill, element.data('values'), element.css("backgroundColor"))
-    $('.canvas-wrap').removeClass('hidden')
-
   replaceModal: (target, body) ->
     modal = $(".#{target}")
     placeholderHeight = modal.find('.modal-dialog').outerHeight()
@@ -485,10 +477,9 @@ $.extend feedbin,
   appendEntries: (entries) ->
     $('.entries ul').append(entries)
 
-  formatEntries: (viewMode, lastUnread, viewType = null) ->
+  formatEntries: (lastUnread, viewType = null) ->
     $(document).trigger('feedbin:entriesLoaded')
     feedbin.viewType = viewType
-    feedbin.data.viewMode = viewMode
     feedbin.localizeTime()
     feedbin.applyUserTitles()
     feedbin.loadEntryImages()
@@ -587,10 +578,11 @@ $.extend feedbin,
     $("[data-behavior~=#{selector}] audio").mediaelementplayer
       stretching: 'responsive'
       features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'fullscreen']
-    $("video").mediaelementplayer
-      stretching: 'responsive'
-      features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'fullscreen']
 
+    $("video").each ->
+      video = $(@)
+      video.attr("controls", "true")
+      video.wrap('<div class="media-container"></div>');
 
   footnotes: ->
     $.bigfoot
@@ -637,6 +629,12 @@ $.extend feedbin,
       feedbin.formatTweets(content)
       feedbin.formatInstagram(content)
 
+      content.find("video[data-camo-poster][data-canonical-poster]").each ->
+        if feedbin.data.proxy_images
+          src = 'camo-poster'
+        else
+          src = 'canonical-poster'
+        $(@).attr("poster", $(@).data(src))
       content.find("img[data-camo-src][data-canonical-src]").each ->
         if feedbin.data.proxy_images
           src = 'camo-src'
@@ -795,6 +793,19 @@ $.extend feedbin,
         $.get container.data("iframe-embed-url")
 
   formatImages: (context = document) ->
+    $("video[data-camo-poster]", context).each ->
+      video = $(@)
+
+      if feedbin.data.proxy_images
+        src = 'camo-poster'
+      else
+        src = 'canonical-poster'
+
+      actualSrc = video.data(src)
+      if actualSrc?
+        video.attr("poster", actualSrc)
+
+
     $("img[data-camo-src]", context).each ->
       img = $(@)
 
@@ -824,6 +835,13 @@ $.extend feedbin,
 
   removeOuterLinks: ->
     $('[data-behavior~=entry_final_content] a').find('video').unwrap()
+
+  tooltips: ->
+    $(document).tooltip
+      selector: '[data-toggle="tooltip"]'
+      delay:
+        show: 400
+        hide: 50
 
   preloadSiblings: ->
     selected = feedbin.selectedEntry.container.closest('li')
@@ -887,11 +905,11 @@ $.extend feedbin,
       newFontSize = currentFontSize + 1
     else
       newFontSize = currentFontSize - 1
-    if feedbin.data.font_sizes[newFontSize]
+    if feedbin.data && feedbin.data.font_sizes && feedbin.data.font_sizes[newFontSize]
       fontContainer.removeClass("font-size-#{currentFontSize}")
       fontContainer.addClass("font-size-#{newFontSize}")
       fontContainer.data('font-size', newFontSize)
-      # localStorage.setItem('font-size', newFontSize);
+      $('[data-behavior~=font_size]').val(newFontSize)
 
   matchHeights: (elements) ->
     height = 0
@@ -1054,86 +1072,6 @@ $.extend feedbin,
       type: "search"
       data: query
       message: message
-
-  buildPoints: (percentages, width, height) ->
-    barWidth = width / (percentages.length - 1)
-    x = 0
-
-    points = []
-    for percentage in percentages
-      y = (height - Math.round(percentage * height))
-      points.push({x: x, y: y})
-      x += barWidth
-
-    points
-
-  drawBarChartFill: (canvas, values, fill) ->
-    if values && canvas.getContext
-
-      context = canvas.getContext("2d")
-      canvasHeight = $(canvas).outerHeight()
-      canvasWidth = $(canvas).outerWidth()
-
-      ratio = 1
-      if 'devicePixelRatio' of window
-        ratio = window.devicePixelRatio
-
-      $(canvas).attr('width', canvasWidth * ratio)
-      $(canvas).attr('height', canvasHeight * ratio)
-      context.scale(ratio, ratio)
-
-      context.fillStyle = fill
-      context.lineWidth = 0
-
-      points = feedbin.buildPoints(values, canvasWidth, canvasHeight)
-
-      context.beginPath()
-      context.lineTo(0, canvasHeight)
-      for point, index in points
-        context.lineTo(point.x, point.y)
-
-      context.lineTo(100, canvasHeight)
-      context.lineTo(100, 0)
-      context.lineTo(0, 0)
-      context.fill()
-
-  drawBarChart: (canvas, values, stroke) ->
-    if values && canvas.getContext
-      lineTo = (x, y, context, height) ->
-        if y == 0
-          y = 1
-        if y == height
-          y = height - 1
-        context.lineTo(x, y)
-
-      context = canvas.getContext("2d")
-      canvasHeight = $(canvas).outerHeight()
-      canvasWidth = $(canvas).outerWidth()
-
-      ratio = 1
-      if 'devicePixelRatio' of window
-        ratio = window.devicePixelRatio
-
-      $(canvas).attr('width', canvasWidth * ratio)
-      $(canvas).attr('height', canvasHeight * ratio)
-      context.scale(ratio, ratio)
-
-      context.lineJoin = 'round'
-      context.strokeStyle = stroke
-      context.lineWidth = 2
-      context.lineCap = 'round'
-
-      points = feedbin.buildPoints(values, canvasWidth, canvasHeight)
-
-      context.beginPath()
-      for point, index in points
-        if index == 0
-          lineTo(point.x + 1, point.y, context, canvasHeight)
-        else if index == points.length - 1
-          lineTo(canvasWidth - 1, point.y, context, canvasHeight)
-        else
-          lineTo(point.x, point.y, context, canvasHeight)
-      context.stroke()
 
   readabilityActive: ->
     $('[data-behavior~=toggle_extract]').find('.active').length > 0
@@ -1622,7 +1560,7 @@ $.extend feedbin,
 
     setViewMode: ->
       $(document).on 'ajax:beforeSend', '[data-behavior~=show_entries]', (event, xhr, settings) ->
-        settings.url = "#{settings.url}?view=#{feedbin.data.viewMode}"
+        settings.url = "#{settings.url}?view_mode=#{feedbin.data.viewMode}"
 
     clearEntry: ->
       $(document).on 'ajax:beforeSend', '[data-behavior~=show_entries]', (event) ->
@@ -1662,11 +1600,12 @@ $.extend feedbin,
         resize: (event, ui) ->
           measure()
         stop: (event, ui) ->
-          form = $('[data-behavior~=resizable_form]')
-          $('[name=column]', form).val($(ui.element).data('resizable-name'))
-          $('[name=width]', form).val(ui.size.width)
-          form.submit()
-          return
+          column = $(ui.element).data('resizable-name')
+          fieldName = "#{column}_width"
+          field = $("[data-behavior~=#{fieldName}]")
+          field.val(ui.size.width)
+          field.closest('form').submit()
+
       $('.feeds-column').resizable($.extend(defaults))
       $('.entries-column').resizable($.extend(defaults))
 
@@ -1747,6 +1686,41 @@ $.extend feedbin,
 
     sortFeeds: ->
       feedbin.sortFeeds()
+
+    showFormatMenu: ->
+      $(document).on 'click', (event) ->
+        menu = $('.format-palette')
+        button = $('[data-behavior~=show_format_menu]')
+        if !feedbin.isRelated(menu, event.target) && !feedbin.isRelated(button, event.target) && feedbin.formatMenu
+          feedbin.formatMenu.destroy()
+          feedbin.formatMenu = null
+          menu.addClass('hide')
+
+      $(document).on 'click', '[data-behavior~=show_format_menu]', (event) ->
+        button = $(event.currentTarget)
+        menu = $('.format-palette')
+        if feedbin.formatMenu
+          feedbin.formatMenu.destroy()
+          feedbin.formatMenu = null
+          menu.addClass('hide')
+        else
+          options = {
+            placement: 'bottom',
+            modifiers: {
+              preventOverflow: {
+                padding: 7
+              },
+              offset: {
+                offset: "0, -5"
+              },
+              flip: {
+                enabled: false
+              },
+            }
+          }
+          feedbin.formatMenu = new Popper(button, menu, options)
+          menu.removeClass('hide')
+          event.stopPropagation()
 
     linkActions: ->
       $(document).on 'click', '[data-behavior~=view_link]', (event) ->
@@ -1994,7 +1968,6 @@ $.extend feedbin,
     formatToolbar: ->
       selectedFont = $("[data-font]").data('font')
       feedbin.fonts(selectedFont)
-      $('[data-behavior~=change_font]').val(selectedFont)
       $('[data-behavior~=change_font]').change ->
         fontContainer = $("[data-font]")
         currentFont = fontContainer.data('font')
@@ -2002,9 +1975,7 @@ $.extend feedbin,
         fontContainer.removeClass("font-#{currentFont}")
         fontContainer.addClass("font-#{newFont}")
         fontContainer.data('font', newFont)
-        $(@).parents('form').submit()
         feedbin.fonts(newFont)
-        # localStorage.setItem('font', newFont);
 
     fontSize: ->
       $(document).on 'click', '[data-behavior~=increase_font]', (event) ->
@@ -2016,32 +1987,31 @@ $.extend feedbin,
         return
 
     entryWidth: ->
-      $(document).on 'click', '[data-behavior~=entry_width]', (event) ->
-        $('[data-behavior~=entry_content_target]').toggleClass('fluid')
-        $('body').toggleClass('fluid')
-        value = if $('body').hasClass('fluid') then 'fluid' else 'fixed'
-        # localStorage.setItem('layout-width', value);
-        return
+      $(document).on 'change', '[data-behavior~=entry_width]', (event) ->
+        onClass = "fluid-1"
+        offClass = "fluid-0"
+        target = $('[data-behavior~=entry_content_target], body')
+        if $(event.target).is(':checked')
+          target.removeClass('fluid-0').addClass('fluid-1')
+        else
+          target.removeClass('fluid-1').addClass('fluid-0')
 
     fullscreen: ->
       $(document).on 'click', '[data-behavior~=full_screen]', (event) ->
         feedbin.toggleFullScreen()
-        feedbin.closeEntryBasement()
-        event.preventDefault()
-        return
+
+      $(document).on 'change', '[data-behavior~=toggle_full_screen]', (event) ->
+        feedbin.toggleFullScreen()
 
     theme: ->
       $(document).on 'click', '[data-behavior~=switch_theme]', (event) ->
-        theme = $(@).data('theme')
+        theme = $(@).val()
         $('[data-behavior~=class_target]').removeClass('theme-day')
         $('[data-behavior~=class_target]').removeClass('theme-sunset')
         $('[data-behavior~=class_target]').removeClass('theme-dusk')
         $('[data-behavior~=class_target]').removeClass('theme-midnight')
+        $('[data-behavior~=class_target]').removeClass('theme-auto')
         $('[data-behavior~=class_target]').addClass("theme-#{theme}")
-        # localStorage.setItem('theme', theme);
-        event.preventDefault()
-
-        return
 
     titleBarColor: ->
       feedbin.setNativeTheme()
@@ -2485,10 +2455,6 @@ $.extend feedbin,
       $(document).on 'feedbin:native:statusbartouched', (event, xCoordinate) ->
         feedbin.scrollToTop(xCoordinate)
 
-    didBecomeActive: ->
-      $(document).on 'feedbin:native:didBecomeActive', (event, value) ->
-        feedbin.refresh()
-
     disableSubmit: ->
       $(document).on 'submit', '[data-behavior~=disable_on_submit]', (event) ->
         $('[type=submit]', @).attr('disabled', 'disabled')
@@ -2599,11 +2565,8 @@ $.extend feedbin,
         field.val(subscription)
         field.closest("form").submit()
 
-    drawBarCharts: ->
-      feedbin.drawBarCharts()
-
     tooltips: ->
-      $('[data-toggle="tooltip"]').tooltip()
+      feedbin.tooltips()
 
     closeMessage: ->
       $(document).on 'click', '[data-behavior~=close_message]', (event) ->
@@ -2641,6 +2604,21 @@ $.extend feedbin,
           feedbin.changeContentView(mode)
         else
           feedbin.changeContentView('default')
+
+    hideTooltips: ->
+      $(document).on 'click', '[data-toggle="tooltip"]', (event) ->
+        $(@).tooltip('hide')
+
+    colorSchemePreference: ->
+      darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      darkModeMediaQuery.addListener (event) ->
+          setTimeout feedbin.setNativeTheme, 300
+
+    visibilitychange: ->
+      $(document).on 'visibilitychange', (event) ->
+        if feedbin.native && document.hidden == false
+          setTimeout feedbin.setNativeTheme, 300
+          feedbin.refresh()
 
     toggleText: ->
       $(document).on 'click', '[data-toggle-text]', (event) ->
