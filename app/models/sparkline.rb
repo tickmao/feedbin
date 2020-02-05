@@ -2,7 +2,7 @@ class Sparkline
 
   attr_reader :width, :height, :percentages, :stroke
 
-  def initialize(width: width, height: height, stroke: stroke, percentages: percentages)
+  def initialize(width:, height:, stroke:, percentages:)
     @width = width.to_f
     @height = height.to_f
     @percentages = percentages

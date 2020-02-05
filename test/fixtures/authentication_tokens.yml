@@ -4,3 +4,8 @@ ben_newsletter:
   user: ben
   token: token
   purpose: 2
+
+new_newsletter:
+  user: new
+  token: token_new
+  purpose: 2
