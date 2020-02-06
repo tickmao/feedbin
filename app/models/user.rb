@@ -103,7 +103,7 @@ class User < ApplicationRecord
   validates_presence_of :password, on: :create
 
   def newsletter_senders
-    NewsletterSender.where(token: newsletter_authentication_token.token)
+    NewsletterSender.where(token: newsletter_authentication_token.token).order(name: :asc)
   end
 
   def generate_newsletter_token
