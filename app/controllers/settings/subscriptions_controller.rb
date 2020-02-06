@@ -67,24 +67,17 @@ class Settings::SubscriptionsController < ApplicationController
 
   def newsletter_senders
     @user = current_user
-
-    feeds = params[:feeds] || []
-
     valid = @user.newsletter_senders.pluck(:feed_id)
-    requested = feeds.map(&:to_i)
-    have = @user.subscriptions.pluck(:feed_id)
-    want = valid & requested
-
-    create_subscriptions = want - have
-    destroy_subscriptions = (valid - want) & have
-
-    create_subscriptions.each do |id|
-      @user.subscriptions.create!(feed_id: id)
+    feed_id = params[:id].to_i
+    if valid.include?(feed_id)
+      if params[:newsletter_sender][:feed_id] == "1"
+        @user.subscriptions.create!(feed_id: feed_id)
+      else
+        @user.subscriptions.where(feed_id: feed_id).take.destroy
+      end
     end
-
-    destroy_subscriptions.each do |id|
-      @user.subscriptions.where(feed_id: id).destroy_all
-    end
+    flash[:notice] = "Settings updated."
+    flash.discard
   end
 
   private

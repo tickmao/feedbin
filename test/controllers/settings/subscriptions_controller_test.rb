@@ -86,22 +86,29 @@ class Settings::SubscriptionsControllerTest < ActionController::TestCase
     user = users(:new)
     login_as user
 
-    3.times { create_newsletter(user) }
+    create_newsletter(user)
 
-    feed_ids = user.newsletter_senders.pluck(:feed_id)
+    feed_id = user.newsletter_senders.first.feed_id
 
-    assert_equal(feed_ids.count, user.subscriptions.count)
+    assert user.subscriptions.where(feed_id: feed_id).exists?
 
-    unsubscribe = feed_ids.shift
+    patch :newsletter_senders, params: {id: feed_id, newsletter_sender: {feed_id: "0"}}, xhr: true
 
-    post :newsletter_senders, params: {feeds: feed_ids}, xhr: true
+    assert_not user.subscriptions.where(feed_id: feed_id).exists?
 
-    assert_equal(feed_ids, user.subscriptions.pluck(:feed_id))
+    patch :newsletter_senders, params: {id: feed_id, newsletter_sender: {feed_id: "1"}}, xhr: true
 
-    post :newsletter_senders, params: {feeds: [unsubscribe]}, xhr: true
-
-    assert user.subscriptions.where(feed_id: unsubscribe).exists?
+    assert user.subscriptions.where(feed_id: feed_id).exists?
   end
+
+  test "should not unsubscribe from normal feed" do
+    login_as @user
+    subscription = @user.subscriptions.first
+    assert_no_difference "Subscription.count", +1 do
+      patch :newsletter_senders, params: {id: subscription.feed_id, newsletter_sender: {feed_id: "0"}}, xhr: true
+    end
+  end
+
 
   def create_newsletter(user)
     signature = Newsletter.new(newsletter_params("asdf", "asdf")).send(:signature)

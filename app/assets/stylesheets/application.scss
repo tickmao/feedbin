@@ -1257,7 +1257,7 @@ table {
             li:last-child {
                 border: none;
             }
-            li > label {
+            li > form > label {
                 padding-left: $two-units;
                 padding-right: $two-units;
             }
@@ -5299,7 +5299,6 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     display: none;
     .shadow-dom & {
         display: block;
-        display: none;
     }
 }
 
@@ -6390,7 +6389,8 @@ label.text-field {
     }
     li > label,
     li > a,
-    li > .form-control {
+    li > .form-control,
+    li > form > label {
         @include form-control;
         padding: 16px 0;
         margin: 0;
