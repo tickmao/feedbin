@@ -1,0 +1,23 @@
+<% present entry, local_assigns do |entry_presenter| %>
+    <header class="newsletter-header">
+        <div class="newsletter-meta-wrap">
+            <div class="newsletter-meta">
+                <% if entry_presenter.newsletter_from? %>
+                    <div class="post-meta"><%= entry_presenter.newsletter_from.name %> <span class="faded">&lt;<%= entry_presenter.newsletter_from.address %>&gt;</span></div>
+                <% end %>
+                <time datetime="<%= entry_presenter.datetime %>"><%= entry_presenter.published_date %></time>
+            </div>
+            <div class="newsletter-meta">
+                <% if entry_presenter.newsletter_to? %>
+                    <div class="post-meta"><%= entry_presenter.newsletter_to.name %> <span class="faded">&lt;<%= entry_presenter.newsletter_to.address %>&gt;</span></div>
+                <% end %>
+            </div>
+        </div>
+        <%= link_to entry.fully_qualified_url, target: '_blank', rel: 'noopener noreferrer', id: 'source_link' do  %>
+            <h1><%= entry_presenter.entry_view_title %></h1>
+        <% end %>
+    </header>
+    <div data-behavior="entry_content_wrap external_links" class="content-styles <%= entry_presenter.entry_type_class %>">
+        <%= render partial: "article_content", locals: {entry: entry} %>
+    </div>
+<% end %>

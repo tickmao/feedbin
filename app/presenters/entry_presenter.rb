@@ -130,6 +130,17 @@ class EntryPresenter < BasePresenter
     nil
   end
 
+  def newsletter_to?
+    newsletter_to
+  end
+
+  def newsletter_to
+    name, address = entry.data && entry.data.dig("newsletter", "data", "To").split(/[<>]/).map(&:strip)
+    OpenStruct.new(name: name.gsub('"', ''), address: address)
+  rescue
+    nil
+  end
+
   def api_content
     ContentFormatter.api_format(formatted_content, entry)
   rescue => e

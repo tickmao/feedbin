@@ -3915,7 +3915,7 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     }
 }
 
-.entry-header {
+.entry-header, .newsletter-header {
     padding: 0;
     margin-bottom: 1.1em;
     position: relative;
@@ -3924,6 +3924,12 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         text-decoration: none;
         @include color($color-contrast-700);
     }
+    .feed-title {
+        display: none;
+    }
+}
+
+.entry-header {
     h1 {
         font-size: 2em;
         line-height: 1.1;
@@ -3933,9 +3939,6 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
         font-weight: bold;
         text-rendering: optimizeLegibility;
         word-wrap: break-word;
-    }
-    .feed-title {
-        display: none;
     }
 }
 .post-meta {
@@ -3955,6 +3958,46 @@ $characters: a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7
     }
 }
 
+.newsletter-header {
+    margin-bottom: $three-units;
+    h1 {
+        font-size: 1.5em;
+        line-height: 1.1;
+        @include color($color-contrast-700);
+        margin: 0 0 .2em 0;
+        padding: 0;
+        font-weight: bold;
+        text-rendering: optimizeLegibility;
+        word-wrap: break-word;
+    }
+}
+
+.newsletter-meta-wrap {
+    @include border-top($color-borders);
+    @include border-bottom($color-borders);
+    padding: $two-units 0;
+    margin-bottom: $three-units;
+    .post-meta {
+        margin: 0;
+        font-weight: bold;
+        @include color($color-contrast-700);
+        span {
+            @include color($color-contrast-500);
+            font-weight: normal;
+        }
+    }
+    .newsletter-meta {
+        display: flex;
+        margin-bottom: $one-unit;
+        &:last-child {
+            margin-bottom: 0;
+        }
+        time {
+            margin-left: auto;
+            @include color($color-contrast-500);
+        }
+    }
+}
 
 .share-form {
     @include background-color($color-contrast-100);

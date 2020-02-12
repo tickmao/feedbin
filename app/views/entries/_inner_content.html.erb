@@ -6,6 +6,8 @@
                     <%= render partial: "tweet", locals: {entry: entry} %>
                 <% elsif entry.micropost? %>
                     <%= render partial: "micropost", locals: {micropost: entry} %>
+                <% elsif entry.feed.newsletter? %>
+                    <%= render partial: "newsletter", locals: {entry: entry} %>
                 <% else %>
                     <%= render partial: "article", locals: {entry: entry} %>
                 <% end %>
