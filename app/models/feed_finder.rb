@@ -2,7 +2,7 @@ class FeedFinder
   def initialize(url, config = {})
     @url = url
     @config = config.merge({
-      request: Feedkit::Request.new(url: @url, clean: true),
+      request: Feedkit::Request.new(url: @url, clean: true)
     })
   end
 
@@ -22,19 +22,15 @@ class FeedFinder
     end
 
     if feeds.blank?
-      feeds = Source::XML.new(@url, @config).call
+      feeds = Source::Xml.new(@url, @config).call
     end
 
     if feeds.blank?
-      feeds = Source::JSONFeed.new(@url, @config).call
+      feeds = Source::JsonFeed.new(@url, @config).call
     end
 
     if feeds.blank?
-      feeds = Source::Youtube.new(@url, @config).call
-    end
-
-    if feeds.blank?
-      feeds = Source::Reddit.new(@url, @config).call
+      feeds = Source::KnownPattern.new(@url, @config).call
     end
 
     if feeds.blank?

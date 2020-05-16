@@ -93,11 +93,15 @@ class EntriesController < ApplicationController
   def mark_all_as_read
     @user = current_user
 
+    @full_update = true
+
     if params[:type] == "feed"
       unread_entries = UnreadEntry.where(user_id: @user.id, feed_id: params[:data])
+      @full_update = false
     elsif params[:type] == "tag"
       feed_ids = @user.taggings.where(tag_id: params[:data]).pluck(:feed_id)
       unread_entries = UnreadEntry.where(user_id: @user.id, feed_id: feed_ids)
+      @full_update = false
     elsif params[:type] == "starred"
       starred = @user.starred_entries.pluck(:entry_id)
       unread_entries = UnreadEntry.where(user_id: @user.id, entry_id: starred)
@@ -110,6 +114,7 @@ class EntriesController < ApplicationController
       @user.updated_entries.delete_all
     elsif %w[unread all].include?(params[:type])
       unread_entries = UnreadEntry.where(user_id: @user.id)
+      @full_update = false
     elsif params[:type] == "saved_search"
       saved_search = @user.saved_searches.where(id: params[:data]).first
       if saved_search.present?
@@ -123,7 +128,7 @@ class EntriesController < ApplicationController
       unread_entries = UnreadEntry.where(user_id: @user.id, entry_id: ids)
     end
 
-    if params[:date].present?
+    if params[:date].present? && unread_entries.present?
       unread_entries = unread_entries.where("created_at <= :last_unread_date", {last_unread_date: params[:date]})
     end
 
@@ -135,7 +140,8 @@ class EntriesController < ApplicationController
     end
 
     @mark_selected = true
-    get_feeds_list
+
+    get_feeds_list if @full_update
 
     respond_to do |format|
       format.js
@@ -207,6 +213,10 @@ class EntriesController < ApplicationController
 
     @search = true
 
+    @search_message = "Mark #{helpers.number_with_delimiter(@total_results)} #{"article".pluralize(@total_results)} that #{"match".pluralize(@total_results == 1 ? 2 : 1)} the search “#{@escaped_query}” as read?"
+
+    @saved_search_path = new_saved_search_path(query: params[:query])
+
     @collection_title = "Search"
 
     @saved_search = SavedSearch.new
@@ -222,11 +232,6 @@ class EntriesController < ApplicationController
     @entry = Entry.find(params[:id])
     UnreadEntry.where(user: @user, entry: @entry).delete_all
     redirect_to @entry.fully_qualified_url, status: :found
-  end
-
-  def diff
-    @entry = Entry.find(params[:id])
-    @content = @entry.content_diff
   end
 
   def newsletter
@@ -251,20 +256,18 @@ class EntriesController < ApplicationController
   def entries_by_id(entry_ids)
     entries = Entry.where(id: entry_ids).includes(feed: [:favicon])
     subscriptions = @user.subscriptions.pluck(:feed_id)
-    updated_entries = @user.updated_entries.where(entry_id: entry_ids).pluck(:entry_id)
     entries.each_with_object({}) do |entry, hash|
       locals = {
         entry: entry,
         services: sharing_services(entry),
         extract: false,
         user: @user,
-        subscriptions: subscriptions,
-        updated_entries: updated_entries,
+        subscriptions: subscriptions
       }
       hash[entry.id] = {
         content: render_to_string(partial: "entries/show", formats: [:html], locals: locals),
         inner_content: render_to_string(partial: "entries/inner_content", formats: [:html], locals: locals),
-        feed_id: entry.feed_id,
+        feed_id: entry.feed_id
       }
     end
   end

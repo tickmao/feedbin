@@ -5,7 +5,7 @@ class SupportedSharingService < ApplicationRecord
       label: "Pocket",
       requires_auth: true,
       service_type: "oauth",
-      klass: "Share::Pocket",
+      klass: "Share::Pocket"
     },
     {
       service_id: "readability",
@@ -13,14 +13,14 @@ class SupportedSharingService < ApplicationRecord
       requires_auth: true,
       service_type: "xauth",
       klass: "Share::Readability",
-      active: false,
+      active: false
     },
     {
       service_id: "instapaper",
       label: "Instapaper",
       requires_auth: true,
       service_type: "xauth",
-      klass: "Share::Instapaper",
+      klass: "Share::Instapaper"
     },
     {
       service_id: "email",
@@ -30,14 +30,14 @@ class SupportedSharingService < ApplicationRecord
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "email_share_panel"}},
       klass: "Share::Email",
       has_share_sheet: true,
-      limit: 20,
+      limit: 20
     },
     {
       service_id: "kindle",
       label: "Kindle",
       requires_auth: false,
       service_type: "kindle",
-      klass: "Share::Kindle",
+      klass: "Share::Kindle"
     },
     {
       service_id: "pinboard",
@@ -46,7 +46,7 @@ class SupportedSharingService < ApplicationRecord
       service_type: "pinboard",
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "pinboard_share_panel"}},
       klass: "Share::Pinboard",
-      has_share_sheet: true,
+      has_share_sheet: true
     },
     {
       service_id: "tumblr",
@@ -55,7 +55,7 @@ class SupportedSharingService < ApplicationRecord
       service_type: "oauth",
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "tumblr_share_panel"}},
       klass: "Share::Tumblr",
-      has_share_sheet: true,
+      has_share_sheet: true
     },
     {
       service_id: "evernote",
@@ -64,21 +64,21 @@ class SupportedSharingService < ApplicationRecord
       service_type: "oauth",
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "evernote_share_panel"}},
       klass: "Share::EvernoteShare",
-      has_share_sheet: true,
+      has_share_sheet: true
     },
     {
       service_id: "twitter",
       label: "Twitter",
       requires_auth: false,
       service_type: "popover",
-      klass: "Share::Twitter",
+      klass: "Share::Twitter"
     },
     {
       service_id: "facebook",
       label: "Facebook",
       requires_auth: false,
       service_type: "popover",
-      klass: "Share::Facebook",
+      klass: "Share::Facebook"
     },
     {
       service_id: "app_dot_net",
@@ -86,24 +86,24 @@ class SupportedSharingService < ApplicationRecord
       requires_auth: false,
       service_type: "popover",
       klass: "Share::AppDotNet",
-      active: false,
+      active: false
     },
     {
       service_id: "buffer",
       label: "Buffer",
       requires_auth: false,
       service_type: "popover",
-      klass: "Share::Buffer",
+      klass: "Share::Buffer"
     },
     {
       service_id: "micro_blog",
       label: "Micro.blog",
       requires_auth: true,
-      service_type: "micro_blog",
+      service_type: "xauth",
       html_options: {data: {behavior: "show_entry_basement", basement_panel: "micro_blog_share_panel"}},
       klass: "Share::MicroBlog",
-      has_share_sheet: true,
-    },
+      has_share_sheet: true
+    }
   ].freeze
 
   store_accessor :settings, :access_token, :access_secret, :email_name, :email_address,
@@ -144,16 +144,6 @@ class SupportedSharingService < ApplicationRecord
 
   def service
     @service ||= klass.constantize.new(self)
-  end
-
-  def active?
-    if requires_auth? && auth_present?
-      true
-    elsif requires_auth?
-      false
-    else
-      true
-    end
   end
 
   def link_options(entry)
@@ -223,20 +213,24 @@ class SupportedSharingService < ApplicationRecord
     options["completions"] || []
   end
 
+  def [](key)
+    info[key]
+  end
+
   def update_completions(new_completions)
     old_completions = completions
     final_completions = old_completions.concat(new_completions).uniq
     options = service_options || {}
     options["completions"] = final_completions
-    update_attributes(service_options: nil)
-    update_attributes(service_options: options)
+    update(service_options: nil)
+    update(service_options: options)
   end
 
   def limit_exceeded
     Honeybadger.notify(
       error_class: "SupportedSharingService",
       error_message: "SupportedSharingService rate limit exceeded",
-      parameters: {user_id: user_id},
+      parameters: {user_id: user_id}
     )
     {error: "Share limit exceeded"}
   end

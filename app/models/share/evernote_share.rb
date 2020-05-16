@@ -22,7 +22,7 @@ class Share::EvernoteShare < Share::Service
       site: URL,
       request_token_path: "/oauth",
       authorize_path: "/OAuth.action",
-      access_token_path: "/oauth",
+      access_token_path: "/oauth"
     }
     OAuth::Consumer.new(ENV["EVERNOTE_KEY"], ENV["EVERNOTE_SECRET"], options)
   end
@@ -54,9 +54,7 @@ class Share::EvernoteShare < Share::Service
     entry = Entry.find(params[:entry_id])
     content = determine_content(params)
     content = ContentFormatter.evernote_format(content, entry)
-    view_paths = Rails::Application::Configuration.new(Rails.root).paths["app/views"]
-    action_view = ActionView::Base.new(view_paths)
-    params[:content] = action_view.render(partial: "supported_sharing_services/evernote_note", locals: {content: content.html_safe})
+    params[:content] = ApplicationController.render(partial: "supported_sharing_services/evernote_note", locals: {content: content.html_safe})
 
     attributes = Evernote::EDAM::Type::NoteAttributes.new
     attributes.subjectDate = entry.published.to_i
@@ -91,7 +89,7 @@ class Share::EvernoteShare < Share::Service
       Honeybadger.notify(
         error_class: "EvernoteShare#add",
         error_message: "EvernoteShare add failure",
-        parameters: parameters,
+        parameters: parameters
       )
       500
     end

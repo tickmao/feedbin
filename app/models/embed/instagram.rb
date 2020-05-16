@@ -48,17 +48,17 @@ class Embed::Instagram
       options = {
         params: {
           url: url,
-          omitscript: true,
-        },
+          omitscript: true
+        }
       }
-      response = URLCache.new(OEMBED_URL, options).body
+      response = UrlCache.new(OEMBED_URL, options).body
       JSON.parse(response)
     end
   end
 
   def page_data
     @page_data ||= begin
-      URLCache.new(permalink).body
+      UrlCache.new(permalink).body
     end
   end
 end

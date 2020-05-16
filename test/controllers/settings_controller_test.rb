@@ -51,7 +51,7 @@ class SettingsControllerTest < ActionController::TestCase
     StripeMock.start
     events = [
       StripeMock.mock_webhook_event("charge.succeeded", {customer: @user.customer_id}),
-      StripeMock.mock_webhook_event("invoice.payment_succeeded", {customer: @user.customer_id}),
+      StripeMock.mock_webhook_event("invoice.payment_succeeded", {customer: @user.customer_id})
     ]
     events.each do |event|
       BillingEvent.create(info: event.as_json)
@@ -85,7 +85,7 @@ class SettingsControllerTest < ActionController::TestCase
 
     plans = {
       original: plans(:basic_monthly_3),
-      new: plans(:basic_yearly_3),
+      new: plans(:basic_yearly_3)
     }
     plans.each do |_, plan|
       create_stripe_plan(plan)
@@ -112,7 +112,7 @@ class SettingsControllerTest < ActionController::TestCase
     user = User.create(
       email: "cc@example.com",
       password: default_password,
-      plan: plan,
+      plan: plan
     )
     user.stripe_token = card_1
     user.save
@@ -134,69 +134,12 @@ class SettingsControllerTest < ActionController::TestCase
       :show_unread_count, :sticky_view_inline, :mark_as_read_confirmation,
       :apple_push_notification_device_token, :receipt_info, :entries_display,
       :entries_feed, :entries_time, :entries_body, :ui_typeface, :theme,
-      :hide_recently_read, :hide_updated, :disable_image_proxy, :entries_image,
+      :hide_recently_read, :hide_updated, :disable_image_proxy, :entries_image
     ].each_with_object({}) { |setting, hash| hash[setting.to_s] = "1" }
 
     patch :settings_update, params: {id: @user, user: settings}
     assert_redirected_to settings_url
     assert_equal settings, @user.reload.settings
-  end
-
-  test "should update view settings" do
-    login_as @user
-    tag = @user.feeds.first.tag("tag", @user).first.tag
-    params = {
-      id: @user,
-      tag_visibility: true,
-      tag: tag.id,
-      column_widths: true,
-      column: "test",
-      width: 1234,
-    }
-    patch :view_settings_update, params: params
-    assert_equal({tag.id.to_s => true}, @user.reload.tag_visibility)
-    assert_response :success
-    assert_equal session[:column_widths], {params[:column] => params[:width].to_s}
-  end
-
-  test "should increase font" do
-    @user.font_size = 7
-    @user.save
-    login_as @user
-
-    post :font_increase
-    assert_response :success
-    assert_equal (@user.font_size.to_i + 1).to_s, @user.reload.font_size
-  end
-
-  test "should decrease font" do
-    @user.font_size = 7
-    @user.save
-    login_as @user
-
-    post :font_decrease
-    assert_response :success
-    assert_equal (@user.font_size.to_i - 1).to_s, @user.reload.font_size
-  end
-
-  test "should change font" do
-    login_as @user
-    post :font, params: {font: Feedbin::Application.config.fonts.values.last}
-    assert_equal @user.reload.font, Feedbin::Application.config.fonts.values.last
-  end
-
-  test "should change theme" do
-    login_as @user
-    ["day", "dusk", "sunset", "midnight"].each do |theme|
-      post :theme, params: {theme: theme}
-      assert_equal(theme, @user.reload.theme)
-    end
-  end
-
-  test "should change entry width" do
-    login_as @user
-    post :entry_width
-    assert_not_equal @user.entry_width, @user.reload.entry_width
   end
 
   test "should update now playing" do
@@ -225,15 +168,4 @@ class SettingsControllerTest < ActionController::TestCase
       assert_equal(audio_panel_size, @user.reload.audio_panel_size)
     end
   end
-
-  test "view modes" do
-    login_as @user
-
-    %w[view_unread view_starred view_all].each do |view_mode|
-      get :view_mode, xhr: true, params: {mode: view_mode}
-      assert_response :success
-      assert_equal view_mode, @user.reload.view_mode
-    end
-  end
-
 end

@@ -36,7 +36,7 @@ class FeedsControllerTest < ActionController::TestCase
       "id" => feed.id,
       "hub.topic" => feed.feed_url,
       "hub.verify_token" => secret,
-      "hub.lease_seconds" => 10_000,
+      "hub.lease_seconds" => 10_000
     }
 
     subscribe_challenge = Faker::Internet.slug
@@ -60,7 +60,7 @@ class FeedsControllerTest < ActionController::TestCase
       "hub.topic" => feed.feed_url,
       "hub.verify_token" => "#{secret}s",
       "hub.mode" => "subscribe",
-      "hub.challenge" => Faker::Internet.slug,
+      "hub.challenge" => Faker::Internet.slug
     }
 
     get :push, params: params
@@ -73,7 +73,7 @@ class FeedsControllerTest < ActionController::TestCase
     body = push_prep(feed)
 
     assert_difference "Sidekiq::Queues['feed_refresher_fetcher_critical'].size", +1 do
-      raw_post :push, {id: feed.id}, body
+      post :push, params: {id: feed.id}, body: body
       assert_response :success
     end
   end
@@ -83,25 +83,9 @@ class FeedsControllerTest < ActionController::TestCase
     body = push_prep(feed)
 
     assert_difference "Sidekiq::Queues['feed_refresher_fetcher'].size", +1 do
-      raw_post :push, {id: feed.id}, body
+      post :push, params: {id: feed.id}, body: body
       assert_response :success
     end
-  end
-
-  test "modify toggle update settings" do
-    login_as @user
-    feed = @user.feeds.first
-    subscription = @user.subscriptions.where(feed: feed).take!
-    post :toggle_updates, params: {id: feed}, xhr: true
-    assert_response :success
-    assert_not_equal subscription.show_updates, subscription.reload.show_updates
-  end
-
-  test "get update_styles" do
-    login_as @user
-    feed = @user.feeds.first
-    get :update_styles, xhr: true
-    assert_response :success
   end
 
   private

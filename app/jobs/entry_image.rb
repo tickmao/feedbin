@@ -20,7 +20,7 @@ class EntryImage
         "args" => EntryImage.build_find_image_args(@entry, options),
         "class" => "FindImage",
         "queue" => "images",
-        "retry" => false,
+        "retry" => false
       )
     end
   end
@@ -39,7 +39,7 @@ class EntryImage
   end
 
   def receive
-    @entry.update_attributes(image: @image)
+    @entry.update(image: @image)
   end
 
   def self.build_find_image_args(entry, options = {})

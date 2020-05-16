@@ -26,16 +26,22 @@ module Api
         end
 
         page_query = @starred_entries || @entries
+        entry_count(page_query)
 
         if page_query.out_of_bounds?
           status_not_found
         elsif !@entries.present?
-          @entries = []
+          render json: []
         else
           links_header(page_query, path_helper, params[:feed_id])
-          fresh_when(etag: @entries)
+          if stale?(etag: @entries)
+            render_json "entries/index"
+          end
         end
-        entry_count(page_query)
+      end
+
+      def render_json(template)
+        render template: "api/v2/#{template}.html.erb", layout: nil, content_type: "application/json"
       end
 
       def entry_count(collection)

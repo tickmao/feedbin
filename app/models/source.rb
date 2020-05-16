@@ -32,4 +32,8 @@ class Source
     end
     feed
   end
+
+  def document
+    @document ||= Nokogiri::HTML(@config[:request].body)
+  end
 end

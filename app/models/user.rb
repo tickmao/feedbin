@@ -43,7 +43,9 @@ class User < ApplicationRecord
     :twitter_access_error,
     :nice_frames,
     :favicon_colors,
-    :newsletter_tag
+    :newsletter_tag,
+    :feeds_width,
+    :entries_width
 
   has_one :coupon
   has_many :subscriptions, dependent: :delete_all
@@ -63,6 +65,7 @@ class User < ApplicationRecord
   has_many :recently_played_entries, dependent: :delete_all
   has_many :updated_entries, dependent: :delete_all
   has_many :devices, dependent: :delete_all
+  has_many :authentication_tokens, dependent: :delete_all
   has_many :in_app_purchases
   belongs_to :plan
 
@@ -76,16 +79,13 @@ class User < ApplicationRecord
   before_save :activate_subscriptions
   before_save { reset_auth_token }
 
-  before_create { create_customer }
+  before_create :create_customer, unless: -> { !ENV["STRIPE_API_KEY"] }
   before_create { generate_token(:starred_token) }
   before_create { generate_token(:inbound_email_token, 4) }
-  before_create { generate_token(:newsletter_token, 4) }
+  before_create { generate_newsletter_token }
   before_create { generate_token(:page_token) }
 
   before_update :update_billing, unless: -> { !ENV["STRIPE_API_KEY"] }
-
-  after_create { schedule_trial_jobs }
-
   before_destroy :cancel_billing, unless: -> { !ENV["STRIPE_API_KEY"] }
   before_destroy :create_deleted_user
   before_destroy :record_stats
@@ -98,6 +98,14 @@ class User < ApplicationRecord
   validates_presence_of :email
   validates_uniqueness_of :email, case_sensitive: false
   validates_presence_of :password, on: :create
+
+  def newsletter_senders
+    NewsletterSender.where(token: newsletter_authentication_token.token).order(name: :asc)
+  end
+
+  def generate_newsletter_token
+    authentication_tokens.newsletters.new(length: 4)
+  end
 
   def theme
     if settings
@@ -140,10 +148,6 @@ class User < ApplicationRecord
       self.password_confirmation = params[:user][:password]
     end
     self
-  end
-
-  def get_view_mode
-    view_mode || "view_unread"
   end
 
   def schedule_trial_jobs
@@ -378,7 +382,7 @@ class User < ApplicationRecord
   def update_tag_visibility(tag, visible)
     tag_visibility_will_change!
     tag_visibility[tag] = visible
-    update_attributes tag_visibility: tag_visibility
+    update tag_visibility: tag_visibility
   end
 
   def build_feeds_by_tag
@@ -426,12 +430,12 @@ class User < ApplicationRecord
   end
 
   def activate
-    update_attributes(suspended: false)
+    update(suspended: false)
     subscriptions.update_all(active: true)
   end
 
   def deactivate
-    update_attributes(suspended: true)
+    update(suspended: true)
     subscriptions.update_all(active: false)
   end
 
@@ -444,7 +448,11 @@ class User < ApplicationRecord
   end
 
   def newsletter_address
-    "#{newsletter_token}@newsletters.feedbin.com"
+    "#{newsletter_authentication_token.token}@newsletters.feedbin.com"
+  end
+
+  def newsletter_authentication_token
+    authentication_tokens.newsletters.active.take
   end
 
   def stripe_url
@@ -500,14 +508,16 @@ class User < ApplicationRecord
     plan == Plan.find_by_stripe_id("trial")
   end
 
-  def display_prefs
-    "font-size-#{font_size || 5} font-#{font || "default"}"
-  end
-
   def twitter_credentials_valid?
     twitter_client&.home_timeline && true
   rescue Twitter::Error::Unauthorized
     false
+  end
+
+  def recently_played_entries_progress
+    recently_played_entries.select(:duration, :progress, :entry_id).each_with_object({}) do |item, hash|
+      hash[item.entry_id] = {progress: item.progress, duration: item.duration}
+    end
   end
 
   def twitter_client
@@ -520,5 +530,4 @@ class User < ApplicationRecord
       }
     end
   end
-
 end

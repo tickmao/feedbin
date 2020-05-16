@@ -10,6 +10,7 @@ class Feed < ApplicationRecord
   has_many :tags, through: :taggings
 
   has_one :favicon, foreign_key: "host", primary_key: "host"
+  has_one :newsletter_sender
 
   before_create :set_host
   after_create :refresh_favicon
@@ -143,7 +144,7 @@ class Feed < ApplicationRecord
         "args" => [[id, feed_url]],
         "class" => "FeedRefresherFetcherCritical",
         "queue" => "feed_refresher_fetcher_critical",
-        "retry" => false,
+        "retry" => false
       )
     end
   end
@@ -157,7 +158,7 @@ class Feed < ApplicationRecord
   end
 
   def json_feed
-    options&.respond_to?(:dig) && options.dig("json_feed")
+    options&.respond_to?(:dig) && options&.dig("json_feed")
   end
 
   def has_subscribers?

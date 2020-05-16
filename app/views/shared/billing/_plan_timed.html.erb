@@ -1,9 +1,7 @@
-<div class="inset">
-    <div class="inset-content">
-        <h4 class="group-header">Your Plan</h4>
-    </div>
+<div class="inset has-description">
+    <h4 class="group-header">Your Plan</h4>
     <div class="control-group">
-        <table class="table table-rounded" style="margin-bottom: 0;">
+        <table class="table table-striped" style="margin-bottom: 0;">
             <tr>
                 <td>Prepaid</td>
                 <td>
@@ -21,8 +19,6 @@
 
 <%= render partial: 'shared/billing/billing_subscribe', locals: {subscribe_title: "Switch to Subscription"} %>
 
-<div class="inset">
-    <%= render partial: 'shared/billing/payment_history' %>
-</div>
+<%= render partial: 'shared/billing/payment_history' %>
 
 <%= render partial: 'shared/billing/receipt_info' %>

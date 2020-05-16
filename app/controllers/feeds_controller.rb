@@ -33,12 +33,12 @@ class FeedsController < ApplicationController
       if [feed.self_url, feed.feed_url].include?(params["hub.topic"]) && secret == params["hub.verify_token"]
         if params["hub.mode"] == "subscribe"
           Librato.increment "push.subscribe"
-          feed.update_attributes(push_expiration: Time.now + (params["hub.lease_seconds"].to_i / 2).seconds)
+          feed.update(push_expiration: Time.now + (params["hub.lease_seconds"].to_i / 2).seconds)
           response = params["hub.challenge"]
           status = :ok
         elsif params["hub.mode"] == "unsubscribe"
           Librato.increment "push.unsubscribe"
-          feed.update_attributes(push_expiration: nil)
+          feed.update(push_expiration: nil)
           response = params["hub.challenge"]
           status = :ok
         end
@@ -51,11 +51,12 @@ class FeedsController < ApplicationController
         body = request.raw_post.force_encoding("UTF-8")
         signature = OpenSSL::HMAC.hexdigest("sha1", secret, body)
         if request.headers["HTTP_X_HUB_SIGNATURE"] == "sha1=#{signature}"
-          Sidekiq::Client.push_bulk(
+          client = Sidekiq::Client.new(SIDEKIQ_ALT)
+          client.push_bulk(
             "args" => [[feed.id, feed.feed_url, {xml: body}]],
             "class" => "FeedRefresherFetcherCritical",
             "queue" => "feed_refresher_fetcher_critical",
-            "retry" => false,
+            "retry" => false
           )
           Librato.increment "entry.push"
         else
@@ -66,38 +67,17 @@ class FeedsController < ApplicationController
         options = {
           push_callback: Rails.application.routes.url_helpers.push_feed_url(feed, protocol: uri.scheme, host: uri.host),
           hub_secret: secret,
-          push_mode: "unsubscribe",
+          push_mode: "unsubscribe"
         }
         Sidekiq::Client.push_bulk(
           "args" => [[feed.id, feed.feed_url, options]],
           "class" => "FeedRefresherFetcher",
           "queue" => "feed_refresher_fetcher",
-          "retry" => false,
+          "retry" => false
         )
       end
       head :ok
     end
-  end
-
-  def toggle_updates
-    @user = current_user
-    subscription = @user.subscriptions.where(feed_id: params[:id]).take!
-    subscription.toggle!(:show_updates)
-    if params.key?(:inline)
-      @delay = false
-      unless @user.setting_on?(:update_message_seen)
-        @user.update_message_seen = "1"
-        @user.save
-        @delay = true
-      end
-    else
-      head :ok
-    end
-  end
-
-  def update_styles
-    user = current_user
-    @feed_ids = user.subscriptions.where(show_updates: false).pluck(:feed_id)
   end
 
   def search
@@ -109,7 +89,7 @@ class FeedsController < ApplicationController
       config = {
         twitter_access_token: @user.twitter_access_token,
         twitter_access_secret: @user.twitter_access_secret,
-        twitter_screen_name: @user.twitter_screen_name,
+        twitter_screen_name: @user.twitter_screen_name
       }
       @feeds = FeedFinder.new(params[:q], config).create_feeds!
       @feeds.map { |feed| feed.priority_refresh(@user) }

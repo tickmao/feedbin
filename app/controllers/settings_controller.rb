@@ -7,16 +7,15 @@ class SettingsController < ApplicationController
 
   def account
     @user = current_user
-    @last_payment = @user.billing_events.
-      order(created_at: :desc).
-      where(event_type: "charge.succeeded").
-      where("created_at >= :expiration_cutoff", {expiration_cutoff: 3.days.ago}).
-      take
+    @last_payment = @user.billing_events
+      .order(created_at: :desc)
+      .where(event_type: "charge.succeeded")
+      .where("created_at >= :expiration_cutoff", {expiration_cutoff: 3.days.ago})
+      .take
   end
 
   def appearance
     @user = current_user
-    @classes = user_classes
   end
 
   def billing
@@ -39,7 +38,13 @@ class SettingsController < ApplicationController
     all_purchases = (stripe_purchases.to_a + in_app_purchases.to_a)
     @billing_events = all_purchases.sort_by { |billing_event| billing_event.purchase_date }.reverse
 
-    @plans = @user.available_plans
+    plan_setup
+  end
+
+  def edit_billing
+    @user = current_user
+    @default_plan = @user.plan
+    plan_setup
   end
 
   def payment_details
@@ -97,12 +102,12 @@ class SettingsController < ApplicationController
         Rails.cache.delete(FeedbinUtils.payment_details_key(current_user.id))
         customer = Customer.retrieve(@user.customer_id)
         customer.reopen_account if customer.unpaid?
-        redirect_to settings_billing_url, notice: "Your credit card has been updated."
+        redirect_to settings_billing_url, notice: "Your card has been updated."
       else
-        redirect_to settings_billing_url, alert: @user.errors.messages[:base].join(" ")
+        redirect_to settings_edit_billing_url, alert: @user.errors.messages[:base].join(" ")
       end
     else
-      redirect_to settings_billing_url, alert: "There was a problem updating your credit card. Please try again."
+      redirect_to settings_edit_billing_url, alert: "There was a problem updating your card. Please try again."
       Librato.increment("billing.token_missing")
     end
   end
@@ -151,31 +156,20 @@ class SettingsController < ApplicationController
     head :ok
   end
 
-  def font_increase
-    change_font_size("increase")
-  end
-
-  def font_decrease
-    change_font_size("decrease")
-  end
-
-  def font
+  def format
+    old_settings = begin
+                     JSON.parse(cookies.permanent.signed[:settings])
+                   rescue
+                     {}
+                   end
+    new_settings = user_format_params
+    cookies.permanent.signed[:settings] = {
+      value: JSON.generate(old_settings.merge(new_settings)),
+      httponly: true,
+      secure: Feedbin::Application.config.force_ssl
+    }
     @user = current_user
-    if Feedbin::Application.config.fonts.value?(params[:font])
-      @user.font = params[:font]
-      @user.save
-    end
-    head :ok
-  end
-
-  def theme
-    @user = current_user
-    themes = ["day", "dusk", "sunset", "midnight"]
-    if themes.include?(params[:theme])
-      @user.theme = params[:theme]
-      @user.save
-    end
-    head :ok
+    @user.update!(new_settings)
   end
 
   def sticky
@@ -186,16 +180,12 @@ class SettingsController < ApplicationController
     end
   end
 
-  def entry_width
+  def subscription_view_mode
     @user = current_user
-    new_width = if @user.entry_width.blank?
-      "fluid"
-    else
-      ""
+    @subscription = @user.subscriptions.where(feed_id: params[:feed_id]).first
+    if @subscription.present?
+      @subscription.update(subscription_view_mode_params)
     end
-    @user.entry_width = new_width
-    @user.save
-    head :ok
   end
 
   def now_playing
@@ -221,32 +211,18 @@ class SettingsController < ApplicationController
     head :ok
   end
 
-  def view_mode
-    modes = ["view_unread", "view_starred", "view_all"]
-    if modes.include?(params[:mode])
-      update_view_mode(params[:mode])
-    end
-    head :ok
+  def newsletters_pages
+    @user = current_user
+    @subscription_ids = @user.subscriptions.pluck(:feed_id)
   end
 
   private
 
-  def change_font_size(direction)
-    @user = current_user
-
-    current_font_size = @user.font_size.try(:to_i) || 5
-    new_font_size = if direction == "increase"
-      current_font_size + 1
-    else
-      current_font_size - 1
-    end
-
-    if Feedbin::Application.config.font_sizes[new_font_size] && new_font_size >= 0
-      @user.font_size = new_font_size
-      @user.save
-    end
-
-    head :ok
+  def plan_setup
+    @plans = @user.available_plans
+    @plan_data = @plans.map { |plan|
+      {id: plan.id, name: plan.name, amount: plan.price_in_cents}
+    }
   end
 
   def plan_exists
@@ -266,14 +242,11 @@ class SettingsController < ApplicationController
     params.require(:user).permit(:now_playing_entry)
   end
 
-  def update_view_mode(view_mode)
-    @user = current_user
-    @view_mode = view_mode
-    @user.update_attributes(view_mode: @view_mode)
+  def user_format_params
+    params.require(:user).permit(:font_size, :theme, :font, :entry_width, :view_mode, :feeds_width, :entries_width)
   end
 
-  def newsletters_pages
-    @user = current_user
+  def subscription_view_mode_params
+    params.require(:subscription).permit(:view_mode)
   end
-
 end

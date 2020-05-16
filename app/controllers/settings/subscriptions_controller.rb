@@ -1,13 +1,14 @@
 class Settings::SubscriptionsController < ApplicationController
   def index
     @user = current_user
-    @subscriptions = subscriptions_with_sort_data.paginate(page: params[:page], per_page: 100)
+    @subscriptions = subscriptions_with_sort_data.paginate(page: params[:page], per_page: 50)
+    store_location
     render layout: "settings"
   end
 
   def destroy
     destroy_subscription(params[:id])
-    redirect_to settings_subscriptions_url, notice: "You have successfully unsubscribed."
+    redirect_back_or(settings_subscriptions_url, "You have successfully unsubscribed.")
   end
 
   def edit
@@ -64,6 +65,21 @@ class Settings::SubscriptionsController < ApplicationController
     redirect_to settings_subscriptions_url, notice: notice
   end
 
+  def newsletter_senders
+    @user = current_user
+    valid = @user.newsletter_senders.pluck(:feed_id)
+    feed_id = params[:id].to_i
+    if valid.include?(feed_id)
+      if params[:newsletter_sender][:feed_id] == "1"
+        @user.subscriptions.create!(feed_id: feed_id)
+      else
+        @user.subscriptions.where(feed_id: feed_id).take.destroy
+      end
+    end
+    flash[:notice] = "Settings updated."
+    flash.discard
+  end
+
   private
 
   def subscription_params
@@ -71,10 +87,10 @@ class Settings::SubscriptionsController < ApplicationController
   end
 
   def subscriptions_with_sort_data
-    ids = @user.subscriptions.pluck(:feed_id)
-    key = Digest::SHA1.hexdigest(ids.join)
+    ids = @user.subscriptions.pluck(:id)
+    key = Digest::SHA1.hexdigest(ids.join(","))
 
-    subscriptions = Rails.cache.fetch("#{@user.id}:subscriptions:#{key}:6", expires_in: 24.hours) {
+    subscriptions = Rails.cache.fetch("#{@user.id}:subscriptions:#{key}", expires_in: 24.hours) {
       tags = @user.tags_on_feed
       subscriptions = @user.subscriptions.default.select("subscriptions.*, feeds.title AS original_title, feeds.last_published_entry AS last_published_entry, feeds.feed_url, feeds.site_url, feeds.host").joins("INNER JOIN feeds ON subscriptions.feed_id = feeds.id AND subscriptions.user_id = #{@user.id}").includes(feed: [:favicon])
       feed_ids = subscriptions.map(&:feed_id)
@@ -85,8 +101,7 @@ class Settings::SubscriptionsController < ApplicationController
 
       subscriptions.each do |subscription|
         counts = entry_counts[subscription.feed_id]
-        max = counts.present? ? counts.max.to_i : 0
-        percentages = counts.present? ? counts.map { |count| count.to_f / max.to_f } : nil
+        percentages = counts.present? ? calculate_percentages(counts) : nil
         volume = counts.present? ? counts.sum : 0
 
         subscription.title = if subscription.title
@@ -121,6 +136,17 @@ class Settings::SubscriptionsController < ApplicationController
     subscriptions
   end
 
+  def calculate_percentages(counts)
+    max = counts.max.to_i
+    counts.map do |count|
+      if count == 0
+        0.to_f
+      else
+        count.to_f / max.to_f
+      end
+    end
+  end
+
   def feed_search_data(subscription)
     name = [].tap do |array|
       array.push subscription.title.downcase
@@ -137,7 +163,7 @@ class Settings::SubscriptionsController < ApplicationController
       name: name.downcase,
       tag: subscription.tag_names,
       updated: -(subscription.try(:last_published_entry).try(:to_time).try(:to_i) || 0),
-      volume: -subscription.post_volume,
+      volume: -subscription.post_volume
     }
   end
 

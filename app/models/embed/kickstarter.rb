@@ -1,7 +1,7 @@
 class Embed::Kickstarter < IframeEmbed
   def self.supported_urls
     [
-      %r{.*?//www\.kickstarter\.com/projects/(.*?)/(.*?)/widget/video\.html},
+      %r{.*?//www\.kickstarter\.com/projects/(.*?)/(.*?)/widget/video\.html}
     ]
   end
 
@@ -23,7 +23,7 @@ class Embed::Kickstarter < IframeEmbed
 
   def image_url
     @image_url ||= begin
-      page = URLCache.new(canonical_url).body
+      page = UrlCache.new(canonical_url).body
       doc = Nokogiri::HTML5(page)
       image = doc.css("meta[property='og:image']")
       if image.empty?

@@ -6,7 +6,7 @@ class EntryTest < ActiveSupport::TestCase
     feed = user.feeds.first
     @entry = feed.entries.build(
       public_id: SecureRandom.hex,
-      content: "<p>#{Faker::Lorem.paragraph}</p>",
+      content: "<p>#{Faker::Lorem.paragraph}</p>"
     )
   end
 
@@ -56,6 +56,15 @@ class EntryTest < ActiveSupport::TestCase
       @entry.save
       job = EntryImage.jobs.last
       assert_equal([@entry.reload.id], job["args"])
+    end
+  end
+
+  test "should enqueue CacheEntryViews" do
+    assert_difference "CacheEntryViews.jobs.size", +1 do
+      @entry.save
+    end
+    assert_difference "CacheEntryViews.jobs.size", +1 do
+      @entry.touch
     end
   end
 

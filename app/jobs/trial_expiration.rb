@@ -4,7 +4,7 @@ class TrialExpiration
 
   def perform
     expire_plan("trial")
-    # expire_prepaid_users
+    expire_prepaid_users
   end
 
   def expire_prepaid_users
@@ -23,5 +23,4 @@ class TrialExpiration
       end
     end
   end
-
 end

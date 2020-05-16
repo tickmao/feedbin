@@ -11,6 +11,7 @@ class SavePage
     entry = create_webpage_entry
     ImageSaver.perform_async(entry.id)
     FaviconFetcher.perform_async(host, true)
+    entry
   end
 
   def create_webpage_entry
@@ -53,7 +54,7 @@ class SavePage
       site_url: URI::HTTP.build(host: ENV["PAGES_DOMAIN"]).to_s,
       protected: true,
       host: ENV["PAGES_DOMAIN"],
-      feed_type: :pages,
+      feed_type: :pages
     }
   end
 
@@ -68,5 +69,4 @@ class SavePage
       skip_recent_post_check: true
     }
   end
-
 end

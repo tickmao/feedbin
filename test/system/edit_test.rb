@@ -1,9 +1,7 @@
 require "application_system_test_case"
 
 class EditTest < ApplicationSystemTestCase
-
   test "Edit feed" do
-
     show_article_setup
     login_as(@user)
 
@@ -18,9 +16,8 @@ class EditTest < ApplicationSystemTestCase
     wait_for_ajax
 
     find(".modal [data-behavior~=autofocus]").set(feed_name)
-    find("[data-behavior~=add_tag]").click
-    find("[placeholder=Tag]").set(tag_name)
-    find(".modal form input[type=submit]").click
+    find("input[placeholder='+ New Tag']").set(tag_name)
+    find(".modal form button[type=submit]").click
 
     wait_for_ajax
 
@@ -29,11 +26,9 @@ class EditTest < ApplicationSystemTestCase
     end
 
     assert_equal feed_name, @user.subscriptions.where(feed: @feed).first.title
-
   end
 
   test "Edit tag" do
-
     show_article_setup
 
     tag_name = "Tag Name"
@@ -50,18 +45,16 @@ class EditTest < ApplicationSystemTestCase
     wait_for_ajax
 
     find(".modal [data-behavior~=autofocus]").set(new_tag_name)
-    find(".modal form input[type=submit]").click
+    find(".modal form button[type=submit]").click
 
     wait_for_ajax
 
     click_link new_tag_name
 
     assert_equal new_tag_name, @user.tags.first.name
-
   end
 
   test "Edit saved search" do
-
     show_article_setup
 
     search_name = "Search Name"
@@ -78,15 +71,12 @@ class EditTest < ApplicationSystemTestCase
     wait_for_ajax
 
     find(".modal [data-behavior~=autofocus]").set(new_search_name)
-    find(".modal form input[type=submit]").click
+    find(".modal form button[type=submit]").click
 
     wait_for_ajax
 
     click_link new_search_name
 
     assert_equal new_search_name, search.reload.name
-
   end
-
-
 end

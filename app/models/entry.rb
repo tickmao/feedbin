@@ -13,6 +13,7 @@ class Entry < ApplicationRecord
   before_create :ensure_published
   before_create :create_summary
   before_create :update_content
+  before_create :tweet_url
   before_update :create_summary
   after_commit :cache_public_id, on: :create
   after_commit :find_images, on: :create
@@ -23,6 +24,7 @@ class Entry < ApplicationRecord
   after_commit :touch_feed_last_published_entry, on: :create
   after_commit :harvest_links, on: :create
   after_commit :cache_extracted_content, on: :create
+  after_commit :cache_views, on: [:create, :update]
 
   validate :has_content
   validates :feed, :public_id, presence: true
@@ -57,7 +59,7 @@ class Entry < ApplicationRecord
   end
 
   def json_feed
-    data&.respond_to?(:dig) && data.dig("json_feed")
+    data&.respond_to?(:dig) && data&.dig("json_feed")
   end
 
   def twitter_thread_ids
@@ -137,7 +139,7 @@ class Entry < ApplicationRecord
         hash[:entities][entity].each_with_index do |value, index|
           hash[:entities][entity][index][:indices] = [
             value[:indices][0] - text_start,
-            value[:indices][1] - text_start,
+            value[:indices][1] - text_start
           ]
         end
       end
@@ -297,19 +299,27 @@ class Entry < ApplicationRecord
     self.content = original
   end
 
-  def content_diff
-    result = nil
-    if original && original["content"].present?
-      begin
-        before = ContentFormatter.format!(original["content"], self)
-        after = ContentFormatter.format!(content, self)
-        result = HTMLDiff::Diff.new("<div>#{before}</div>", "<div>#{after}</div>").inline_html
-        result = Sanitize.fragment(result, Sanitize::Config::RELAXED)
-        result = result.length > after.length ? result.html_safe : after.html_safe
-      rescue
-      end
+  def tweet_url
+    if main_tweet
+      self.url = main_tweet.uri.to_s
     end
-    result
+  rescue
+  end
+
+  def content_diff
+    @content_diff ||= begin
+      result = nil
+      if original && original["content"].present? && original["content"].length != content.length
+        begin
+          before = ContentFormatter.format!(original["content"], self)
+          after = ContentFormatter.format!(content, self)
+          result = HTMLDiff::Diff.new("<div>#{before}</div>", "<div>#{after}</div>").inline_html
+          result = result.html_safe
+        rescue
+        end
+      end
+      result
+    end
   end
 
   def newsletter_url
@@ -440,5 +450,9 @@ class Entry < ApplicationRecord
 
   def cache_extracted_content
     CacheExtractedContent.perform_async(id, feed_id)
+  end
+
+  def cache_views
+    CacheEntryViews.perform_async(id)
   end
 end

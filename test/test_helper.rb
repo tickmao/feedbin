@@ -28,35 +28,14 @@ end
 
 $redis = {
   entries: ConnectionPool.new(size: 10) { Redis.new(url: ENV["REDIS_URL"]) },
-  refresher: ConnectionPool.new(size: 10) { Redis.new(url: ENV["REDIS_URL"]) },
+  refresher: ConnectionPool.new(size: 10) { Redis.new(url: ENV["REDIS_URL"]) }
 }
-
-Capybara.register_driver(:headless_chrome) do |app|
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-    chromeOptions: {args: ["headless", "disable-gpu", "window-size=1340,800"]},
-  )
-
-  Capybara::Selenium::Driver.new(
-    app,
-    browser: :chrome,
-    desired_capabilities: capabilities,
-  )
-end
-
-Capybara.default_max_wait_time = 10
 
 class ActiveSupport::TestCase
   include LoginHelper
   include FactoryHelper
 
   fixtures :all
-
-  def raw_post(action, params, body)
-    @request.env["RAW_POST_DATA"] = body
-    response = post(action, params: params)
-    @request.env.delete("RAW_POST_DATA")
-    response
-  end
 
   def flush_redis
     Sidekiq.redis do |redis|
@@ -76,8 +55,8 @@ class ActiveSupport::TestCase
   def stub_request_file(file, url, response_options = {})
     file = File.join(Rails.root, "test/support/www", file)
     options = {body: File.new(file), status: 200}.merge(response_options)
-    stub_request(:get, url).
-      to_return(options)
+    stub_request(:get, url)
+      .to_return(options)
   end
 
   def load_tweet
@@ -100,5 +79,41 @@ class ActiveSupport::TestCase
     rescue
       nil
     end
+  end
+
+  def newsletter_params(recipient, signature, title = nil, from = nil)
+    title = SecureRandom.hex if title.nil?
+    {
+      "timestamp" => "timestamp",
+      "token" => "token",
+      "signature" => signature,
+      "recipient" => "#{recipient}@development.newsletters.feedbin.com",
+      "sender" => "#{title}@feedbin.com",
+      "subject" => "#{title} This is the subject",
+      "from" => "#{title} <#{from || "ben"}@feedbin.com>",
+      "X-Mailgun-Incoming" => "Yes",
+      "X-Envelope-From" => "<ben@feedbin.com>",
+      "Received" => "XYZ",
+      "Dkim-Signature" => "XYZ",
+      "X-Google-Dkim-Signature" => "XYZ",
+      "X-Gm-Message-State" => "XYZ",
+      "X-Received" => "XYZ",
+      "Return-Path" => "<ben@feedbin.com>",
+      "From" => "Ben Ubois <#{title}@feedbin.com>",
+      "Content-Type" => "multipart/alternative; boundary=\"Apple-Mail=_8AB713F4-14C8-48B5-AD4B-B694CA436A93\"",
+      "Subject" => "This is the subject",
+      "Message-Id" => "<0B507DA2-3174-4575-8987-C2064F3D532C@feedbin.com>",
+      "Date" => "Thu, 28 Jul 2016 18:44:38 -0700",
+      "To" => "#{recipient}@development.newsletters.feedbin.com",
+      "Mime-Version" => "1.0 (Mac OS X Mail 9.3 \\(3124\\))",
+      "X-Mailer" => "Apple Mail (2.3124)",
+      "message-headers" => "XYZ",
+      "body-plain" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation .",
+      "body-html" => "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html charset=us-ascii\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;\" class=\"\"><div style=\"margin: 0px; line-height: normal;\" class=\"\"><b class=\"\">Lorem ipsum</b> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div></body></html>",
+      "stripped-html" => "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html charset=us-ascii\"></head><body style=\"word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space;\" class=\"\"><div style=\"margin: 0px; line-height: normal;\" class=\"\"><b class=\"\">Lorem ipsum</b> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</div></body></html>",
+      "stripped-text" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation .",
+      "stripped-signature" => "",
+      "List-Unsubscribe" => "<http://www.host.com/list.cgi?cmd=unsub&lst=list>, <mailto:list-request@host.com?subject=unsubscribe>"
+    }
   end
 end

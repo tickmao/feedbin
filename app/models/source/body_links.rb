@@ -54,8 +54,4 @@ class Source::BodyLinks < Source
       false
     end
   end
-
-  def document
-    @document ||= Nokogiri::HTML(@config[:request].body)
-  end
 end

@@ -5,17 +5,17 @@ class EntryPresenter < BasePresenter
     %r{https?://m\.youtube\.com/watch\?v=(.*?)(&|#|$)},
     %r{https?://www\.youtube\.com/embed/(.*?)(\?|$)},
     %r{https?://www\.youtube\.com/v/(.*?)(#|\?|$)},
-    %r{https?://www\.youtube\.com/user/.*?#\w/\w/\w/\w/(.+)\b},
+    %r{https?://www\.youtube\.com/user/.*?#\w/\w/\w/\w/(.+)\b}
   ]
 
   INSTAGRAM_URLS = [
     %r{https?://www\.instagram\.com/p/(.*?)(/|#|\?|$)},
-    %r{https?://instagram\.com/p/(.*?)(/|#|\?|$)},
+    %r{https?://instagram\.com/p/(.*?)(/|#|\?|$)}
   ]
 
   VIMEO_URLS = [
     %r{https?://vimeo\.com/video/(.*?)(#|\?|$)},
-    %r{https?://vimeo\.com/([0-9]+)(#|\?|$)},
+    %r{https?://vimeo\.com/([0-9]+)(#|\?|$)}
   ]
 
   presents :entry
@@ -27,8 +27,8 @@ class EntryPresenter < BasePresenter
         mark_as_read_path: @template.mark_as_read_entry_path(entry),
         recently_read_path: @template.recently_read_entry_path(entry),
         entry_id: entry.id,
-        entry_info: {id: entry.id, feed_id: entry.feed_id, published: entry.published.to_i},
-      },
+        entry_info: {id: entry.id, feed_id: entry.feed_id, published: entry.published.to_i}
+      }
     }
     @template.link_to @template.entry_path(entry), options do
       yield
@@ -71,6 +71,67 @@ class EntryPresenter < BasePresenter
   rescue => e
     Rails.logger.info { e.inspect }
     @template.content_tag(:p, "&ndash;&ndash;".html_safe)
+  end
+
+  def is_numeric?(string)
+    string = string.strip
+    begin
+      string.to_i.to_s == string
+    rescue
+      false
+    end
+  end
+
+  def update_media_queries(html)
+    regex = /@media(.*?)\(max-width:(.*?)px\)(.*?){/
+    html.gsub(regex) do |string|
+      matches = string.match(regex)
+      if matches[2] && is_numeric?(matches[2])
+        number = matches[2].to_i
+        if number >= 400
+          number = 10_000
+        end
+        string = "@media#{matches[1]}(max-width:#{number}px)#{matches[3]}{"
+      end
+      string
+    end
+  rescue
+    html
+  end
+
+  def newsletter_content
+    output = update_media_queries(formatted_content)
+    output = ContentFormatter.newsletter_format(output)
+    output = <<-eod
+    <style>
+    body {
+      margin: 0  !important;
+      padding: 0 !important;
+    }
+    table, td, img {
+      max-width: 620px !important;
+    }
+    img[width="1"], img[height="1"] {
+      display: none !important;
+    }
+    </style>
+    #{output}
+    eod
+    output.html_safe
+  rescue => e
+    Rails.logger.info { e.inspect }
+    @template.content_tag(:p, "&ndash;&ndash;".html_safe)
+  end
+
+  def newsletter_from?
+    newsletter_from
+  end
+
+  def newsletter_from
+    name, address = entry.data && entry.data.dig("newsletter", "data", "from").split(/[<>]/).map(&:strip)
+    OpenStruct.new(name: name.delete('"'), address: address)
+  rescue
+    nil
   end
 
   def api_content
@@ -206,7 +267,7 @@ class EntryPresenter < BasePresenter
     end
 
     if entry.retweet?
-      classes.push("retweet")
+      classes.push("re-tweet")
     end
 
     classes.join(" ")
@@ -240,7 +301,7 @@ class EntryPresenter < BasePresenter
             title: parsed.title,
             host: parsed.domain,
             author: parsed.author,
-            content: content,
+            content: content
           }
           articles.push data
         end
@@ -313,15 +374,6 @@ class EntryPresenter < BasePresenter
     "entry-type-#{entry_type} entry-format-#{entry_type}-#{entry.content_format}"
   end
 
-  def content_diff
-    before = ContentFormatter.api_format(entry.original["content"], entry)
-    after = ContentFormatter.api_format(entry.content, entry)
-    result = HTMLDiff::Diff.new("<div>#{before}</div>", "<div>#{after}</div>").inline_html
-    Sanitize.fragment(result, Sanitize::Config::RELAXED)
-  rescue
-    nil
-  end
-
   def decoder
     @decoder ||= HTMLEntities.new
   end
@@ -331,17 +383,17 @@ class EntryPresenter < BasePresenter
       text = Sanitize.fragment(entry.content,
         remove_contents: true,
         elements: %w[html body div span
-                     h1 h2 h3 h4 h5 h6 p blockquote pre
-                     a abbr acronym address big cite code
-                     del dfn em ins kbd q s samp
-                     small strike strong sub sup tt var
-                     b u i center
-                     dl dt dd ol ul li
-                     fieldset form label legend
-                     table caption tbody tfoot thead tr th td
-                     article aside canvas details embed
-                     figure figcaption footer header hgroup
-                     menu nav output ruby section summary])
+          h1 h2 h3 h4 h5 h6 p blockquote pre
+          a abbr acronym address big cite code
+          del dfn em ins kbd q s samp
+          small strike strong sub sup tt var
+          b u i center
+          dl dt dd ol ul li
+          fieldset form label legend
+          table caption tbody tfoot thead tr th td
+          article aside canvas details embed
+          figure figcaption footer header hgroup
+          menu nav output ruby section summary])
       text = ReverseMarkdown.convert(text)
       text = ActionController::Base.helpers.strip_tags(text)
       decoder.decode(text)
@@ -391,7 +443,7 @@ class EntryPresenter < BasePresenter
   end
 
   def has_diff?
-    entry.content.present? && entry.original.present? && entry.original["content"].present? && entry.original["content"].length != entry.content.length
+    entry.content_diff.present?
   end
 
   def is_updated_entry?
@@ -552,9 +604,9 @@ class EntryPresenter < BasePresenter
   end
 
   # Sizes: normal, bigger
-  def tweet_profile_image_uri(tweet, size = "bigger")
+  def tweet_profile_image_uri(tweet, size = :bigger)
     if tweet.user.profile_image_uri? && tweet.user.profile_image_uri_https(size)
-      @template.camo_link(tweet.user.profile_image_uri_https("bigger"))
+      @template.camo_link(tweet.user.profile_image_uri_https(size))
     else
       @template.image_url("favicon-profile-default.png")
     end
@@ -586,7 +638,7 @@ class EntryPresenter < BasePresenter
     else
       context = {
         embed_url: Rails.application.routes.url_helpers.iframe_embeds_path,
-        embed_classes: "iframe-placeholder entry-callout system-content",
+        embed_classes: "iframe-placeholder entry-callout system-content"
       }
       filter = HTML::Pipeline::IframeFilter.new("", context)
       attributes = filter.iframe_attributes(url, 16, 9)
@@ -618,7 +670,7 @@ class EntryPresenter < BasePresenter
     options = {
       poster: media.media_url_https.to_s + ":large",
       width: media.video_info.aspect_ratio.first,
-      height: media.video_info.aspect_ratio.last,
+      height: media.video_info.aspect_ratio.last
     }
 
     if media.type == "animated_gif"
@@ -650,6 +702,37 @@ class EntryPresenter < BasePresenter
     end
   end
 
+  def tweet_author_description(tweet)
+    entities = entry.main_tweet.to_h.dig(:user, :entities, :description)
+    @template.content_tag(:p, class: "tweet-text") do
+      if entities
+        Twitter::TwitterText::Autolink.auto_link_usernames_or_lists(Twitter::TwitterText::Autolink.auto_link_with_json(tweet.user.description, entities)).html_safe
+      else
+        Twitter::TwitterText::Autolink.auto_link(tweet.user.description).html_safe
+      end
+    end
+  end
+
+  def tweet_author_verified?(tweet)
+    tweet.user.verified?
+  end
+
+  def tweet_author_joined(tweet)
+    "#{tweet.user.created_at.strftime("%b")} #{tweet.user.created_at.year}"
+  end
+
+  def tweet_author_joined_day(tweet)
+    tweet.user.created_at.mday.to_s.chars.map(&:to_i)
+  end
+
+  def tweet_author_location(tweet)
+    tweet.user.location? ? tweet.user.location : nil
+  end
+
+  def tweet_author_location?(tweet)
+    tweet.user.location?
+  end
+
   def quoted_status?
     entry.main_tweet.quoted_status?
   end
@@ -664,7 +747,7 @@ class EntryPresenter < BasePresenter
         yield
       end
     elsif subscriptions.include?(entry.feed.id)
-      @template.link_to @template.edit_subscription_path(entry.feed), remote: true, class: "feed-button link", data: {behavior: "open_settings_modal"} do
+      @template.link_to @template.edit_subscription_path(entry.feed, app: true), remote: true, class: "feed-button link", title: "Edit feed", data: {behavior: "open_settings_modal", toggle: "tooltip"} do
         yield
       end
     else
@@ -673,5 +756,4 @@ class EntryPresenter < BasePresenter
       end
     end
   end
-
 end

@@ -20,14 +20,6 @@ module ApplicationHelper
     @mark_selected || false
   end
 
-  def view_mode
-    params[:view] || @user.get_view_mode
-  end
-
-  def view_mode_selected(mode)
-    "selected-mode" if mode == view_mode
-  end
-
   def rtl?(string)
     unless string.blank?
       rtl_test = /[\u0600-\u06FF]|[\u0750-\u077F]|[\u0590-\u05FF]|[\uFE70-\uFEFF]/m
@@ -38,6 +30,10 @@ module ApplicationHelper
         percentage > 50
       end
     end
+  end
+
+  def json_array(&block)
+    raw "[#{yield}]"
   end
 
   def rtl(string)
@@ -54,11 +50,36 @@ module ApplicationHelper
     current_user.try(:unread_entries).try(:order, "created_at DESC").try(:first).try(:created_at).try(:iso8601, 6)
   end
 
+  def get_icon(name)
+    name = name.sub(".svg", "")
+    icon = Feedbin::Application.config.icons[name]
+    unless icon
+      file = "#{Rails.root}/app/assets/svg/#{name}.svg"
+      if File.file?(file)
+        icon = Feedbin::Application.config.icons[name] = SvgIcon.new_from_file(file)
+      end
+    end
+    icon
+  end
+
+  def icon_exists?(name)
+    get_icon(name).present?
+  end
+
   def svg_tag(name, options = {})
     options = options.symbolize_keys
 
     name = name.sub(".svg", "")
-    options[:width], options[:height] = extract_dimensions(options.delete(:size)) if options[:size]
+    options.delete(:size)
+
+    icon = get_icon(name)
+
+    unless icon
+      raise "Icon missing #{name}"
+    end
+
+    options[:width] = icon.width
+    options[:height] = icon.height
 
     options[:class] = [name, options[:class]].compact.join(" ")
 
@@ -93,7 +114,7 @@ module ApplicationHelper
       scheme: "https",
       host: "www.google.com",
       path: "/s2/favicons",
-      query: {domain: host}.to_query,
+      query: {domain: host}.to_query
     )
     uri.scheme = "https"
     uri.to_s
@@ -112,7 +133,7 @@ module ApplicationHelper
   def camo_link(url)
     options = {
       asset_proxy: ENV["CAMO_HOST"],
-      asset_proxy_secret_key: ENV["CAMO_KEY"],
+      asset_proxy_secret_key: ENV["CAMO_KEY"]
     }
     pipeline = HTML::Pipeline::CamoFilter.new(nil, options, nil)
     pipeline.asset_proxy_url(url.to_s)
@@ -126,5 +147,28 @@ module ApplicationHelper
     else
       address.join("<br>").html_safe
     end
+  end
+
+  def toggle_switch(options = {})
+    css_class = options.delete(:class)
+    defaults = {
+      class: "switch #{css_class}"
+    }
+    content_tag :span, defaults.merge(options) do
+      content_tag :span, class: "switch-inner" do
+        svg_tag "icon-check"
+      end
+    end
+  end
+
+  def radio_button_control
+    content_tag :span, class: "radio-button" do
+      content_tag :span, class: "radio-button-inner" do
+      end
+    end
+  end
+
+  def short_number(number)
+    number_to_human(number, format: "%n%u", precision: 2, units: {thousand: "K", million: "M", billion: "B"})
   end
 end

@@ -33,6 +33,10 @@ class Newsletter
     parsed_from.name || from_email
   end
 
+  def name
+    parsed_from.name
+  end
+
   def subject
     data["subject"]
   end
@@ -79,7 +83,7 @@ class Newsletter
 
   def headers
     {
-      "List-Unsubscribe" => data["List-Unsubscribe"],
+      "List-Unsubscribe" => data["List-Unsubscribe"]
     }
   end
 

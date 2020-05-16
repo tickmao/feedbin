@@ -1,20 +1,18 @@
 source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem "rails", "= 5.1.7"
+gem "rails", "= 6.0.3"
 
-gem "rails-deprecated_sanitizer"
 gem "rails-controller-testing"
-gem "rails_autolink"
-
-gem "nokogumbo", "= 1.4.9"
+gem "responders"
+gem "rack", github: "rack/rack", ref: "4ebd70b"
 
 group :development do
   gem "capistrano"
   gem "capistrano-bundler"
-  gem "capistrano-rbenv"
   gem "capistrano-rails"
   gem "better_errors"
+  gem "binding_of_caller"
   gem "silencer"
   gem "benchmark-ips"
   gem "listen"
@@ -27,30 +25,31 @@ group :development, :test do
   gem "minitest"
   gem "stripe-ruby-mock", "= 2.5.0", require: "stripe_mock"
   gem "faker"
-  gem "webmock"
+  gem "webmock", "= 3.8.0"
   gem "minitest-stub-const"
   gem "coveralls", require: false
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
-  gem "capybara", "~> 2.13"
+  gem "capybara"
   gem "selenium-webdriver"
   gem "minitest-stub_any_instance"
   gem "standard"
 end
 
-gem "pg", "< 1.0"
+gem "pg"
 gem "unicorn"
 
 gem "feedjira", github: "feedbin/feedjira", ref: "e6b7b11"
 gem "feedkit", github: "feedbin/feedkit", branch: "master"
 
 gem "opml_saw", github: "feedbin/opml_saw", ref: "61d8c2d"
-gem "html-pipeline", github: "feedbin/html-pipeline", ref: "676376c"
+gem "html-pipeline", github: "feedbin/html-pipeline", ref: "20162f9"
 gem "grocer-pushpackager", github: "feedbin/grocer-pushpackager", ref: "6b01b4e", require: "grocer/pushpackager"
 gem "html_diff", github: "feedbin/html_diff", ref: "c7c15ce"
 gem "carrierwave_direct", github: "feedbin/carrierwave_direct", ref: "a0bc323"
+gem "dalli", github: "feedbin/dalli", branch: "feedbin"
 
+gem "sass-rails"
 gem "mini_racer"
-gem "sassc-rails"
 gem "coffee-rails"
 gem "uglifier", "= 4.1.11"
 gem "autoprefixer-rails"
@@ -61,7 +60,6 @@ gem "json"
 gem "activerecord-import", ">= 0.4.1"
 gem "redis"
 gem "jquery-rails"
-gem "dalli"
 gem "will_paginate"
 gem "sanitize"
 gem "carrierwave"
@@ -82,9 +80,8 @@ gem "evernote_oauth"
 gem "rmagick", require: false
 gem "reverse_markdown"
 gem "htmlentities"
-gem "responders", "~> 2.0"
 gem "dotenv-rails"
-gem "kramdown"
+gem "redcarpet"
 gem "premailer-rails"
 gem "http"
 gem "net-http-persistent"
@@ -98,7 +95,9 @@ gem "twitter-text"
 gem "bootsnap", require: false
 gem "unicode-emoji"
 gem "rack-attack"
+gem "jbuilder_cache_multi"
+gem "bcrypt"
 
 # Stripe
-gem "stripe"
+gem "stripe", "~> 4.24.0"
 gem "stripe_event"

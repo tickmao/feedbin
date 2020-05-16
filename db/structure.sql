@@ -94,6 +94,41 @@ CREATE TABLE public.ar_internal_metadata (
 
 
 --
+-- Name: authentication_tokens; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.authentication_tokens (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    token text NOT NULL,
+    purpose integer NOT NULL,
+    data jsonb DEFAULT '{}'::jsonb,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    active boolean DEFAULT true NOT NULL
+);
+
+
+--
+-- Name: authentication_tokens_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.authentication_tokens_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: authentication_tokens_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.authentication_tokens_id_seq OWNED BY public.authentication_tokens.id;
+
+
+--
 -- Name: billing_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -496,6 +531,42 @@ ALTER SEQUENCE public.in_app_purchases_id_seq OWNED BY public.in_app_purchases.i
 
 
 --
+-- Name: newsletter_senders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.newsletter_senders (
+    id bigint NOT NULL,
+    feed_id bigint NOT NULL,
+    active boolean DEFAULT true NOT NULL,
+    token text NOT NULL,
+    full_token text NOT NULL,
+    email text NOT NULL,
+    name text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: newsletter_senders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.newsletter_senders_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: newsletter_senders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.newsletter_senders_id_seq OWNED BY public.newsletter_senders.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -723,7 +794,8 @@ CREATE TABLE public.subscriptions (
     muted boolean DEFAULT false,
     show_retweets boolean DEFAULT true,
     media_only boolean DEFAULT false,
-    kind bigint DEFAULT 0
+    kind bigint DEFAULT 0,
+    view_mode bigint DEFAULT 0
 );
 
 
@@ -1033,6 +1105,13 @@ ALTER TABLE ONLY public.actions ALTER COLUMN id SET DEFAULT nextval('public.acti
 
 
 --
+-- Name: authentication_tokens id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.authentication_tokens ALTER COLUMN id SET DEFAULT nextval('public.authentication_tokens_id_seq'::regclass);
+
+
+--
 -- Name: billing_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1107,6 +1186,13 @@ ALTER TABLE ONLY public.imports ALTER COLUMN id SET DEFAULT nextval('public.impo
 --
 
 ALTER TABLE ONLY public.in_app_purchases ALTER COLUMN id SET DEFAULT nextval('public.in_app_purchases_id_seq'::regclass);
+
+
+--
+-- Name: newsletter_senders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.newsletter_senders ALTER COLUMN id SET DEFAULT nextval('public.newsletter_senders_id_seq'::regclass);
 
 
 --
@@ -1231,6 +1317,14 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
+-- Name: authentication_tokens authentication_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.authentication_tokens
+    ADD CONSTRAINT authentication_tokens_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: billing_events billing_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1316,6 +1410,14 @@ ALTER TABLE ONLY public.imports
 
 ALTER TABLE ONLY public.in_app_purchases
     ADD CONSTRAINT in_app_purchases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: newsletter_senders newsletter_senders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.newsletter_senders
+    ADD CONSTRAINT newsletter_senders_pkey PRIMARY KEY (id);
 
 
 --
@@ -1443,6 +1545,27 @@ ALTER TABLE ONLY public.users
 --
 
 CREATE INDEX index_actions_on_user_id ON public.actions USING btree (user_id);
+
+
+--
+-- Name: index_authentication_tokens_on_purpose_and_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_authentication_tokens_on_purpose_and_token ON public.authentication_tokens USING btree (purpose, token);
+
+
+--
+-- Name: index_authentication_tokens_on_purpose_and_token_and_active; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authentication_tokens_on_purpose_and_token_and_active ON public.authentication_tokens USING btree (purpose, token, active);
+
+
+--
+-- Name: index_authentication_tokens_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_authentication_tokens_on_user_id ON public.authentication_tokens USING btree (user_id);
 
 
 --
@@ -1590,6 +1713,20 @@ CREATE UNIQUE INDEX index_in_app_purchases_on_transaction_id ON public.in_app_pu
 --
 
 CREATE INDEX index_in_app_purchases_on_user_id ON public.in_app_purchases USING btree (user_id);
+
+
+--
+-- Name: index_newsletter_senders_on_feed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_newsletter_senders_on_feed_id ON public.newsletter_senders USING btree (feed_id);
+
+
+--
+-- Name: index_newsletter_senders_on_token; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_newsletter_senders_on_token ON public.newsletter_senders USING btree (token);
 
 
 --
@@ -1978,11 +2115,27 @@ CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING b
 
 
 --
+-- Name: newsletter_senders fk_rails_1aa815fea5; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.newsletter_senders
+    ADD CONSTRAINT fk_rails_1aa815fea5 FOREIGN KEY (feed_id) REFERENCES public.feeds(id);
+
+
+--
 -- Name: unreads fk_rails_90f07702a3; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.unreads
     ADD CONSTRAINT fk_rails_90f07702a3 FOREIGN KEY (entry_id) REFERENCES public.entries(id) ON DELETE CASCADE;
+
+
+--
+-- Name: authentication_tokens fk_rails_ad331ebb27; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.authentication_tokens
+    ADD CONSTRAINT fk_rails_ad331ebb27 FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -2137,6 +2290,12 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190516210058'),
 ('20190710112843'),
 ('20190715152451'),
-('20190820134157');
+('20190725121939'),
+('20190820134157'),
+('20200102115516'),
+('20200103141053'),
+('20200109204853'),
+('20200110142059'),
+('20200113101112');
 
 

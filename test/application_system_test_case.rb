@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  driven_by :headless_chrome
+  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400]
 
   def login_as(user)
     visit login_path
@@ -25,9 +25,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   end
 
   def wait_for_ajax
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop until finished_all_ajax_requests?
-    end
+    sleep 0.5
   end
 
   def finished_all_ajax_requests?

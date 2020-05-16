@@ -29,8 +29,8 @@ class SendStats
   end
 
   def queue_depth
-    socket = "/tmp/unicorn.sock"
-    if File.exist?(socket)
+    socket = ENV["UNICORN_SOCKET"]
+    if socket && File.exist?(socket)
       result = Raindrops::Linux.unix_listener_stats([socket])
       stats = result.values.first
       Librato.measure "server_queue_depth.active", stats.active, source: Socket.gethostname
@@ -60,10 +60,21 @@ class SendStats
           group.measure("gets", stats["cmd_get"].to_f)
           group.measure("sets", stats["cmd_set"].to_f)
           group.measure("hits", stats["get_hits"].to_f)
+          group.measure("hit_rate", hit_rate(stats))
           group.measure("items", stats["curr_items"].to_f)
           group.measure("connections", stats["curr_connections"].to_i)
         end
       end
+    end
+  end
+
+  def hit_rate(stats)
+    hits = stats["get_hits"].to_f
+    gets = stats["cmd_get"].to_f
+    if gets != 0.0
+      ((hits / gets) * 100).to_i
+    else
+      0
     end
   end
 
