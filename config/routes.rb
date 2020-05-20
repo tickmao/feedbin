@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   get :version, to: proc { |env| [200, {}, [File.read("REVISION")]] }
   get :subscribe, to: "site#subscribe"
   get :headers, to: "site#headers"
+  get :service_worker, to: "site#service_worker"
+  get "manifest/:theme", to: "site#manifest", as: "manifest"
 
   post "/emails" => "emails#create"
   post "/newsletters" => "newsletters#create"
