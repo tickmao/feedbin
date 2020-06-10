@@ -13,8 +13,8 @@ class SelfUrl
 
   def update(feed_id)
     feed = Feed.find(feed_id)
-    request = Feedkit::Feedkit.new.fetch_and_parse(feed.feed_url)
-    self_url = request.self_url
+    response = Feedkit::Request.download(feed.feed_url)
+    self_url = response.parse.self_url
     feed.update(self_url: self_url)
   rescue
     feed.update(self_url: feed.feed_url)
