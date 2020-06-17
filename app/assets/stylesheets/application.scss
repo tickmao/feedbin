@@ -83,8 +83,8 @@ $color-contrast-100: (
 
 $color-base-alt: (
     debug:    color-base-alt,
-    day:      white,
-    sunset:   #f5f2eb,
+    day:      $theme-color-base,
+    sunset:   $theme-color-sunset-base,
     dusk:     $theme-color-dusk-100,
     midnight: $theme-color-midnight-100,
 );
@@ -3693,35 +3693,6 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
 }
 
-.settings-button-wrap {
-    display: flex;
-    .subscribe-toolbar & {
-        display: none;
-        .has-offscreen-panels & {
-            display: flex;
-        }
-    }
-    .app-settings-button {
-        display: none;
-        .native & {
-            display: flex;
-        }
-    }
-    .web-settings-button {
-        display: flex;
-        .dropdown-content {
-            top: $toolbar-height - 6;
-            right: 8px !important;
-        }
-        .native & {
-            display: none;
-        }
-    }
-    .has-offscreen-panels .entry-toolbar &, .has-offscreen-panels .account-toolbar & {
-        display: none;
-    }
-}
-
 .settings-menu-button {
     height: 36px;
     width: 36px;
@@ -3743,8 +3714,8 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     position: relative;
     .dropdown-content {
         display: none;
-        width: 200px;
-        border-radius: 4px;
+        width: 232px;
+        border-radius: 8px;
         @include background-color($color-base-alt);
         @include border($color-borders);
         box-shadow: $box-shadow-dropdown;
@@ -3753,47 +3724,69 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
     ul {
         margin: 0;
-        padding: 0;
+        padding: $one-unit 0;
         list-style: none;
         li {
             margin: 0;
-            padding: 0;
-            a, span, button {
+            padding: 0 $one-unit;
+            > a, > span, > button {
                 position: relative;
                 text-decoration: none;
-                display: block;
+                display: flex;
                 @include font-size(16);
                 @include color($color-contrast-700);
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 width: 100%;
-                padding: 12px 16px;
+                padding: $one-unit;
                 font-family: $font-stack;
                 font-weight: 400 !important;
                 text-align: left;
-                @include border-bottom($color-borders);
                 cursor: pointer;
+                border-radius: 4px;
                 .favicon-unread-active {
                     display: none;
                 }
-                &:hover, &.selected {
-                    @include background-color($color-selected, $extra: !important);
-                    color: white  !important;
+                .menu-text {
+                    display: flex;
+                    flex-direction: column;
+                    .title {
+                        @include font-size(14);
+                    }
+                    .subtitle {
+                        @include font-size(12);
+                        @include color($color-contrast-500);
+                    }
+                }
+                .icon-wrap {
+                    width: 16px;
+                    height: 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-shrink: 0;
+                    margin-right: $one-unit;
+                    svg {
+                        @include fill($color-icons);
+                    }
+                }
+                &:hover {
+                    @include background-color((
+                        debug:    dropdown-hover,
+                        day:      $theme-color-100,
+                        sunset:   $theme-color-sunset-100,
+                        dusk:     $theme-color-dusk-200,
+                        midnight: $theme-color-midnight-200,
+                    ), $extra: !important);
                     text-decoration: none;
+                }
+                &.selected {
+                    @include background-color($color-selected, $extra: !important);
                     &.with-icon {
                         svg {
                             @include fill(white);
                         }
-                    }
-                    .favicon-unread-active {
-                        display: inline;
-                    }
-                    .favicon-unread {
-                        display: none;
-                    }
-                    .share-keyboard {
-                        color: white;
                     }
                 }
                 &.no-border {
@@ -5315,7 +5308,7 @@ Settings
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
     .logo {
-        padding: 39px 0 0 21px;
+        padding: 39px 0 0 $three-units;
         display: block;
         svg {
             width: 140px;
@@ -5349,15 +5342,11 @@ Settings
 }
 
 .nav {
-    $nav-padding: 35px;
-    $icon-width: 22px;
-    $icon-margin: 16px;
-
-    margin: 18px 0 0 0;
+    margin: 0 0 0 0;
     padding: 0;
     list-style: none;
     li {
-        font-size: 16px;
+        margin-bottom: 4px;
     }
     .nav-header {
         font-weight: bold;
@@ -5365,25 +5354,34 @@ Settings
         align-items: center;
         margin: 16px 0;
     }
-    .icon-wrap {
-        line-height: 0;
-        width: $icon-width;
-        margin-right: $icon-margin;
+    .menu-text {
         display: flex;
+        flex-direction: column;
+        .title {
+            @include font-size(16);
+        }
+        .subtitle {
+            @include font-size(14);
+            @include color($color-contrast-500);
+        }
+    }
+    .icon-wrap {
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
         justify-content: center;
+        flex-shrink: 0;
+        margin-right: $one-unit;
         svg {
-            @include fill($color-contrast-400);
+            @include fill($color-icons);
         }
     }
     a {
+        display: flex;
         text-align: left;
-        display: block;
-        display: block;
-        padding: 6px 8px 6px ($icon-width + $icon-margin);
-        .settings-inner & {
-            padding-left: $nav-padding + $icon-width + $icon-margin;
-            padding-right: $nav-padding;
-        }
+        padding: $one-unit;
+        border-radius: 4px;
         &:hover {
             text-decoration: none;
             @include background-color($color-contrast-200);
@@ -5397,9 +5395,21 @@ Settings
                 @include background-color(transparent, $extra: !important);
                 text-decoration: underline;
             }
+            .title {
+                color: #fff;
+            }
+            .subtitle {
+                @include color(rgba(white, .5));
+            }
+            .icon-wrap {
+                svg {
+                    @include fill(white);
+                }
+            }
         }
     }
     .settings & {
+        padding: 0 $three-units;
         a {
             @include color($color-contrast-700);
             &.active {
@@ -5407,9 +5417,8 @@ Settings
             }
         }
         .nav-header {
-            padding: 0 $nav-padding;
             @include color($color-contrast-700);
-            margin: 40px 0 8px 0;
+            margin: $four-units 0 $two-units 0;
         }
         .icon-wrap {
             svg {
@@ -5426,10 +5435,13 @@ Settings
 
 .nav-small {
     position: relative;
-    padding-top: 32px;
+    padding-top: 32px !important;
     margin: 32px 0 0 0;
+    li {
+        margin: 0;
+    }
     a {
-        font-size: 16px;
+        @include font-size(14);
         &:hover span {
             background-color: transparent;
         }
@@ -5453,11 +5465,57 @@ Settings
         }
     }
     .settings-inner & {
+        a {
+            padding-left: $four-units;
+        }
         &.border {
             &:before {
                 @include background-color($color-borders);
             }
         }
+    }
+}
+
+.settings-button-wrap {
+    display: flex;
+    .subscribe-toolbar & {
+        display: none;
+        .has-offscreen-panels & {
+            display: flex;
+        }
+    }
+    .app-settings-button {
+        display: none;
+        .native & {
+            display: flex;
+        }
+    }
+    .web-settings-button {
+        display: flex;
+        .dropdown-content {
+            top: $toolbar-height - 6;
+            right: 8px !important;
+        }
+        .native & {
+            display: none;
+        }
+    }
+    .has-offscreen-panels .entry-toolbar &, .has-offscreen-panels .account-toolbar & {
+        display: none;
+    }
+    .nav-header {
+        &:first-child {
+            display: none;
+        }
+        content: "";
+        @include border-bottom($color-borders);
+        margin: $one-unit $one-unit $one-unit $five-units;
+        div {
+            display: none;
+        }
+    }
+    .nav-small {
+        display: none;
     }
 }
 
