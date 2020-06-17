@@ -194,14 +194,7 @@ $box-shadow-dropdown: 0px 4px 6px 2px rgba(0, 0, 0, 0.1);
 $focus-glow: 0px 0px 0px 4px $color-accent-blue-400;
 $focus-glow-inset: inset $focus-glow;
 $subtle-focus-glow: 0px 0px 1px 0 rgba($selected, 1);
-
-$one-unit: 8px;
-$two-units: $one-unit * 2;
-$three-units: $one-unit * 3;
-$four-units: $one-unit * 4;
-$five-units: $one-unit * 5;
-$six-units: $one-unit * 6;
-$seven-units: $one-unit * 7;
+$color-selected-muted: rgba(white, .5);
 
 $color-sidebar: (
     debug:    color-sidebar,
@@ -1108,7 +1101,7 @@ table {
         border-radius: 0;
     }
     li {
-        padding: $two-units 0;
+        padding: base-units(2) 0;
         margin: 0;
         @include border-bottom($color-borders);
         position: relative;
@@ -1120,7 +1113,7 @@ table {
             a {
                 display: block;
                 text-decoration: none;
-                padding: $two-units 0;
+                padding: base-units(2) 0;
                 @include color($color-contrast-700);
                 z-index: 10;
                 position: relative;
@@ -1211,7 +1204,7 @@ table {
         padding: 16px;
         .last-control {
             margin-left: auto;
-            padding-left: $two-units;
+            padding-left: base-units(2);
         }
         .control-group-description {
             margin-left: 41px;
@@ -1262,11 +1255,11 @@ table {
                 border: none;
             }
             li > form > label {
-                padding-left: $two-units;
-                padding-right: $two-units;
+                padding-left: base-units(2);
+                padding-right: base-units(2);
             }
             .switch {
-                right: $two-units;
+                right: base-units(2);
             }
         }
     }
@@ -1313,7 +1306,7 @@ table {
 }
 
 .inset {
-    margin: 0 0 $seven-units 0;
+    margin: 0 0 base-units(7) 0;
     .pill-list {
         border-radius: 0;
         border-left: none;
@@ -2759,10 +2752,10 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             color: white !important;
         }
         .title-inner span, .time {
-            color: rgba(white, .5) !important;
+            color: $color-selected-muted !important;
         }
         .icon-retweet, .icon-media {
-            fill: rgba(white, .5);
+            fill: $color-selected-muted;
         }
         .icon-star {
             fill: white;
@@ -3724,11 +3717,11 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
     ul {
         margin: 0;
-        padding: $one-unit 0;
+        padding: base-units(1) 0;
         list-style: none;
         li {
             margin: 0;
-            padding: 0 $one-unit;
+            padding: 0 base-units(1);
             > a, > span, > button {
                 position: relative;
                 text-decoration: none;
@@ -3739,7 +3732,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 width: 100%;
-                padding: $one-unit;
+                padding: base-units(1);
                 font-family: $font-stack;
                 font-weight: 400 !important;
                 text-align: left;
@@ -3751,6 +3744,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 .menu-text {
                     display: flex;
                     flex-direction: column;
+                    line-height: 1.25;
                     .title {
                         @include font-size(14);
                     }
@@ -3766,7 +3760,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                     align-items: center;
                     justify-content: center;
                     flex-shrink: 0;
-                    margin-right: $one-unit;
+                    margin-right: base-units(1);
                     svg {
                         @include fill($color-icons);
                     }
@@ -3809,19 +3803,6 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                         visibility: hidden;
                     }
                 }
-            }
-            &:last-child a,
-            &:last-child button,
-            &:last-child span {
-                border-bottom: none;
-                border-bottom-right-radius: 4px;
-                border-bottom-left-radius: 4px;
-            }
-            &:first-child a,
-            &:first-child button,
-            &:first-child span {
-                border-top-left-radius: 4px;
-                border-top-right-radius: 4px;
             }
             .view_unread &.view-mode-unread,
             .view_starred &.view-mode-starred,
@@ -4024,7 +4005,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     background-size: 80% 80%;
     bottom: 1px;
     @include background-color($color-icons);
-    svg {
+    > svg {
         position: absolute;
         top: 6px;
         left: 6px;
@@ -4041,7 +4022,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
 
 .setting-view-link-0 {
     .view-link-app {
-        display: block;
+        display: flex;
     }
     .view-link-tab {
         display: none;
@@ -4052,7 +4033,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         display: none;
     }
     .view-link-tab {
-        display: block;
+        display: flex;
     }
 }
 
@@ -4152,7 +4133,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     pre code {
         @include background-color($color-contrast-100);
         @include color($color-contrast-600);
-        padding: $two-units;
+        padding: base-units(2);
         @include border($color-contrast-200);
         display: block;
         overflow-x: auto;
@@ -4295,7 +4276,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         display: flex;
         align-items: center;
         svg {
-            margin-right: $one-unit;
+            margin-right: base-units(1);
         }
     }
 
@@ -4362,7 +4343,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         img.full-width, .fluid-width-video-wrapper, .media-container {
             width: 100vw !important;
             max-width: none !important;
-            margin-left: -$two-units !important;
+            margin-left: -base-units(2) !important;
         }
     }
 }
@@ -4424,7 +4405,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         }
     }
     .embed-data {
-        padding-right: $two-units;
+        padding-right: base-units(2);
     }
     .embed-icon {
         width: 34px;
@@ -5308,7 +5289,7 @@ Settings
     @include background-color($color-sidebar);
     @include border-right(map-merge($color-borders, (day: transparent, sunset: transparent)));
     .logo {
-        padding: 39px 0 0 $three-units;
+        padding: 39px 0 0 base-units(3);
         display: block;
         svg {
             width: 140px;
@@ -5372,7 +5353,7 @@ Settings
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        margin-right: $one-unit;
+        margin-right: base-units(1);
         svg {
             @include fill($color-icons);
         }
@@ -5380,26 +5361,21 @@ Settings
     a {
         display: flex;
         text-align: left;
-        padding: $one-unit;
+        padding: base-units(1);
         border-radius: 4px;
+        @include color($color-contrast-700);
         &:hover {
             text-decoration: none;
             @include background-color($color-contrast-200);
         }
-        body.touch &:hover {
-            background-color: transparent !important;
-        }
         &.active {
-            @include background-color($color-selected, $extra: !important);
-            .modal & {
-                @include background-color(transparent, $extra: !important);
-                text-decoration: underline;
-            }
+            @include background-color($color-selected);
+            @include color(white);
             .title {
-                color: #fff;
+                @include color(white);
             }
             .subtitle {
-                @include color(rgba(white, .5));
+                @include color($color-selected-muted);
             }
             .icon-wrap {
                 svg {
@@ -5407,18 +5383,15 @@ Settings
                 }
             }
         }
+        body.touch &:hover {
+            background-color: transparent !important;
+        }
     }
     .settings & {
-        padding: 0 $three-units;
-        a {
-            @include color($color-contrast-700);
-            &.active {
-                @include color(white);
-            }
-        }
+        padding: 0 base-units(3);
         .nav-header {
             @include color($color-contrast-700);
-            margin: $four-units 0 $two-units 0;
+            margin: base-units(4) 0 base-units(2) 0;
         }
         .icon-wrap {
             svg {
@@ -5442,6 +5415,7 @@ Settings
     }
     a {
         @include font-size(14);
+        padding-left: base-units(4);
         &:hover span {
             background-color: transparent;
         }
@@ -5465,9 +5439,6 @@ Settings
         }
     }
     .settings-inner & {
-        a {
-            padding-left: $four-units;
-        }
         &.border {
             &:before {
                 @include background-color($color-borders);
@@ -5504,18 +5475,25 @@ Settings
         display: none;
     }
     .nav-header {
-        &:first-child {
-            display: none;
-        }
-        content: "";
-        @include border-bottom($color-borders);
-        margin: $one-unit $one-unit $one-unit $five-units;
-        div {
-            display: none;
-        }
+        display: none;
     }
     .nav-small {
         display: none;
+    }
+    li.border {
+        margin-top: base-units(1);
+        padding-top: base-units(1);
+        position: relative;
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            height: 1px;
+            top: 0;
+            left: base-units(5);
+            right: base-units(1);
+            @include background-color($color-borders);
+        }
     }
 }
 
@@ -7147,7 +7125,7 @@ Link Viewer
         font-size: 24px;
         margin-bottom: 40px;
         svg {
-            margin-right: $one-unit;
+            margin-right: base-units(1);
         }
     }
     p {
@@ -9263,7 +9241,7 @@ Media Queries
         }
     }
     .entry-inner {
-        padding: $two-units;
+        padding: base-units(2);
         .modal & {
             padding-left: 0;
             padding-right: 0;
@@ -10139,11 +10117,11 @@ $tooltip-arrow-height: 6px;
 }
 
 .key-group + .key-group {
-    margin-top: $one-unit;
+    margin-top: base-units(1);
 }
 
 .key {
-    margin-left: $one-unit;
+    margin-left: base-units(1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10164,5 +10142,5 @@ $tooltip-arrow-height: 6px;
 }
 
 .spacer {
-    margin-left: $one-unit;
+    margin-left: base-units(1);
 }

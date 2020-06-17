@@ -2,7 +2,17 @@
     <li class="nav-header">
         <div>General</div>
     </li>
-    <li class="desktop-hide"><%= link_to "Feedbin", "/" %></li>
+    <li class="desktop-hide">
+        <%= link_to root_path do %>
+            <span class="icon-wrap">
+                <%= svg_tag "menu-icon-app" %>
+            </span>
+            <span class="menu-text">
+                <span class="title">Feedbin</span>
+                <span class="subtitle">Back to the app</span>
+            </span>
+        <% end %>
+    </li>
     <li>
         <%= link_to settings_path, class: is_active?("settings", "settings") do %>
             <span class="icon-wrap">
@@ -51,7 +61,7 @@
     <li class="nav-header">
         <div>Tools</div>
     </li>
-    <li>
+    <li class="border">
         <%= link_to actions_path, class: is_active?("actions", ["index", "new", "edit"]) do %>
             <span class="icon-wrap">
                 <%= svg_tag "menu-icon-actions" %>
@@ -88,7 +98,7 @@
     <li class="nav-header">
         <div>Admin</div>
     </li>
-    <li>
+    <li class="border">
         <%= link_to settings_account_path, class: is_active?("settings", "account") do %>
             <span class="icon-wrap">
                 <%= svg_tag "menu-icon-account" %>
@@ -116,7 +126,7 @@
         <li>
             <%= link_to admin_users_path, class: is_active?("admin/users", "index") do %>
                 <span class="icon-wrap">
-                    <%= svg_tag "menu-icon-account" %>
+                    <%= svg_tag "menu-icon-customers" %>
                 </span>
                 <span class="menu-text">
                     <span class="title">Customers</span>
@@ -125,6 +135,16 @@
             <% end %>
         </li>
     <% end %>
+    <li class="log-out border">
+        <%= link_to logout_path, method: "delete" do %>
+            <span class="icon-wrap">
+                <%= svg_tag "menu-icon-log-out" %>
+            </span>
+            <span class="menu-text">
+                <span class="title">Log Out</span>
+            </span>
+        <% end %>
+    </li>
 </ul>
 <ul class="nav nav-small border">
     <li>
