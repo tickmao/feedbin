@@ -259,6 +259,9 @@ GEM
     faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.13.1)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
     fog-aws (3.6.5)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
