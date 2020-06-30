@@ -16,10 +16,6 @@ module ApplicationHelper
     "active" if controller.include?(params[:controller]) && action.include?(params[:action])
   end
 
-  def mark_selected?
-    @mark_selected || false
-  end
-
   def rtl?(string)
     unless string.blank?
       rtl_test = /[\u0600-\u06FF]|[\u0750-\u077F]|[\u0590-\u05FF]|[\uFE70-\uFEFF]/m
@@ -83,8 +79,14 @@ module ApplicationHelper
 
     options[:class] = [name, options[:class]].compact.join(" ")
 
+    inline = options.delete(:inline)
+
     content_tag :svg, options do
-      content_tag :use, "", "xlink:href": "##{name}"
+      if inline
+        icon.markup.html_safe
+      else
+        content_tag :use, "", "href": "##{name}"
+      end
     end
   end
 

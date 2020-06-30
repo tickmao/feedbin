@@ -4,7 +4,6 @@ class EntriesController < ApplicationController
 
   def index
     @user = current_user
-    update_selected_feed!("collection_all")
 
     feed_ids = @user.subscriptions.pluck(:feed_id)
     entry_id_cache = EntryIdCache.new(@user.id, feed_ids)
@@ -26,19 +25,13 @@ class EntriesController < ApplicationController
 
   def unread
     @user = current_user
-    update_selected_feed!("collection_unread")
 
     unread_entries = @user.unread_entries.select(:entry_id).page(params[:page]).sort_preference(@user.entry_sort)
     @entries = Entry.entries_with_feed(unread_entries, @user.entry_sort).entries_list
 
     @page_query = unread_entries
-
     @append = params[:page].present?
-
     @all_unread = "true"
-    @type = "unread"
-    @data = nil
-
     @collection_title = "Unread"
 
     respond_to do |format|
@@ -48,18 +41,12 @@ class EntriesController < ApplicationController
 
   def starred
     @user = current_user
-    update_selected_feed!("collection_starred")
 
     starred_entries = @user.starred_entries.select(:entry_id).page(params[:page]).order("published DESC")
     @entries = Entry.entries_with_feed(starred_entries, "published DESC").entries_list
 
     @page_query = starred_entries
-
     @append = params[:page].present?
-
-    @type = "starred"
-    @data = nil
-
     @collection_title = "Starred"
 
     respond_to do |format|
@@ -69,15 +56,26 @@ class EntriesController < ApplicationController
 
   def show
     @user = current_user
-    @entries = entries_by_id(params[:id])
-    respond_to do |format|
-      format.js
+    ids = @user.can_read_filter([params[:id].to_i])
+    if ids.present?
+      @entries = entries_by_id(ids)
+      UnreadEntry.where(user: @user, entry_id: params[:id]).delete_all
+      UpdatedEntry.where(user: @user, entry_id: params[:id]).delete_all
+      respond_to do |format|
+        format.js
+        format.html do
+          logged_in
+        end
+      end
+    else
+      render_404
     end
   end
 
   def preload
     @user = current_user
     ids = params[:ids].split(",").map { |i| i.to_i }
+    ids = @user.can_read_filter(ids)
     ViewLinkCacheMultiple.perform_async(@user.id, ids)
     entries = entries_by_id(ids)
     render json: entries.to_json
@@ -139,8 +137,6 @@ class EntriesController < ApplicationController
       UnreadEntry.where(user_id: @user.id, entry_id: ids).delete_all
     end
 
-    @mark_selected = true
-
     get_feeds_list if @full_update
 
     respond_to do |format|
@@ -190,7 +186,6 @@ class EntriesController < ApplicationController
     entry_ids = unread_entries.map(&:entry_id)
     unread_entries.delete_all
 
-    @mark_selected = true
     get_feeds_list
 
     respond_to do |format|
@@ -256,6 +251,7 @@ class EntriesController < ApplicationController
   def entries_by_id(entry_ids)
     entries = Entry.where(id: entry_ids).includes(feed: [:favicon])
     subscriptions = @user.subscriptions.pluck(:feed_id)
+    @title = "#{entries.first.title} - Feedbin"
     entries.each_with_object({}) do |entry, hash|
       locals = {
         entry: entry,

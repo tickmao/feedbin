@@ -23,8 +23,6 @@ $.extend feedbin,
   formatMenu: null
   hasShadowDOM: typeof(document.createElement("div").attachShadow) == "function"
   colorHash: new ColorHash
-    lightness: [.3,.4,.5,.6,.7]
-    saturation: [.7,.8]
 
   changeContentView: (view) ->
     currentView = $('[data-behavior~=content_option]:not(.hide)')
@@ -57,7 +55,7 @@ $.extend feedbin,
 
     unless element.is('.tag-link')
       tagParent = element.closest('[data-tag-id]')
-      if tagParent.find(".drawer").data('hidden') == true
+      if !tagParent.hasClass('open')
         tagParent.find('[data-behavior~=toggle_drawer]').submit();
       if tagParent.is('.zero-count')
         tagParent.removeClass('zero-count')
@@ -175,6 +173,19 @@ $.extend feedbin,
 
     feedbin.nativeMessage("performAction", message)
 
+  tagVisibility: ->
+    $('.feeds [data-tag-id]').each ->
+      tag = $(@)
+      id = tag.data('tag-id')
+      open = false
+      if feedbin.data && feedbin.data.tag_visibility && id of feedbin.data.tag_visibility
+        open = feedbin.data.tag_visibility[id]
+
+      if open
+        tag.addClass('open')
+
+      feedbin.data.tag_visibility[id] = open
+
   reselect: ->
     if feedbin.selectedSource && feedbin.selectedTag
       $("[data-tag-id=#{feedbin.selectedTag}]").find("[data-feed-id=#{feedbin.selectedSource}]").addClass("selected")
@@ -189,11 +200,18 @@ $.extend feedbin,
         feedbin.fontsLoaded = true
 
   faviconColors: (target) ->
-    $(".favicon-default", target).each ->
+    $("[data-color-hash-seed]", target).each ->
       host = $(@).data("color-hash-seed")
+      [hue, saturation, lightness] = feedbin.colorHash.hsl(host)
       color = feedbin.colorHash.hex(host)
+      rotate = hue % 6
+      translate = 25 - rotate
+
       $(@).css
         "background-color": color
+
+      $('.favicon-inner', @).css
+        "transform": "translate(-#{translate}%, -#{translate}%) rotate(#{hue}deg)"
 
   calculateColor: (backgroundColor, foregroundColor) ->
     canvas = document.createElement('canvas')
@@ -210,6 +228,12 @@ $.extend feedbin,
     data = context.getImageData(1, 1, 1, 1)
     canvas.parentNode.removeChild(canvas)
     "rgba(#{data.data[0]}, #{data.data[1]}, #{data.data[2]}, #{data.data[3]})"
+
+  darkMode: ->
+    if "matchMedia" of window
+      result = window.matchMedia('(prefers-color-scheme: dark)')
+      if result && "matches" of result
+        result.matches == true
 
   setNativeTheme: (calculateOverlay = false, timeout = 1) ->
     if feedbin.native && feedbin.data && feedbin.theme
@@ -478,7 +502,10 @@ $.extend feedbin,
     $('[data-behavior~=pagination]').html(html)
 
   entryChanged: ->
-    !feedbin.previousEntry || !feedbin.previousEntry.container.is(feedbin.selectedEntry.container)
+    if feedbin.previousEntry == null
+      false
+    else
+      !feedbin.previousEntry || !feedbin.previousEntry.container.is(feedbin.selectedEntry.container)
 
   animateEntryContent: (content) ->
     innerContent = $('[data-behavior~=inner_content_target]')
@@ -556,9 +583,9 @@ $.extend feedbin,
       hljs.highlightBlock(e)
 
   audioVideo: (selector = "entry_final_content") ->
-    $("[data-behavior~=#{selector}] audio").mediaelementplayer
-      stretching: 'responsive'
-      features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'fullscreen']
+    $("[data-behavior~=#{selector}] audio").each ->
+      $(@).attr("controls", "controls")
+      $(@).attr("preload", "none")
 
     $("video").each ->
       video = $(@)
@@ -834,6 +861,7 @@ $.extend feedbin,
         hide: 50
 
   preloadSiblings: ->
+    return if feedbin.selectedEntry.container == null
     selected = feedbin.selectedEntry.container.closest('li')
     siblings = selected.nextAll().slice(0,4).add(selected.prevAll().slice(0,4))
     siblings.each ->
@@ -969,6 +997,7 @@ $.extend feedbin,
       null
 
   nextEntryPreview: () ->
+    return if feedbin.selectedEntry.container == null
     next = feedbin.selectedEntry.container.parents('li').next()
     if next.length
       title = next.find('.title').text()
@@ -1713,6 +1742,11 @@ $.extend feedbin,
           event.stopPropagation()
 
     linkActions: ->
+      $(document).on 'click', '[data-behavior~=add_to_pages]', (event) ->
+        href = $(@).parents("a:first").attr('href')
+        $.post(feedbin.data.pages_internal_path, {url: href});
+        event.preventDefault()
+
       $(document).on 'click', '[data-behavior~=view_link]', (event) ->
         href = $(@).parents("a:first").attr('href')
         if feedbin.data.view_links_in_app
@@ -1764,38 +1798,39 @@ $.extend feedbin,
           $('.dropdown-content', dropdown).css({width: "#{width}px"})
 
     drawer: ->
+      feedbin.tagVisibility()
       $(document).on 'submit', '[data-behavior~=toggle_drawer]', (event) =>
-        button = $(event.currentTarget).find('button')
-        drawer = button.parents('li').find('.drawer')
+        container = $(event.currentTarget).closest('[data-tag-id]')
+        id = container.data('tag-id')
+        container.toggleClass('open')
+        container.addClass('animate')
+
+        open = !feedbin.data.tag_visibility[id]
+        feedbin.data.tag_visibility[id] = open
+
+        drawer = container.find('.drawer')
 
         windowHeight = window.innerHeight
         targetHeight = $('ul', drawer).height()
         if windowHeight < targetHeight
           targetHeight = windowHeight - drawer.offset().top
 
-        if drawer.data('hidden') == true
+        if open
           height = targetHeight
           hidden = false
-          klass = 'icon-hide'
         else
           height = 0
           hidden = true
-          klass = 'icon-show'
           drawer.css
             height: targetHeight
 
         drawer.animate {
           height: height
         }, 150, ->
+          container.removeClass('animate')
           if height > 0
             drawer.css
               height: 'auto'
-
-        drawer.data('hidden', hidden)
-        drawer.toggleClass('hidden')
-        button.removeClass('icon-hide')
-        button.removeClass('icon-show')
-        button.addClass(klass)
 
         event.stopPropagation()
         event.preventDefault()
@@ -1880,6 +1915,7 @@ $.extend feedbin,
             feedbin.changeContentView(feedbin.previousContentView)
           else
             $("[data-content-option~=extract]").html(feedbin.extractCache["#{entry}"]);
+            feedbin.formatEntryContent(entry, false, false);
             feedbin.changeContentView('extract')
 
         else if feedbin.readabilityXHR
@@ -1992,6 +2028,7 @@ $.extend feedbin,
         $('body').toggleClass('full-screen')
         if !$('body').hasClass('full-screen')
           feedbin.scrollToPanel('.entries-column', false)
+          window.history.replaceState({}, "", "/");
         feedbin.measureEntryColumn()
         feedbin.setNativeBorders()
 
@@ -2308,8 +2345,7 @@ $.extend feedbin,
     loadLinksInApp: ->
       $(document).on 'click', '[data-behavior~=entry_final_content] a', (event) ->
         newTab = (event.ctrlKey || event.metaKey)
-        linkActions = $(event.target).is(".link-actions")
-        if feedbin.data.view_links_in_app && !linkActions && !newTab
+        if feedbin.data.view_links_in_app && !feedbin.isRelated(".link-actions", event.target) && !newTab
           href = $(@).attr('href')
           feedbin.loadLink(href)
           event.preventDefault()
