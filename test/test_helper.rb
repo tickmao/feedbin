@@ -69,16 +69,9 @@ class ActiveSupport::TestCase
   end
 
   def clear_search
-    begin
-      Entry.__elasticsearch__.delete_index!
-    rescue
-      nil
-    end
-    begin
-      Entry.__elasticsearch__.create_index!
-    rescue
-      nil
-    end
+    $search[:main].indices.delete index: ["entries*","actions*"], ignore: 404
+    Entry.__elasticsearch__.create_index!
+    Action.__elasticsearch__.create_index!
   end
 
   def newsletter_params(recipient, signature, title = nil, from = nil)

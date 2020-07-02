@@ -27,7 +27,6 @@ class SearchServerSetup
     if data.present?
       Client.bulk(
         index: Entry.index_name,
-        type: Entry.document_type,
         body: data
       )
     end

@@ -1,4 +1,7 @@
 class Action < ApplicationRecord
+
+  include SearchSettings
+
   attr_accessor :automatic_modification, :apply_action
 
   belongs_to :user
@@ -41,28 +44,33 @@ class Action < ApplicationRecord
   end
 
   def search_body
-    {}.tap do |hash|
-      hash[:feed_id] = computed_feed_ids
-      hash[:query] = {
+    {
+      query: {
         bool: {
-          filter: {
-            bool: {
-              must: {terms: {feed_id: computed_feed_ids}}
-            }
-          }
+          filter: filters
         }
       }
-      if query.present?
-        escaped_query = FeedbinUtils.escape_search(query)
-        hash[:query][:bool][:must] = {
-          query_string: {
-            fields: ["_all", "title.*", "content.*", "emoji", "author", "url"],
-            default_operator: "AND",
-            query: escaped_query
-          }
-        }
-      end
-    end
+    }
+  end
+
+  def filters
+    array = []
+
+    array.push({
+      terms: {
+        feed_id: computed_feed_ids
+      }
+    })
+
+    array.push({
+      query_string: {
+        fields: ["title", "content", "author", "url", "twitter_screen_name", "twitter_name"],
+        default_operator: "AND",
+        query: FeedbinUtils.escape_search(query)
+      }
+    }) if query.present?
+
+    array
   end
 
   def compute_feed_ids
@@ -92,9 +100,8 @@ class Action < ApplicationRecord
   end
 
   def _percolator
-    Entry.__elasticsearch__.client.get(
-      index: Entry.index_name,
-      type: ".percolator",
+    $search[:main].get(
+      index: Action.index_name,
       id: id,
       ignore: 404
     )
@@ -113,23 +120,6 @@ class Action < ApplicationRecord
 
   def results
     Entry.search(search_options).page(1).records(includes: :feed)
-  end
-
-  def scrolled_results(&block)
-    scroll = "2m"
-    response = Entry.__elasticsearch__.client.search(
-      index: Entry.index_name,
-      type: Entry.document_type,
-      scroll: scroll,
-      body: search_options
-    )
-
-    while response["hits"]["hits"].present?
-      yield response
-      response = Entry.__elasticsearch__.client.scroll({scroll_id: response["_scroll_id"], scroll: scroll})
-    end
-
-    response["_scroll_id"]
   end
 
   def error_hint

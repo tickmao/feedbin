@@ -1,17 +1,22 @@
 class ActionsBulk
-  include Sidekiq::Worker
+  include Sidekiq::Worker, ScrolledSearch
   sidekiq_options queue: :default, retry: false
 
   def perform(action_id, user_id)
     user = User.find(user_id)
     action = user.actions.find(action_id)
-
     entry_ids = []
-    action.scrolled_results do |result|
-      ids = result["hits"]["hits"].map { |hit|
-        hit["_id"].to_i
-      }
-      entry_ids.concat(ids)
+
+    response = $search[:main].search(
+      index: Entry.index_name,
+      scroll: "1m",
+      body: action.search_options
+    )
+
+    scrolled_search(response) do |hits|
+      hits.each do |hit|
+        entry_ids.push(hit["_id"].to_i)
+      end
     end
 
     action.actions.each do |task|
@@ -31,4 +36,5 @@ class ActionsBulk
       end
     end
   end
+
 end

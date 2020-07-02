@@ -280,4 +280,19 @@ class ContentFormatter
   rescue
     content
   end
+
+  def self.links(*args)
+    new._links(*args)
+  end
+
+  def _links(entry)
+    links = [entry.fully_qualified_url]
+    Nokogiri::HTML5(entry.content).css("a").each do |link|
+      links.push(link["href"])
+    end
+    links.map do |link|
+      Addressable::URI.parse(link).host
+    rescue
+    end.flatten.uniq
+  end
 end

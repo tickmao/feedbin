@@ -8,7 +8,6 @@ class SearchIndexRemove
     $search.each do |_, client|
       client.bulk(
         index: Entry.index_name,
-        type: Entry.document_type,
         body: data
       )
     end

@@ -1,5 +1,5 @@
 class Entry < ApplicationRecord
-  include Searchable
+  include SearchSettings, Searchable
 
   attr_accessor :fully_qualified_url, :read, :starred, :skip_mark_as_unread, :skip_recent_post_check
 
@@ -242,9 +242,8 @@ class Entry < ApplicationRecord
     base = as_json(root: false, only: Entry.mappings.to_hash[:properties].keys.reject { |key| key.to_s.start_with?("twitter") || key.to_s.start_with?("full_entry") })
     base["title"] = ContentFormatter.summary(title)
     base["content"] = ContentFormatter.summary(content)
-
-    full_content = [base["title"], base["content"]].join
-    base["emoji"] = full_content.scan(Unicode::Emoji::REGEX).join(" ")
+    base["link"] = ContentFormatter.links(self)
+    base["updated"] = updated_at
 
     if tweet?
       tweets = [main_tweet]
@@ -389,7 +388,7 @@ class Entry < ApplicationRecord
       }
       UnreadEntry.import(unread_entries, validate: false, on_duplicate_key_ignore: true)
     end
-    SearchIndexStore.perform_async(self.class.name, id)
+    SearchIndexStore.perform_async(id)
   end
 
   def recent_post

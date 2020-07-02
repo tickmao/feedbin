@@ -8,22 +8,22 @@ class SearchIndexStoreTest < ActiveSupport::TestCase
   end
 
   test "should index entry" do
-    SearchIndexStore.new.perform("Entry", @entry.id)
+    SearchIndexStore.new.perform(@entry.id)
     Entry.__elasticsearch__.refresh_index!
-    entry = Entry.__elasticsearch__.client.get(id: @entry.id, index: Entry.index_name, type: Entry.document_type)
+    entry = $search[:main].get(id: @entry.id, index: Entry.index_name)
 
     assert entry["found"]
   end
 
   test "should percolate entry" do
-    action = nil
-    Sidekiq::Testing.inline! do
-      action = @user.actions.create(feed_ids: [@entry.feed.id], query: "\"#{@entry.title}\"")
+    action = Sidekiq::Testing.inline! do
+      @user.actions.create!(feed_ids: [@entry.feed.id], query: "\"#{@entry.title}\"")
     end
     Entry.__elasticsearch__.refresh_index!
+    Action.__elasticsearch__.refresh_index!
 
     assert_difference "ActionsPerform.jobs.size", +1 do
-      SearchIndexStore.new.perform("Entry", @entry.id)
+      SearchIndexStore.new.perform(@entry.id)
     end
 
     entry_id, action_ids = ActionsPerform.jobs.first["args"]
@@ -38,7 +38,7 @@ class SearchIndexStoreTest < ActiveSupport::TestCase
     Entry.__elasticsearch__.refresh_index!
 
     assert_no_difference "ActionsPerform.jobs.size", +1 do
-      SearchIndexStore.new.perform("Entry", @entry.id, true)
+      SearchIndexStore.new.perform(@entry.id, true)
     end
   end
 end

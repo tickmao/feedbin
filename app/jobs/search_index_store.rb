@@ -1,43 +1,52 @@
 class SearchIndexStore
-  include Sidekiq::Worker
+  include Sidekiq::Worker, ScrolledSearch
   sidekiq_options queue: :critical
 
-  def perform(klass, id, update = false)
-    klass = klass.constantize
-    record = klass.find(id)
-    index(record, klass)
-    percolate(record, klass) unless update
+  def perform(id, update = false)
+    entry = Entry.find(id)
+    document = entry.as_indexed_json
+    index(entry, document)
+    percolate(entry, document) unless update
   rescue ActiveRecord::RecordNotFound
   end
 
-  def index(record, klass)
+  def index(entry, document)
     data = {
-      index: klass.index_name,
-      type: klass.document_type,
-      id: record.id,
-      body: record.as_indexed_json
+      index: Entry.index_name,
+      id: entry.id,
+      body: document
     }
     $search.each do |_, client|
       client.index(data)
     end
   end
 
-  def percolate(record, klass)
-    result = klass.__elasticsearch__.client.percolate(
-      index: klass.index_name,
-      type: klass.document_type,
-      percolate_format: "ids",
+  def percolate(entry, document, update = false)
+    response = $search[:main].search(
+      index: Action.index_name,
+      scroll: "1m",
+      ignore: 404,
       body: {
-        doc: record.as_indexed_json,
-        filter: {
-          term: {feed_id: record.feed_id}
+        size: 1000,
+        _source: {
+          excludes: ["query"]
+        },
+        query: {
+          constant_score: {
+            filter: {
+              percolate: {
+                field: "query",
+                document: document
+              }
+            }
+          }
         }
       }
     )
 
-    ids = result["matches"].map(&:to_i)
-    if ids.present?
-      ActionsPerform.perform_async(record.id, ids)
+    scrolled_search(response) do |hits|
+      ids = hits.map { |hit| hit["_id"].to_i }
+      ActionsPerform.perform_async(entry.id, ids, update)
     end
   end
 end

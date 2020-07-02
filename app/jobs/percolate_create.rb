@@ -11,8 +11,7 @@ class PercolateCreate
       percolate_destroy
     else
       options = {
-        index: Entry.index_name,
-        type: ".percolator",
+        index: Action.index_name,
         id: @action.id,
         body: @action.search_body
       }

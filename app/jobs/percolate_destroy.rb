@@ -4,13 +4,12 @@ class PercolateDestroy
 
   def perform(action_id)
     options = {
-      index: Entry.index_name,
-      type: ".percolator",
-      id: action_id
+      index: Action.index_name,
+      id: action_id,
+      ignore: 404
     }
     $search.each do |_, client|
       client.delete(options)
     end
-  rescue Elasticsearch::Transport::Transport::Errors::NotFound
   end
 end

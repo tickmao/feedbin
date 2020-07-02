@@ -21,7 +21,7 @@ class SearchServerSetupTest < ActiveSupport::TestCase
     Entry.__elasticsearch__.refresh_index!
     query = {
       query: {
-        filtered: {
+        bool: {
           filter: {
             terms: {id: @entries.map(&:id)}
           }
