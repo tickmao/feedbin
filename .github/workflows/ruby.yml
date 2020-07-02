@@ -76,6 +76,7 @@ jobs:
       env:
         PGHOST: 127.0.0.1
         PGUSER: postgres
+        POSTGRES_PASSWORD: postgres
         RAILS_ENV: test
       run: |
         psql -c 'create database feedbin_test;' -U postgres
