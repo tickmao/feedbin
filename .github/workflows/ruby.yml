@@ -76,7 +76,7 @@ jobs:
         PGUSER: postgres
         RAILS_ENV: test
       run: |
-      psql -c 'create database feedbin_test;' -U postgres
+        psql -c 'create database feedbin_test;' -U postgres
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 2
         bundle exec rails db:create
