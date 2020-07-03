@@ -449,10 +449,6 @@ class Entry < ApplicationRecord
     HarvestLinks.perform_async(id) if tweet?
   end
 
-  def cache_extracted_content
-    CacheExtractedContent.perform_async(id, feed_id)
-  end
-
   def cache_views
     CacheEntryViews.perform_async(id)
   end
