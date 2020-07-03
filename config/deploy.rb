@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock "3.14.1"
 
-set :branch, "master"
+set :branch, "es7"
 
 set :application, "feedbin"
 set :repo_url, "git@github.com:feedbin/#{fetch(:application)}.git"

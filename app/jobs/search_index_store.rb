@@ -4,7 +4,7 @@ class SearchIndexStore
 
   def perform(id, update = false)
     entry = Entry.find(id)
-    document = entry.as_indexed_json
+    document = entry.search_data
     index(entry, document)
     percolate(entry, document) unless update
   rescue ActiveRecord::RecordNotFound
