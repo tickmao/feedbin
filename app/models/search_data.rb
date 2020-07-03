@@ -52,7 +52,7 @@ class SearchData
       links.push(link["href"])
     end
     links.map do |link|
-      Addressable::URI.parse(link)&.host
+      Addressable::URI.parse(link)&.host rescue nil
     end.flatten.uniq
   end
 end
