@@ -23,7 +23,6 @@ class Entry < ApplicationRecord
   after_commit :increment_feed_stat, on: :create
   after_commit :touch_feed_last_published_entry, on: :create
   after_commit :harvest_links, on: :create
-  after_commit :cache_extracted_content, on: :create
   after_commit :cache_views, on: [:create, :update]
 
   validate :has_content
