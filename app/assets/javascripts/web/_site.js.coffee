@@ -173,9 +173,6 @@ $.extend feedbin,
 
     feedbin.nativeMessage("performAction", message)
 
-  captureVisibility: ->
-    $('.feeds [data-tag-id]').each ->
-
   tagVisibility: ->
     feedbin.data.tag_visibility ?= {}
     for id, open of feedbin.data.tag_visibility
