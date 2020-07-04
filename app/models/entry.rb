@@ -83,11 +83,13 @@ class Entry < ApplicationRecord
       tweets = [main_tweet]
       tweets.push(main_tweet.quoted_status) if main_tweet.quoted_status?
 
-      media = tweets.find { |tweet|
+      media = tweets.find do |tweet|
         return true if tweet.media?
         urls = tweet.urls.reject { |url| url.expanded_url.host == "twitter.com" }
         return true unless urls.empty?
-      }
+      rescue
+        false
+      end
     end
     !!media
   end

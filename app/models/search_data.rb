@@ -38,7 +38,11 @@ class SearchData
         html.encode!(Encoding::UTF_8, invalid: :replace, undef: :replace)
       end
       html.gsub!(Sanitize::REGEX_UNSUITABLE_CHARS, "")
-      Sanitize.node!(Nokogiri::HTML5.fragment(html), ContentFormatter::SANITIZE_BASIC)
+      html = Nokogiri::HTML5.fragment(html, max_tree_depth: 5000)
+      Sanitize.node!(html, ContentFormatter::SANITIZE_BASIC)
+    rescue ArgumentError
+      # Can be raise by Nokogiri::HTML5 Document tree depth limit exceeded
+      OpenStruct.new(text: html)
     end
   end
 
