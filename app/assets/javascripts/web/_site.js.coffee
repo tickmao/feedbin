@@ -173,18 +173,15 @@ $.extend feedbin,
 
     feedbin.nativeMessage("performAction", message)
 
-  tagVisibility: ->
+  captureVisibility: ->
     $('.feeds [data-tag-id]').each ->
-      tag = $(@)
-      id = tag.data('tag-id')
-      open = false
-      if feedbin.data && feedbin.data.tag_visibility && id of feedbin.data.tag_visibility
-        open = feedbin.data.tag_visibility[id]
 
+  tagVisibility: ->
+    feedbin.data.tag_visibility ?= {}
+    for id, open of feedbin.data.tag_visibility
+      tag = $(".feeds [data-tag-id=#{id}]")
       if open
         tag.addClass('open')
-
-      feedbin.data.tag_visibility[id] = open
 
   reselect: ->
     if feedbin.selectedSource && feedbin.selectedTag
