@@ -1801,26 +1801,23 @@ $.extend feedbin,
       feedbin.tagVisibility()
       $(document).on 'submit', '[data-behavior~=toggle_drawer]', (event) =>
         container = $(event.currentTarget).closest('[data-tag-id]')
+        open = !container.hasClass("open")
         id = container.data('tag-id')
+        feedbin.data.tag_visibility[id] = open
+
         container.toggleClass('open')
         container.addClass('animate')
 
-        open = !feedbin.data.tag_visibility[id]
-        feedbin.data.tag_visibility[id] = open
-
         drawer = container.find('.drawer')
 
-        windowHeight = window.innerHeight
-        targetHeight = $('ul', drawer).height()
-        if windowHeight < targetHeight
-          targetHeight = windowHeight - drawer.offset().top
-
         if open
+          windowHeight = window.innerHeight
+          targetHeight = $('ul', drawer).height()
+          if windowHeight < targetHeight
+            targetHeight = windowHeight - drawer.offset().top
           height = targetHeight
-          hidden = false
         else
           height = 0
-          hidden = true
           drawer.css
             height: targetHeight
 
