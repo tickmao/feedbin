@@ -1571,8 +1571,9 @@ $.extend feedbin,
     selected: ->
       $(document).on 'ajax:success', '[data-behavior~=show_entries]', (event) ->
         target = $(event.target)
-        feedbin.selectedSource = target.closest('[data-feed-id]').data('feed-id')
-        feedbin.selectedTag = target.closest('[data-tag-id]').data('tag-id')
+        unless target.is('[data-behavior~=toggle_drawer]')
+          feedbin.selectedSource = target.closest('[data-feed-id]').data('feed-id')
+          feedbin.selectedTag = target.closest('[data-tag-id]').data('tag-id')
 
     setViewMode: ->
       $(document).on 'ajax:beforeSend', '[data-behavior~=show_entries]', (event, xhr, settings) ->
