@@ -2,7 +2,6 @@ module Searchable
   extend ActiveSupport::Concern
 
   included do
-    include Elasticsearch::Model
 
     UNREAD_REGEX = /(?<=\s|^)is:\s*unread(?=\s|$)/
     READ_REGEX = /(?<=\s|^)is:\s*read(?=\s|$)/

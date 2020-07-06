@@ -7,6 +7,9 @@ module SearchSettings
     include Elasticsearch::Model
 
     search_settings = {
+      index: {
+        number_of_shards: "12",
+      },
       analysis: {
         analyzer: {
           lower_exact: {

@@ -24,7 +24,7 @@ class SearchData
       base[:twitter_retweet] = @entry.tweet.retweeted_status?
       base[:twitter_quoted] = @entry.tweet.quoted_status?
       base[:twitter_media] = @entry.twitter_media?
-      base[:twitter_image] = !!(tweets.find { |tweet| tweet.media? })
+      base[:twitter_image] = !!(tweets.find { |tweet| tweet.media? rescue nil })
       base[:twitter_link] = !!(tweets.find { |tweet| tweet.urls? })
     end
 
