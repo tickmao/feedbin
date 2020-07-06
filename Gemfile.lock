@@ -594,6 +594,7 @@ DEPENDENCIES
   librato-rails (~> 1.4.2)
   listen
   lograge
+  loofah
   mini_racer
   minitest
   minitest-stub-const

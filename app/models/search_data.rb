@@ -11,8 +11,8 @@ class SearchData
       author: @entry.author,
       url: @entry.fully_qualified_url,
       feed_id: @entry.feed_id,
-      published: @entry.published,
-      updated: @entry.updated_at,
+      published: @entry.published.iso8601,
+      updated: @entry.updated_at.iso8601,
       link: links
     }
 
@@ -32,22 +32,11 @@ class SearchData
   end
 
   def document
-    @document ||= begin
-      html = @entry.content.to_s.dup
-      unless html.encoding.name == Encoding::UTF_8.to_s
-        html.encode!(Encoding::UTF_8, invalid: :replace, undef: :replace)
-      end
-      html.gsub!(Sanitize::REGEX_UNSUITABLE_CHARS, "")
-      html = Nokogiri::HTML5.fragment(html, max_tree_depth: 5000)
-      Sanitize.node!(html, ContentFormatter::SANITIZE_BASIC)
-    rescue ArgumentError
-      # Can be raise by Nokogiri::HTML5 Document tree depth limit exceeded
-      OpenStruct.new(text: html)
-    end
+    @document ||= Loofah.fragment(@entry.content).scrub!(:prune)
   end
 
   def text
-    document.text&.squish
+    document.to_text(encode_special_chars: false).gsub("\n", " ")
   end
 
   def links
@@ -57,6 +46,6 @@ class SearchData
     end
     links.map do |link|
       Addressable::URI.parse(link)&.host rescue nil
-    end.flatten.uniq
+    end.compact.uniq
   end
 end
