@@ -259,7 +259,7 @@ class ContentFormatter
     text = Loofah.fragment(text)
       .scrub!(:prune)
       .to_text(encode_special_chars: false)
-      .gsub!(/\s+/, " ")
+      .gsub(/\s+/, " ")
       .squish
 
     text = text.truncate(length, separator: " ", omission: "") if length
