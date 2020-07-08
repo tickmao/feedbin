@@ -6,11 +6,11 @@ class SearchData
   def to_h
     base = {
       id: @entry.id,
-      title: ContentFormatter.summary(@entry.title),
-      content: text,
-      author: @entry.author,
-      url: @entry.fully_qualified_url,
       feed_id: @entry.feed_id,
+      title: ContentFormatter.summary(@entry.title),
+      url: @entry.fully_qualified_url,
+      author: @entry.author,
+      content: text,
       published: @entry.published.iso8601,
       updated: @entry.updated_at.iso8601,
       link: links
@@ -36,7 +36,10 @@ class SearchData
   end
 
   def text
-    document.to_text(encode_special_chars: false).gsub("\n", " ")
+    document
+      .to_text(encode_special_chars: false)
+      .gsub!(/\s+/, " ")
+      .squish
   end
 
   def links
