@@ -24,6 +24,7 @@ class Entry < ApplicationRecord
   after_commit :touch_feed_last_published_entry, on: :create
   after_commit :harvest_links, on: :create
   after_commit :cache_views, on: [:create, :update]
+  after_commit :save_twitter_users, on: [:create]
 
   validate :has_content
   validates :feed, :public_id, presence: true
@@ -435,5 +436,9 @@ class Entry < ApplicationRecord
 
   def cache_views
     CacheEntryViews.perform_async(id)
+  end
+
+  def save_twitter_users
+    SaveTwitterUsers.perform_async(id) if tweet?
   end
 end
