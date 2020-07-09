@@ -8,7 +8,7 @@ module SearchSettings
 
     search_settings = {
       index: {
-        number_of_shards: "12",
+        number_of_shards: "16",
       },
       analysis: {
         analyzer: {
