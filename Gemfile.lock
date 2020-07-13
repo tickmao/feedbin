@@ -359,6 +359,7 @@ GEM
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
+    patron (0.13.3)
     pg (1.2.3)
     premailer (1.11.1)
       addressable
@@ -601,6 +602,7 @@ DEPENDENCIES
   minitest-stub_any_instance
   oauth
   opml_saw!
+  patron
   pg
   premailer-rails
   puma

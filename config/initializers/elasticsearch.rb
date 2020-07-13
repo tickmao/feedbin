@@ -1,5 +1,6 @@
 defaults = {
-  log: Rails.env.development?
+  log: Rails.env.development?,
+  adapter: :patron
 }
 $search = {}.tap do |hash|
   hash[:main] = ConnectionPool::Wrapper.new(size: ENV.fetch("SEARCH_POOL", 1).to_i, timeout: 5) {
