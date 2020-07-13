@@ -599,7 +599,6 @@ DEPENDENCIES
   minitest
   minitest-stub-const
   minitest-stub_any_instance
-  net-http-persistent
   oauth
   opml_saw!
   pg

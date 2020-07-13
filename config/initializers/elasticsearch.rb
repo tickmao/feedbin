@@ -1,11 +1,15 @@
-require "net/http/persistent"
-
 defaults = {
   log: Rails.env.development?
 }
 $search = {}.tap do |hash|
-  hash[:main] = Elasticsearch::Client.new(defaults)
-  hash[:alt] = Elasticsearch::Client.new(defaults.merge(url: ENV["ELASTICSEARCH_ALT_URL"])) if ENV["ELASTICSEARCH_ALT_URL"]
+  hash[:main] = ConnectionPool::Wrapper.new(size: ENV.fetch("SEARCH_POOL", 1).to_i, timeout: 5) {
+    Elasticsearch::Client.new(defaults)
+  }
+  if ENV["ELASTICSEARCH_ALT_URL"]
+    hash[:alt] = ConnectionPool::Wrapper.new(size: ENV.fetch("SEARCH_POOL", 1).to_i, timeout: 5) {
+      Elasticsearch::Client.new(defaults.merge(url: ENV["ELASTICSEARCH_ALT_URL"]))
+    }
+  end
 end
 
 Elasticsearch::Model.client = $search[:main]

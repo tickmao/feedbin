@@ -7,11 +7,13 @@ class ActionsBulk
     action = user.actions.find(action_id)
     entry_ids = []
 
-    response = $search[:main].search(
-      index: Entry.index_name,
-      scroll: "1m",
-      body: action.search_options
-    )
+    response = $search[:main].with do |client|
+      client.search(
+        index: Entry.index_name,
+        scroll: "1m",
+        body: action.search_options
+      )
+    end
 
     scrolled_search(response) do |hits|
       hits.each do |hit|

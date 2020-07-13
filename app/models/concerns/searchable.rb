@@ -26,7 +26,7 @@ module Searchable
         }
 
         if queries.present?
-          result = $search[:main].msearch body: queries
+          result = $search[:main].with {|client| client.msearch(body: queries) }
           entry_ids = result["responses"].map { |response|
             hits = response.dig("hits", "hits") || []
             hits.map do |hit|
@@ -60,8 +60,14 @@ module Searchable
     def self.scoped_search(params, user)
       options = build_search(params, user)
       query = build_query(options)
+      request = {
+        index: Entry.index_name,
+        body: {
+          query: query[:query]
+        }
+      }
 
-      result = $search[:main].indices.validate_query({index: Entry.index_name, body: {query: query[:query]}})
+      result = $search[:main].with { |client| client.indices.validate_query(request) }
       if result["valid"] == false
         Entry.search(nil).records
       else

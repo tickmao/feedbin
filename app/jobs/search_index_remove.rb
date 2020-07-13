@@ -5,11 +5,13 @@ class SearchIndexRemove
     data = ids.map { |id|
       {delete: {_id: id}}
     }
-    $search.each do |_, client|
-      client.bulk(
-        index: Entry.index_name,
-        body: data
-      )
+    $search.each do |_, pool|
+      pool.with do |client|
+        client.bulk(
+          index: Entry.index_name,
+          body: data
+        )
+      end
     end
   end
 end

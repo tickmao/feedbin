@@ -71,7 +71,7 @@ class ActiveSupport::TestCase
   end
 
   def clear_search
-    $search[:main].indices.delete index: ["entries*","actions*"], ignore: 404
+    $search[:main].with {|client| client.indices.delete index: ["entries*","actions*"], ignore: 404 }
     Entry.__elasticsearch__.create_index!
     Action.__elasticsearch__.create_index!
   end

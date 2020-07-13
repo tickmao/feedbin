@@ -16,13 +16,15 @@ class SearchIndexStore
       id: entry.id,
       body: document
     }
-    $search.each do |_, client|
-      client.index(data)
+    $search.each do |_, pool|
+      pool.with do |client|
+        client.index(data)
+      end
     end
   end
 
   def percolate(entry, document, update = false)
-    response = $search[:main].search(
+    request = {
       index: Action.index_name,
       scroll: "1m",
       ignore: 404,
@@ -42,7 +44,11 @@ class SearchIndexStore
           }
         }
       }
-    )
+    }
+
+    response = $search[:main].with do |client|
+      client.search(request)
+    end
 
     scrolled_search(response) do |hits|
       ids = hits.map { |hit| hit["_id"].to_i }

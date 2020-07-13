@@ -8,8 +8,10 @@ class PercolateDestroy
       id: action_id,
       ignore: 404
     }
-    $search.each do |_, client|
-      client.delete(options)
+    $search.each do |_, pool|
+      pool.with do |client|
+        client.delete(options)
+      end
     end
   end
 end

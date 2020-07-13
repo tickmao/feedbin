@@ -100,11 +100,13 @@ class Action < ApplicationRecord
   end
 
   def _percolator
-    $search[:main].get(
-      index: Action.index_name,
-      id: id,
-      ignore: 404
-    )
+    $search[:main].with do |client|
+      client.get(
+        index: Action.index_name,
+        id: id,
+        ignore: 404
+      )
+    end
   end
 
   def query_valid
@@ -112,7 +114,7 @@ class Action < ApplicationRecord
       index: Entry.index_name,
       body: {query: search_body[:query]}
     }
-    result = $search[:main].indices.validate_query(options)
+    result = $search[:main].with {|client| client.indices.validate_query(options) }
     if result["valid"] == false
       errors[:base] << "Search syntax invalid"
     end

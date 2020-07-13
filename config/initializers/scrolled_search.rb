@@ -5,11 +5,13 @@ module ScrolledSearch
     }
     until response["hits"]["hits"].empty?
       yield response["hits"]["hits"]
-      response = $search[:main].scroll({
-        scroll: "1m",
-        body: body
-      })
+      response = $search[:main].with do |client|
+        client.scroll({
+          scroll: "1m",
+          body: body
+        })
+      end
     end
-    $search[:main].clear_scroll(body: body)
+    $search[:main].with {|client| client.clear_scroll(body: body) }
   end
 end

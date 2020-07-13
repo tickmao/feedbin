@@ -15,8 +15,10 @@ class SearchIndexStoreAlt
       id: entry.id,
       body: document
     }
-    $search.each do |_, client|
-      client.index(data)
+    $search.each do |_, pool|
+      pool.with do |client|
+        client.index(data)
+      end
     end
   end
 end

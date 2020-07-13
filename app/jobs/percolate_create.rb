@@ -15,8 +15,10 @@ class PercolateCreate
         id: @action.id,
         body: @action.search_body
       }
-      $search.each do |_, client|
-        client.index(options)
+      $search.each do |_, pool|
+        pool.with do |client|
+          client.index(options)
+        end
       end
     end
   end
