@@ -1,4 +1,5 @@
 window.feedbin ?= {}
+window.feedbin.data ?= {}
 
 (($) ->
 
@@ -55,7 +56,7 @@ $.extend feedbin,
 
     unless element.is('.tag-link')
       tagParent = element.closest('[data-tag-id]')
-      if tagParent.find(".drawer").data('hidden') == true
+      if !tagParent.hasClass('open')
         tagParent.find('[data-behavior~=toggle_drawer]').submit();
       if tagParent.is('.zero-count')
         tagParent.removeClass('zero-count')
@@ -173,6 +174,22 @@ $.extend feedbin,
 
     feedbin.nativeMessage("performAction", message)
 
+  tagVisibility: (values = null) ->
+    if values
+      localStorage.setItem(feedbin.data.visibility_key, JSON.stringify(values))
+      values
+    else
+      JSON.parse(localStorage.getItem(feedbin.data.visibility_key)) || {}
+
+  setTagVisibility: ->
+    visibility = feedbin.tagVisibility()
+    if Object.keys(visibility).length == 0
+      visibility = feedbin.tagVisibility(feedbin.data.tag_visibility)
+    for id, open of visibility
+      tag = $(".feeds [data-tag-id=#{id}]")
+      if open
+        tag.addClass('open')
+
   reselect: ->
     if feedbin.selectedSource && feedbin.selectedTag
       $("[data-tag-id=#{feedbin.selectedTag}]").find("[data-feed-id=#{feedbin.selectedSource}]").addClass("selected")
@@ -215,6 +232,12 @@ $.extend feedbin,
     data = context.getImageData(1, 1, 1, 1)
     canvas.parentNode.removeChild(canvas)
     "rgba(#{data.data[0]}, #{data.data[1]}, #{data.data[2]}, #{data.data[3]})"
+
+  darkMode: ->
+    if "matchMedia" of window
+      result = window.matchMedia('(prefers-color-scheme: dark)')
+      if result && "matches" of result
+        result.matches == true
 
   setNativeTheme: (calculateOverlay = false, timeout = 1) ->
     if feedbin.native && feedbin.data && feedbin.theme
@@ -1555,8 +1578,9 @@ $.extend feedbin,
     selected: ->
       $(document).on 'ajax:success', '[data-behavior~=show_entries]', (event) ->
         target = $(event.target)
-        feedbin.selectedSource = target.closest('[data-feed-id]').data('feed-id')
-        feedbin.selectedTag = target.closest('[data-tag-id]').data('tag-id')
+        unless target.is('[data-behavior~=toggle_drawer]')
+          feedbin.selectedSource = target.closest('[data-feed-id]').data('feed-id')
+          feedbin.selectedTag = target.closest('[data-tag-id]').data('tag-id')
 
     setViewMode: ->
       $(document).on 'ajax:beforeSend', '[data-behavior~=show_entries]', (event, xhr, settings) ->
@@ -1779,38 +1803,39 @@ $.extend feedbin,
           $('.dropdown-content', dropdown).css({width: "#{width}px"})
 
     drawer: ->
+      feedbin.setTagVisibility()
       $(document).on 'submit', '[data-behavior~=toggle_drawer]', (event) =>
-        button = $(event.currentTarget).find('button')
-        drawer = button.parents('li').find('.drawer')
+        container = $(event.currentTarget).closest('[data-tag-id]')
+        open = !container.hasClass("open")
+        id = container.data('tag-id')
 
-        windowHeight = window.innerHeight
-        targetHeight = $('ul', drawer).height()
-        if windowHeight < targetHeight
-          targetHeight = windowHeight - drawer.offset().top
+        visibility = feedbin.tagVisibility()
+        visibility[id] = open
+        feedbin.tagVisibility(visibility)
 
-        if drawer.data('hidden') == true
+        container.toggleClass('open')
+        container.addClass('animate')
+
+        drawer = container.find('.drawer')
+
+        if open
+          windowHeight = window.innerHeight
+          targetHeight = $('ul', drawer).height()
+          if windowHeight < targetHeight
+            targetHeight = windowHeight - drawer.offset().top
           height = targetHeight
-          hidden = false
-          klass = 'icon-hide'
         else
           height = 0
-          hidden = true
-          klass = 'icon-show'
           drawer.css
             height: targetHeight
 
         drawer.animate {
           height: height
         }, 150, ->
+          container.removeClass('animate')
           if height > 0
             drawer.css
               height: 'auto'
-
-        drawer.data('hidden', hidden)
-        drawer.toggleClass('hidden')
-        button.removeClass('icon-hide')
-        button.removeClass('icon-show')
-        button.addClass(klass)
 
         event.stopPropagation()
         event.preventDefault()

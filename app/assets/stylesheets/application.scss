@@ -2082,6 +2082,33 @@ $hamburger-dot: 4px;
                 padding-left: $tag-offset;
                 position: relative;
             }
+            &.tag {
+                .drawer {
+                    height: 0;
+                    opacity: 0;
+                }
+                .icon-caret {
+                    @include fill($color-icons);
+                    transform: rotate(-90deg);
+                }
+                &.open {
+                    .drawer {
+                        height: auto;
+                        opacity: 1;
+                    }
+                    .icon-caret {
+                        transform: rotate(0deg);
+                    }
+                }
+                &.animate {
+                    .drawer {
+                        transition: opacity .3s linear;
+                    }
+                    .icon-caret {
+                        transition: transform .15s linear;
+                    }
+                }
+            }
             .tag-visibility-control {
                 padding: 0;
                 margin: 0;
@@ -2099,14 +2126,6 @@ $hamburger-dot: 4px;
                     border: none;
                     padding: 0 0 0 20px;
                     margin: 0;
-                    svg {
-                        transition: transform .15s linear;
-                        transform: rotate(-90deg);
-                        @include fill($color-icons);
-                    }
-                    &.icon-hide svg {
-                        transform: rotate(0deg);
-                    }
                 }
             }
             &.selected {
@@ -2142,11 +2161,6 @@ $hamburger-dot: 4px;
     .drawer {
         position: relative;
         overflow: hidden;
-        opacity: 1;
-        transition: opacity .3s linear;
-        &.hidden {
-            opacity: 0;
-        }
         ul {
             overflow: hidden;
             padding: 0;
@@ -2628,6 +2642,33 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         border-radius: 4px;
         @include border($color-borders);
     }
+    .link-preview {
+        margin: 8px 0 0 0 !important;
+        border-radius: 4px;
+        @include border($color-borders);
+        padding-bottom: 8px;
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 3px 3px 0 0;
+            margin-bottom: 8px;
+        }
+        span {
+            display: block;
+            margin: 0 8px 2px 8px;
+        }
+        .tweet-link-title {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tweet-link-host {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            @include color($color-contrast-400);
+        }
+    }
     .title, &.no-title .feed-title {
         font-weight: bold;
         display: block;
@@ -2748,10 +2789,10 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         .entries-inner-wrap {
             border-bottom-color: transparent;
         }
-        .title, .feed-title, .quoted-summary, .body {
+        .title, .feed-title, .quoted-summary, .body, .tweet-link-title {
             color: white !important;
         }
-        .title-inner span, .time {
+        .title-inner span, .time, .tweet-link-host {
             color: $color-selected-muted !important;
         }
         .icon-retweet, .icon-media {
@@ -2763,7 +2804,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         .icon-unread {
             background-color: white;
         }
-        .quoted-summary {
+        .quoted-summary, .link-preview {
             border-color: rgba(white, .3) !important;
         }
         .feed-title {
@@ -2926,14 +2967,18 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         flex-direction: row-reverse;
         margin: 0 0 0 auto;
         .entry-status {
-            display: flex;
+            display: block;
             margin-left: 8px;
+            position: relative;
+            .icon-unread {
+                margin: 2px 0 0 1px;
+            }
         }
         time {
             margin-left: 8px;
         }
     }
-    .quoted-summary {
+    .quoted-summary, .link-preview {
         display: none !important;
     }
 }
@@ -2985,7 +3030,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
 }
 .entries-image-0 .entries, .entries-display-inline .entries {
-    .entry-image {
+    .entry-image, .link-preview {
         display: none;
     }
 }
@@ -3182,7 +3227,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
 
     h3 {
-        @include font-size(16);
+        @include font-size(14);
         font-weight: bold;
         margin: 24px 16px 16px 16px;
     }
@@ -3314,7 +3359,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         @include border-bottom($color-borders);
         @include border-top($color-borders);
         button {
-            font-size: 16px;
+            @include font-size(14);
             padding: 16px;
             align-items: center;
             justify-content: center;
@@ -3327,6 +3372,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 @include border-right($color-borders);
             }
         }
+    }
+    .control-group li > label {
+        @include font-size(14);
     }
 }
 .fonts {
@@ -3726,7 +3774,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 position: relative;
                 text-decoration: none;
                 display: flex;
-                @include font-size(16);
+                @include font-size(14);
                 @include color($color-contrast-700);
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -3789,8 +3837,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 &.with-icon {
                     display: flex;
                     align-items: center;
-                    strong {
-                        font-weight: 500;
+                    span {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -3872,7 +3919,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         align-items: baseline;
     }
     .share-keyboard {
-        @include font-size(16);
+        @include font-size(14);
         margin-left: auto;
         font-style: normal;
         margin-top: 2px;
