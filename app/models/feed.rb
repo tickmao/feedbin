@@ -15,6 +15,8 @@ class Feed < ApplicationRecord
   before_create :set_host
   after_create :refresh_favicon
 
+  after_commit :web_sub_subscribe, on: :create
+
   attr_accessor :count, :tags
   attr_readonly :feed_url
 
@@ -177,6 +179,10 @@ class Feed < ApplicationRecord
 
   def web_sub_callback_signature
     OpenSSL::HMAC.hexdigest("sha256", web_sub_secret, id.to_s)
+  end
+
+  def web_sub_subscribe
+    WebSubSubscribe.perform_async(id)
   end
 
   private

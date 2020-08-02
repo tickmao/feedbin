@@ -26,13 +26,13 @@ class WebSub
   private
 
   def perform(mode)
-    @hubs.each do |hub|
+    @feed.hubs.each do |hub|
       request(hub, mode)
     end
   end
 
   def request(url, mode)
-    HTTP.post(url, form: {
+    HTTP.timeout(:global, write: 5, connect: 5, read: 5).follow(max_hops: 2).post(url, form: {
       "hub.mode"     => mode,
       "hub.verify"   => "async",
       "hub.topic"    => @feed.self_url,

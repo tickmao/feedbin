@@ -4,21 +4,20 @@ class WebSubController < ApplicationController
   before_action :set_feed
 
   def verify
-    response = nil
-    status = :not_found
-    if @feed.self_url == params["hub.topic"]
-      if params["hub.mode"] == "subscribe"
-        expires_at = Time.now + (params["hub.lease_seconds"].to_i / 2).seconds
-        @feed.update(push_expiration: expires_at)
-        response = params["hub.challenge"]
-        status = :ok
-      elsif params["hub.mode"] == "unsubscribe"
-        @feed.update(push_expiration: nil)
-        response = params["hub.challenge"]
-        status = :ok
-      end
+    valid_topic = @feed.self_url == params["hub.topic"]
+    if "subscribe" == params["hub.mode"] && valid_topic
+      @feed.update(push_expiration: Time.now + (params["hub.lease_seconds"].to_i / 2).seconds)
+      render plain: params["hub.challenge"]
+    elsif "unsubscribe" == params["hub.mode"] && valid_topic
+      @feed.update(push_expiration: nil)
+      render plain: params["hub.challenge"]
+    elsif "denied" == params["hub.mode"] && valid_topic
+      @feed.update(push_expiration: Time.now + 1.week)
+      Honeybadger.notify(error_class: "WebSubController#denied", error_message: "Request denied", parameters: params)
+      head :ok
+    else
+      head :not_found
     end
-    render plain: response, status: status
   end
 
   def publish
