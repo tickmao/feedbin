@@ -3,7 +3,6 @@ class SelfUrl
   sidekiq_options retry: false, queue: :worker_slow
 
   def perform(feed_id = nil, schedule = false)
-    return true
     if schedule
       build
     else
@@ -14,10 +13,10 @@ class SelfUrl
   def update(feed_id)
     feed = Feed.find(feed_id)
     response = Feedkit::Request.download(feed.feed_url)
-    self_url = response.parse.self_url
-    feed.update(self_url: self_url)
+    parsed = response.parse
+    feed.update(self_url: parsed.self_url, hubs: parsed.hubs)
   rescue
-    feed.update(self_url: feed.feed_url)
+    feed.update(self_url: nil, hubs: nil)
   end
 
   def build
