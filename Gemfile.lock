@@ -26,8 +26,8 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedjira.git
-  revision: f7ab1cbead49a23818f305b8fb4e2635fc780807
-  branch: f2
+  revision: e6b7b11b4b20cfb01ce6a73806a59308298a10c7
+  ref: e6b7b11
   specs:
     feedjira (2.1.2)
       faraday (>= 0.9)
@@ -37,7 +37,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 83d00b99b916c70883d01aa890126a0b8d9b4cfe
+  revision: 3b26004d5977130ad58a6fcda063aa1d56030ab3
   branch: http
   specs:
     feedkit (0.1.0)
