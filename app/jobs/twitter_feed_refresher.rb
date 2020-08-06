@@ -14,7 +14,7 @@ class TwitterFeedRefresher
       args = {
         "args" => [feed.id, feed.feed_url, keys],
         "class" => "TwitterFeedRefresherCritical",
-        "queue" => "feed_refresher_fetcher_critical",
+        "queue" => "feed_downloader_critical",
         "retry" => false,
         "at" => Time.now.to_i + rand(0..6.minutes.to_i)
       }

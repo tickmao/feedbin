@@ -37,7 +37,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 39b9aca3699cab4c3e2ad4cd26f969e068e95c20
+  revision: 7a8a43f749983dc7d64839723a9c80abc4df5fdc
   branch: http
   specs:
     feedkit (0.1.0)
@@ -73,7 +73,7 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/http.git
-  revision: 9377af8b2eb3b9b2ffdef8b3be60ab28424e3a3f
+  revision: dc031da97cfcb15aade491a5dfc321c61c944bde
   branch: feedbin
   specs:
     http (4.4.1)

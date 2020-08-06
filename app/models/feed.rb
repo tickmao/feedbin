@@ -133,8 +133,8 @@ class Feed < ApplicationRecord
     else
       Sidekiq::Client.push_bulk(
         "args" => [[id, feed_url]],
-        "class" => "FeedRefresherFetcherCritical",
-        "queue" => "feed_refresher_fetcher_critical",
+        "class" => "FeedDownloaderCritical",
+        "queue" => "feed_downloader_critical",
         "retry" => false
       )
     end
