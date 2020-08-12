@@ -1267,12 +1267,22 @@ $.extend feedbin,
     $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').hide()
     $('.modal-purpose-subscribe .modal-dialog').removeClass('done');
     $('[data-behavior~=feeds_search_favicon_target]').html('')
+    $('.modal-purpose-subscribe [data-behavior~=subscribe_target]').html('')
 
   showSubscribeResults: ->
     $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').slideDown(200)
     $('.modal-purpose-subscribe .modal-dialog').addClass('done');
     $('.modal-purpose-subscribe [data-behavior~=submit_add]').removeAttr('disabled');
     $('.modal-purpose-subscribe .title').first().find("input").focus();
+    $('.modal-purpose-subscribe .password-footer').addClass('hide')
+    $('.modal-purpose-subscribe .subscribe-footer').removeClass('hide')
+
+  showAuthField: ->
+    $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').slideDown(200)
+    $('.modal-purpose-subscribe .modal-dialog').addClass('done');
+    $('.modal-purpose-subscribe #basic_username').first().find("input").focus();
+    $('.modal-purpose-subscribe .password-footer').removeClass('hide')
+    $('.modal-purpose-subscribe .subscribe-footer').addClass('hide')
 
   showModal: (target, title = null) ->
     modal = $("#modal")

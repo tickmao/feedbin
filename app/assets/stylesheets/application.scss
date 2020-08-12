@@ -7149,6 +7149,14 @@ button.reset {
     }
 }
 
+.password-error {
+    display: flex;
+    align-items: center;
+    svg {
+        margin-right: base-units(1);
+    }
+}
+
 .button-wrap-inline {
     display: flex;
     align-items: center;

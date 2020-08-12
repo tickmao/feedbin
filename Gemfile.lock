@@ -36,17 +36,6 @@ GIT
       sax-machine (>= 1.0)
 
 GIT
-  remote: https://github.com/feedbin/feedkit.git
-  revision: ec384a314e6be84f7b8a92408a2f9d95cea249d3
-  branch: master
-  specs:
-    feedkit (0.1.0)
-      feedjira (~> 2.0)
-      http (~> 4.4)
-      twitter (~> 7.0)
-      twitter-text (~> 3.1.0)
-
-GIT
   remote: https://github.com/feedbin/grocer-pushpackager.git
   revision: 6b01b4e4e71af26edf55f095251366294527afaf
   ref: 6b01b4e
@@ -89,6 +78,15 @@ GIT
   specs:
     opml_saw (0.0.2)
       nokogiri
+
+PATH
+  remote: /Users/ben/Sites/feedkit
+  specs:
+    feedkit (0.1.0)
+      feedjira (~> 2.0)
+      http (~> 4.4)
+      twitter (~> 7.0)
+      twitter-text (~> 3.1.0)
 
 GEM
   remote: https://rubygems.org/
