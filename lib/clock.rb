@@ -19,10 +19,14 @@ end
 
 every(1.day, "clockwork.daily", at: "12:00", tz: "UTC") do
   if RedisLock.acquire("clockwork:delete_entries:v2")
-    # EntryDeleterScheduler.perform_async
+    EntryDeleterScheduler.perform_async
   end
 
   if RedisLock.acquire("clockwork:trial_expiration:v2")
     TrialExpiration.perform_async
+  end
+
+  if RedisLock.acquire("clockwork:twitter_validate_credentials")
+    TwitterValidateCredentials.perform_async
   end
 end

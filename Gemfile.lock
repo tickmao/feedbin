@@ -16,8 +16,8 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedjira.git
-  revision: e6b7b11b4b20cfb01ce6a73806a59308298a10c7
-  ref: e6b7b11
+  revision: e45ed4a8c2170fd054988988e9734d64cb75be1a
+  branch: f2
   specs:
     feedjira (2.1.2)
       faraday (>= 0.9)
@@ -27,14 +27,14 @@ GIT
 
 GIT
   remote: https://github.com/feedbin/feedkit.git
-  revision: 72869799777d418de5ed31b4ac23c5b7114670c5
+  revision: 512caa6a34f3a8bbcaf4823894aefb8c1859bcf0
   branch: master
   specs:
     feedkit (0.1.0)
-      curb (~> 0.9)
       feedjira (~> 2.0)
-      twitter (~> 6.2)
-      twitter-text (~> 2.1)
+      http (~> 4.4)
+      twitter (~> 7.0)
+      twitter-text (~> 3.1.0)
 
 GIT
   remote: https://github.com/feedbin/grocer-pushpackager.git
@@ -62,12 +62,40 @@ GIT
       nokogiri
 
 GIT
+  remote: https://github.com/feedbin/http.git
+  revision: dc031da97cfcb15aade491a5dfc321c61c944bde
+  branch: feedbin
+  specs:
+    http (4.4.1)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 2.2)
+      http-parser (~> 1.2.0)
+
+GIT
   remote: https://github.com/feedbin/opml_saw.git
   revision: 61d8c2dd3d46e9cae38178754469dd9da7c8bd6a
   ref: 61d8c2d
   specs:
     opml_saw (0.0.2)
       nokogiri
+
+GIT
+  remote: https://github.com/feedbin/twitter.git
+  revision: 56b2ee834ab8d2bafc12e89f8147523c8954a1d7
+  branch: feedbin
+  specs:
+    twitter (7.0.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (~> 0.0.11)
+      http (~> 4.0)
+      http-form_data (~> 2.0)
+      http_parser.rb (~> 0.6.0)
+      memoizable (~> 0.4.0)
+      multipart-post (~> 2.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.3.0)
 
 GEM
   remote: https://rubygems.org/
@@ -116,7 +144,7 @@ GEM
     activerecord (6.0.3.2)
       activemodel (= 6.0.3.2)
       activesupport (= 6.0.3.2)
-    activerecord-import (1.0.5)
+    activerecord-import (1.0.6)
       activerecord (>= 3.2)
     activestorage (6.0.3.2)
       actionpack (= 6.0.3.2)
@@ -138,9 +166,9 @@ GEM
       connection_pool (~> 2)
       net-http2 (>= 0.18, < 2)
     ast (2.4.1)
-    autoprefixer-rails (9.8.4)
+    autoprefixer-rails (9.8.6.1)
       execjs
-    bcrypt (3.1.13)
+    bcrypt (3.1.15)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     benchmark-ips (2.8.2)
@@ -150,7 +178,7 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    bootsnap (1.4.6)
+    bootsnap (1.4.8)
       msgpack (~> 1.0)
     buftok (0.2.0)
     builder (3.2.4)
@@ -160,11 +188,11 @@ GEM
       i18n
       rake (>= 10.0.0)
       sshkit (>= 1.9.0)
-    capistrano-bundler (1.6.0)
+    capistrano-bundler (2.0.1)
       capistrano (~> 3.1)
-    capistrano-rails (1.5.0)
+    capistrano-rails (1.6.1)
       capistrano (~> 3.1)
-      capistrano-bundler (~> 1.1)
+      capistrano-bundler (>= 1.1, < 3)
     capybara (3.33.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -192,7 +220,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.6)
+    concurrent-ruby (1.1.7)
     connection_pool (2.2.3)
     coveralls (0.8.23)
       json (>= 1.8, < 3)
@@ -211,10 +239,10 @@ GEM
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    dotenv (2.7.5)
-    dotenv-rails (2.7.5)
-      dotenv (= 2.7.5)
-      railties (>= 3.2, < 6.1)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     elasticsearch (7.5.0)
       elasticsearch-api (= 7.5.0)
       elasticsearch-transport (= 7.5.0)
@@ -233,7 +261,7 @@ GEM
     evernote_oauth (0.2.3)
       evernote-thrift
       oauth (>= 0.4.1)
-    excon (0.75.0)
+    excon (0.76.0)
     execjs (2.7.0)
     faker (2.13.0)
       i18n (>= 1.6, < 2)
@@ -242,6 +270,9 @@ GEM
     faraday_middleware (0.14.0)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.13.1)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
     fog-aws (3.6.6)
       fog-core (~> 2.1)
       fog-json (~> 1.1)
@@ -258,30 +289,27 @@ GEM
     fog-xml (0.1.3)
       fog-core
       nokogiri (>= 1.5.11, < 2.0.0)
-    foreman (0.87.1)
+    foreman (0.87.2)
     formatador (0.2.5)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     hashdiff (1.0.1)
     hashie (4.1.0)
     hetchy (1.0.0)
-    honeybadger (4.7.0)
+    honeybadger (4.7.1)
     htmlbeautifier (1.3.1)
     htmlentities (4.3.4)
     http-2 (0.10.2)
-    http (3.3.0)
-      addressable (~> 2.3)
-      http-cookie (~> 1.0)
-      http-form_data (~> 2.0)
-      http_parser.rb (~> 0.6.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
+    http-parser (1.2.1)
+      ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
     httparty (0.18.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
-    i18n (1.8.3)
+    i18n (1.8.5)
       concurrent-ruby (~> 1.0)
     idn-ruby (0.1.0)
     image_processing (1.11.0)
@@ -307,7 +335,7 @@ GEM
       activesupport (>= 3.0)
       librato-rack (~> 1.1.0)
       railties (>= 3.0)
-    libv8 (7.3.492.27.1)
+    libv8 (8.4.255.0)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -333,13 +361,13 @@ GEM
     mini_magick (4.10.1)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    mini_racer (0.2.15)
-      libv8 (> 7.3)
+    mini_racer (0.3.1)
+      libv8 (~> 8.4.255)
     minitest (5.14.1)
     minitest-stub-const (0.6)
     minitest-stub_any_instance (1.0.2)
     msgpack (1.3.3)
-    multi_json (1.14.1)
+    multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     naught (1.1.0)
@@ -351,7 +379,7 @@ GEM
       net-ssh (>= 2.6.5, < 7.0.0)
     net-ssh (6.1.0)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     nokogumbo (2.0.2)
       nokogiri (~> 1.8, >= 1.8.4)
@@ -361,7 +389,7 @@ GEM
       ast (~> 2.4.1)
     patron (0.13.3)
     pg (1.2.3)
-    premailer (1.11.1)
+    premailer (1.13.1)
       addressable
       css_parser (>= 1.6.0)
       htmlentities (>= 4.0.0)
@@ -374,8 +402,6 @@ GEM
     rack (2.2.3)
     rack-attack (6.3.1)
       rack (>= 1.0, < 3)
-    rack-protection (2.0.8.1)
-      rack
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.3.2)
@@ -435,8 +461,8 @@ GEM
       rubocop-ast (>= 0.0.3)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 2.0)
-    rubocop-ast (0.1.0)
-      parser (>= 2.7.0.1)
+    rubocop-ast (0.3.0)
+      parser (>= 2.7.1.4)
     rubocop-performance (1.6.1)
       rubocop (>= 0.71.0)
     ruby-progressbar (1.10.1)
@@ -462,11 +488,10 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sidekiq (6.0.7)
+    sidekiq (6.1.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
-      rack-protection (>= 2.0.0)
-      redis (>= 4.1.0)
+      redis (>= 4.2.0)
     silencer (1.0.1)
     simple_oauth (0.3.1)
     simplecov (0.16.1)
@@ -506,18 +531,7 @@ GEM
     tilt (2.0.10)
     tins (1.25.0)
       sync
-    twitter (6.2.0)
-      addressable (~> 2.3)
-      buftok (~> 0.2.0)
-      equalizer (~> 0.0.11)
-      http (~> 3.0)
-      http-form_data (~> 2.0)
-      http_parser.rb (~> 0.6.0)
-      memoizable (~> 0.4.0)
-      multipart-post (~> 2.0)
-      naught (~> 1.0)
-      simple_oauth (~> 0.3.0)
-    twitter-text (2.1.0)
+    twitter-text (3.1.0)
       idn-ruby
       unf (~> 0.1.0)
     tzinfo (1.2.7)
@@ -531,20 +545,20 @@ GEM
     unicode-emoji (2.5.0)
       unicode-version (~> 1.0)
     unicode-version (1.0.0)
-    unicorn (5.5.5)
+    unicorn (5.6.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     webmock (3.8.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket-driver (0.7.2)
+    websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
     will_paginate (3.3.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.3.1)
+    zeitwerk (2.4.0)
 
 PLATFORMS
   ruby
@@ -588,7 +602,7 @@ DEPENDENCIES
   html_diff!
   htmlbeautifier
   htmlentities
-  http
+  http!
   httparty
   jbuilder
   jquery-rails
@@ -626,7 +640,7 @@ DEPENDENCIES
   stripe (~> 4.24.0)
   stripe-ruby-mock (= 2.5.0)
   stripe_event
-  twitter
+  twitter!
   twitter-text
   uglifier
   unicode-emoji

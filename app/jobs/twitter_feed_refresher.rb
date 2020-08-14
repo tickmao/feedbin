@@ -13,10 +13,10 @@ class TwitterFeedRefresher
     if keys.present?
       args = {
         "args" => [feed.id, feed.feed_url, keys],
-        "class" => "TwitterFeedRefresherCritical",
-        "queue" => "feed_refresher_fetcher_critical",
+        "class" => "TwitterRefresherCritical",
+        "queue" => "feed_downloader_critical",
         "retry" => false,
-        "at" => Time.now.to_i + rand(0..6.minutes.to_i)
+        "at" => Time.now.to_i + rand(0..8.minutes.to_i)
       }
 
       if user
@@ -31,7 +31,7 @@ class TwitterFeedRefresher
     user_ids = if user
       [user.id]
     else
-      feed.subscriptions.where(active: true, muted: false).pluck(:user_id)
+      feed.subscriptions.where(active: true).pluck(:user_id)
     end
 
     users = User.where(id: user_ids)

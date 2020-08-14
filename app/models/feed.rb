@@ -15,6 +15,8 @@ class Feed < ApplicationRecord
   before_create :set_host
   after_create :refresh_favicon
 
+  after_commit :web_sub_subscribe, on: :create
+
   attr_accessor :count, :tags
   attr_readonly :feed_url
 
@@ -73,6 +75,7 @@ class Feed < ApplicationRecord
     options.dig("json_feed", "icon")
   end
 
+  # TODO get last effective url from a feedburner feed
   def self.create_from_parsed_feed(parsed_feed)
     ActiveRecord::Base.transaction do
       record = create!(parsed_feed.to_feed)
@@ -88,19 +91,7 @@ class Feed < ApplicationRecord
   end
 
   def check
-    options = {}
-    unless last_modified.blank?
-      options[:if_modified_since] = last_modified
-    end
-    unless etag.blank?
-      options[:if_none_match] = etag
-    end
-    request = Feedkit::Request.new(url: feed_url, options: options)
-    result = request.status
-    if request.body
-      result = Feedkit::Feedkit.new.fetch_and_parse(feed_url, request: request)
-    end
-    result
+    Feedkit::Request.download(feed_url)
   end
 
   def self.include_user_title
@@ -142,8 +133,8 @@ class Feed < ApplicationRecord
     else
       Sidekiq::Client.push_bulk(
         "args" => [[id, feed_url]],
-        "class" => "FeedRefresherFetcherCritical",
-        "queue" => "feed_refresher_fetcher_critical",
+        "class" => "FeedDownloaderCritical",
+        "queue" => "feed_downloader_critical",
         "retry" => false
       )
     end
@@ -163,6 +154,24 @@ class Feed < ApplicationRecord
 
   def has_subscribers?
     subscriptions_count > 0
+  end
+
+  def web_sub_secret
+    Digest::SHA256.hexdigest([id, Rails.application.secrets.secret_key_base].join("-"))
+  end
+
+  def web_sub_callback
+    uri = URI(ENV["PUSH_URL"])
+    signature = OpenSSL::HMAC.hexdigest("sha256", web_sub_secret, id.to_s)
+    Rails.application.routes.url_helpers.web_sub_verify_url(id, web_sub_callback_signature, protocol: uri.scheme, host: uri.host)
+  end
+
+  def web_sub_callback_signature
+    OpenSSL::HMAC.hexdigest("sha256", web_sub_secret, id.to_s)
+  end
+
+  def web_sub_subscribe
+    WebSubSubscribe.perform_async(id)
   end
 
   private

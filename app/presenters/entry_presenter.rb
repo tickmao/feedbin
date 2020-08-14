@@ -180,7 +180,7 @@ class EntryPresenter < BasePresenter
   def title
     length = 100
     if entry.tweet?
-      text = entry.tweet_summary.html_safe
+      text = entry.tweet_summary(nil, true).html_safe
       length = 280
     elsif sanitized_title.present?
       text = sanitized_title
@@ -603,6 +603,14 @@ class EntryPresenter < BasePresenter
     end
   end
 
+  def tweet_profile_banner(tweet)
+    @template.content_tag(:div, class: "profile-banner", data: { color_hash_seed: tweet.user.screen_name }) do
+      if tweet.user.profile_banner_url?
+        @template.image_tag(@template.camo_link(tweet.user.profile_banner_url_https("1500x500")))
+      end
+    end
+  end
+
   # Sizes: normal, bigger
   def tweet_profile_image_uri(tweet, size = :bigger)
     if tweet.user.profile_image_uri? && tweet.user.profile_image_uri_https(size)
@@ -689,8 +697,8 @@ class EntryPresenter < BasePresenter
     @template.video_tag highest_quality_video.url.to_s, options
   end
 
-  def tweet_text(tweet, tag = true)
-    text = entry.tweet_text(tweet)
+  def tweet_text(tweet, tag = true, options = {})
+    text = entry.tweet_text(tweet, options)
     if text.present?
       if tag
         @template.content_tag(:p, class: "tweet-text") do
@@ -725,6 +733,10 @@ class EntryPresenter < BasePresenter
     tweet.user.created_at.mday.to_s.chars.map(&:to_i)
   end
 
+  def tweet_author_joined_datetime(tweet)
+    tweet.user.created_at.iso8601
+  end
+
   def tweet_author_location(tweet)
     tweet.user.location? ? tweet.user.location : nil
   end
@@ -739,6 +751,14 @@ class EntryPresenter < BasePresenter
 
   def quoted_status
     entry.main_tweet.quoted_status
+  end
+
+  def tweet_link_title
+    saved_page(entry.main_tweet.urls.first.expanded_url.to_s)&.title
+  end
+
+  def tweet_link_host
+    saved_page(entry.main_tweet.urls.first.expanded_url.to_s)&.domain
   end
 
   def feed_wrapper(subscriptions, &block)
