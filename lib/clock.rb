@@ -25,4 +25,12 @@ every(1.day, "clockwork.daily", at: "12:00", tz: "UTC") do
   if RedisLock.acquire("clockwork:trial_expiration:v2")
     TrialExpiration.perform_async
   end
+
+  if RedisLock.acquire("clockwork:twitter_validate_credentials")
+    TwitterValidateCredentials.perform_async
+  end
+
+  if RedisLock.acquire("clockwork:web_sub_maintenance")
+    WebSubMaintenance.perform_async
+  end
 end

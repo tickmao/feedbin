@@ -24,6 +24,8 @@ $.extend feedbin,
   formatMenu: null
   hasShadowDOM: typeof(document.createElement("div").attachShadow) == "function"
   colorHash: new ColorHash
+  scrollStarted: false
+  loadingMore: false
 
   changeContentView: (view) ->
     currentView = $('[data-behavior~=content_option]:not(.hide)')
@@ -38,6 +40,15 @@ $.extend feedbin,
       feedbin.previousContentView = currentView.data('content-option')
       currentView.addClass('hide')
       nextView.removeClass('hide')
+
+  loadMore: () ->
+    if feedbin.scrollStarted == false
+      element = $('.entries')[0]
+      url = $('.pagination .next_page').attr('href')
+      if url && element.scrollHeight <= element.offsetHeight
+        feedbin.loadingMore = true
+        $.getScript url, =>
+          feedbin.loadingMore = false
 
   newsletterLoad: (context) ->
     feedbin.formatImages(context)
@@ -1403,14 +1414,14 @@ $.extend feedbin,
       element.style.display = 'none'
       element.style.font = '-apple-system-body'
 
-      if element.style.font == ""
-        base = "16"
-      else
+      if element.style.font != "" && "ontouchend" of document
         document.body.appendChild element
         style = window.getComputedStyle(element, null)
         size = style.getPropertyValue 'font-size'
         base = parseInt(size) - 1
         element.parentNode.removeChild(element)
+      else
+        base = "16"
 
       $("html").css
         "font-size": "#{base}px"
@@ -2628,6 +2639,7 @@ $.extend feedbin,
 
       $(document).on 'click', '[data-behavior~=toggle_profile]', (event) ->
         element = $(event.currentTarget).closest('[data-behavior~=author_profile_wrap]').find('[data-behavior~=author_profile]')
+        feedbin.faviconColors(element)
         element.toggleClass('hide')
 
     changeContentView: ->
@@ -2660,6 +2672,10 @@ $.extend feedbin,
         newText = button.data('toggle-text')
         button.text(newText)
         button.data('toggle-text', text)
+
+    scrollStarted: ->
+      $(document).on 'click', '[data-behavior~=show_entries]', (event) ->
+        feedbin.scrollStarted = false
 
     copy: ->
       $(document).on 'click', '[data-behavior~=copy]', (event) ->

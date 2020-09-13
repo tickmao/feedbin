@@ -18,7 +18,6 @@ Rails.application.routes.draw do
   get :subscribe, to: "site#subscribe"
   get :headers, to: "site#headers"
 
-  post "/emails" => "emails#create"
   post "/newsletters" => "newsletters#create"
   get "bookmarklet/:cache_buster", to: "bookmarklet#script", as: "bookmarklet"
 
@@ -49,6 +48,10 @@ Rails.application.routes.draw do
 
   # Error log
   post "apple_push_notifications/:version/log", as: :apple_push_notifications_log, to: "apple_push_notifications#log"
+
+  # WebSub
+  get  "web_sub/:id/:signature", as: :web_sub_verify,  to: "web_sub#verify"
+  post "web_sub/:id/:signature", as: :web_sub_publish, to: "web_sub#publish"
 
   resource :app, only: [] do
     member do

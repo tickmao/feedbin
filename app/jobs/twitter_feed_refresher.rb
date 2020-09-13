@@ -13,14 +13,14 @@ class TwitterFeedRefresher
     if keys.present?
       args = {
         "args" => [feed.id, feed.feed_url, keys],
-        "class" => "TwitterFeedRefresherCritical",
-        "queue" => "feed_refresher_fetcher_critical",
-        "retry" => false,
-        "at" => Time.now.to_i + rand(0..6.minutes.to_i)
+        "class" => "TwitterRefresher",
+        "queue" => "twitter_refresher",
+        "retry" => false
       }
 
       if user
-        args.delete("at")
+        args["class"] = "TwitterRefresherCritical"
+        args["queue"] = "twitter_refresher_critical"
       end
 
       Sidekiq::Client.push(args)

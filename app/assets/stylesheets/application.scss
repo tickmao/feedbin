@@ -1741,6 +1741,7 @@ $hamburger-dot: 4px;
         transition: transform 0.2s ease;
         transform-origin: top left;
         display: flex;
+        align-items: center;
         .view-mode-unread,
         .view-mode-starred,
         .view-mode-all {
@@ -1949,11 +1950,12 @@ $hamburger-dot: 4px;
             .feed-action-form {
                 padding: 0;
                 margin: 0;
-                margin-left: auto;
-                position: relative;
                 overflow: visible;
                 min-width: 50px;
-                height: 1px;
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 0;
                 .feed-action-button {
                     font-weight: bold;
                     @include color($color-contrast-400);
@@ -1962,16 +1964,13 @@ $hamburger-dot: 4px;
                     appearance: none;
                     background: none;
                     border: none;
-                    padding: 0;
+                    padding: 0 16px 0 0;
                     margin: 0;
-                    display: block;
-                    position: absolute;
-                    width: 50px;
-                    height: 32px;
-                    top: -6px;
-                    right: -16px;
-                    padding-right: 16px;
                     text-align: right;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
                 }
             }
             .clear-form {
@@ -2181,7 +2180,7 @@ $hamburger-dot: 4px;
         &.source-section {
             @include font-size(12);
             @include size-in-rems(padding-top, 22)
-            @include color($color-contrast-400);
+            @include color($color-contrast-500);
             font-weight: bold;
             text-transform: uppercase;
             display: flex;
@@ -2199,7 +2198,7 @@ $hamburger-dot: 4px;
             white-space: nowrap;
             width: 100%;
             display: block;
-            align-items: stretch;
+            align-items: center;
             display: flex;
         }
     }
@@ -2510,7 +2509,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
     .time {
         align-self: flex-end;
-        @include color($color-contrast-400);
+        @include color($color-contrast-500);
         display: block;
         white-space: nowrap;
     }
@@ -2570,7 +2569,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            @include color($color-contrast-400);
+            @include color($color-contrast-500);
         }
     }
     .title, &.no-title .feed-title {
@@ -2584,7 +2583,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         .title-inner {
             font-weight: bold;
             span {
-                @include color($color-contrast-400);
+                @include color($color-contrast-500);
                 font-weight: normal;
             }
         }
@@ -2934,7 +2933,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
 }
 .entries-image-0 .entries, .entries-display-inline .entries {
-    .entry-image {
+    .entry-image, .link-preview {
         display: none;
     }
 }
@@ -3131,7 +3130,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     }
 
     h3 {
-        @include font-size(16);
+        @include font-size(14);
         font-weight: bold;
         margin: 24px 16px 16px 16px;
     }
@@ -3263,7 +3262,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         @include border-bottom($color-borders);
         @include border-top($color-borders);
         button {
-            font-size: 16px;
+            @include font-size(14);
             padding: 16px;
             align-items: center;
             justify-content: center;
@@ -3276,6 +3275,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 @include border-right($color-borders);
             }
         }
+    }
+    .control-group li > label {
+        @include font-size(14);
     }
 }
 .fonts {
@@ -3437,7 +3439,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     .next-entry-feed, .next-entry-title {
         display: block;
         @include font-size(14);
-        @include color($color-contrast-400);
+        @include color($color-contrast-500);
         margin-bottom: 5px;
         font-family: $font-stack !important;
         font-weight: 400 !important;
@@ -3675,7 +3677,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 position: relative;
                 text-decoration: none;
                 display: flex;
-                @include font-size(16);
+                @include font-size(14);
                 @include color($color-contrast-700);
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -3738,8 +3740,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 &.with-icon {
                     display: flex;
                     align-items: center;
-                    strong {
-                        font-weight: 500;
+                    span {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -3821,11 +3822,11 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         align-items: baseline;
     }
     .share-keyboard {
-        @include font-size(16);
+        @include font-size(14);
         margin-left: auto;
         font-style: normal;
         margin-top: 2px;
-        color: map-get($color-contrast-400, day);
+        color: map-get($color-contrast-500, day);
     }
 }
 
@@ -4299,7 +4300,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
 
 .content-styles .entry-callout, .entry-callout {
     @include background-color($color-contrast-100);
-    @include color($color-contrast-400);
+    @include color($color-contrast-500);
     position: relative;
     @include font-size(13);
     padding: 10px 12px;
@@ -4456,7 +4457,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     .embed-subtitle {
         @include font-size(14);
         display: block;
-        @include color($color-contrast-400);
+        @include color($color-contrast-500);
     }
 
 }
@@ -4737,8 +4738,24 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             position: absolute;
             top: 47px;
             left: 0;
-            padding: 16px;
             transition: opacity .2s ease-in;
+            overflow: hidden;
+            .author-profile-inner {
+                padding: 0 base-units(2) base-units(2) base-units(2);
+                margin-top: base-units(-5);
+                transition: .05s ease-in margin;
+                @media (max-height: 768px) {
+                    margin-top: base-units(-7);
+                }
+            }
+            .profile-banner {
+                position: relative;
+                height: 100px;
+                @include background-color($color-contrast-200);
+                img {
+                    width: 100%;
+                }
+            }
             .profile-info h1 {
                 @include font-size(16);
                 svg {
@@ -4778,7 +4795,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                     margin-right: 4px;
                     @include fill($color-icons);
                 }
-                span {
+                span, time {
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -4787,6 +4804,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 strong {
                     @include color($color-contrast-600);
                     margin-right: 4px;
+                }
+                &.joined {
+                    flex-shrink: 0;
                 }
                 .calendar-icon {
                     flex-shrink: 0;
@@ -4855,7 +4875,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             flex-grow: 1;
             .link {
                 font-weight: normal;
-                @include color($color-contrast-400);
+                @include color($color-contrast-500);
                 text-decoration: none;
                 background: none;
                 display: block;
@@ -4868,7 +4888,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 }
             }
         }
-        img {
+        .profile-image img {
             margin: 0;
             $size: 47px;
             border: 2px solid white;
@@ -4884,6 +4904,14 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 width: 100%;
                 max-height: 270px;
                 object-fit: cover;
+                box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+                transition: .1s ease-out width;
+                .theme-day & {
+                    box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+                }
+                @media (max-height: 768px) {
+                    width: 50%;
+                }
             }
         }
         .tweet-actions {
@@ -5900,7 +5928,7 @@ Settings
             margin: 0;
             span {
                 font-weight: normal;
-                @include color($color-contrast-400);
+                @include color($color-contrast-500);
             }
             a {
                 color: map-get($color-contrast-700, day);
@@ -5920,7 +5948,7 @@ Settings
                 display: block;
             }
             a, a:hover {
-                color: map-get($color-contrast-400, day);
+                color: map-get($color-contrast-500, day);
             }
             a:hover {
                 text-decoration: none;
@@ -6178,7 +6206,7 @@ Settings
         }
         .last-updated-wrap, .subscription-meta {
             @include font-size(14);
-            @include color($color-contrast-400);
+            @include color($color-contrast-500);
         }
         .subscription-meta {
             min-width: 0;
@@ -6398,7 +6426,7 @@ label.text-field {
         }
         .info {
             margin-left: auto;
-            @include color($color-contrast-400);
+            @include color($color-contrast-500);
         }
     }
     li > a {

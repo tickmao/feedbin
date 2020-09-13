@@ -405,7 +405,8 @@ CREATE TABLE public.feeds (
     self_url text,
     feed_type bigint DEFAULT 0,
     active boolean DEFAULT true,
-    options json
+    options json,
+    hubs text[]
 );
 
 
@@ -1106,7 +1107,8 @@ CREATE TABLE public.users (
     expires_at timestamp without time zone,
     newsletter_token character varying,
     price_tier bigint,
-    page_token character varying
+    page_token character varying,
+    twitter_auth_failures bigint
 );
 
 
@@ -1728,10 +1730,24 @@ CREATE INDEX index_feeds_on_host ON public.feeds USING btree (host);
 
 
 --
+-- Name: index_feeds_on_hubs; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_feeds_on_hubs ON public.feeds USING btree (hubs) WHERE (hubs IS NOT NULL);
+
+
+--
 -- Name: index_feeds_on_last_published_entry; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_feeds_on_last_published_entry ON public.feeds USING btree (last_published_entry);
+
+
+--
+-- Name: index_feeds_on_push_expiration; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_feeds_on_push_expiration ON public.feeds USING btree (push_expiration) WHERE (push_expiration IS NOT NULL);
 
 
 --
@@ -2162,6 +2178,13 @@ CREATE UNIQUE INDEX index_users_on_starred_token ON public.users USING btree (st
 
 
 --
+-- Name: index_users_on_twitter_auth_failures; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_twitter_auth_failures ON public.users USING btree (twitter_auth_failures);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2351,6 +2374,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200109204853'),
 ('20200110142059'),
 ('20200113101112'),
-('20200708130351');
+('20200708130351'),
+('20200730134217'),
+('20200810160825');
 
 
