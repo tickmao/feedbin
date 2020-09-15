@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 git_source(:github) { |name| "https://github.com/#{name}.git" }
 
-gem "rails", "= 6.0.3.2"
+gem "rails", "= 6.0.3.3"
 gem "will_paginate"
 
 gem "http",                github: "feedbin/http",                branch: "feedbin"
@@ -14,6 +14,7 @@ gem "html-pipeline",       github: "feedbin/html-pipeline",       ref: "1e77ecf"
 gem "html_diff",           github: "feedbin/html_diff",           ref: "013e1bb"
 gem "opml_saw",            github: "feedbin/opml_saw",            ref: "61d8c2d"
 gem "elasticsearch-model", github: "feedbin/elasticsearch-rails", branch: "2.x"
+gem "twitter",             github: "feedbin/twitter",             branch: "feedbin"
 
 gem "activerecord-import"
 gem "addressable", require: "addressable/uri"
@@ -58,7 +59,6 @@ gem "sass-rails"
 gem "sidekiq"
 gem "stripe", "~> 4.24.0"
 gem "stripe_event"
-gem "twitter"
 gem "twitter-text"
 gem "uglifier"
 gem "unicode-emoji"

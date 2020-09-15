@@ -36,10 +36,15 @@ var callback = function() {
     <% else %>
     feedbin.viewType = null;
     <% end %>
+
+    try {
+      feedbin.loadMore();
+    } catch (e) {
+    }
 }
 
 if (feedbin.panelScrollComplete) {
-    callback();
+  callback();
 } else {
     var interval = setInterval(function() {
         if (feedbin.panelScrollComplete) {

@@ -28,6 +28,7 @@ class ApplicationController < ActionController::Base
   end
 
   def logged_in
+    clear_location
     get_feeds_list
     subscriptions = @user.subscriptions
 
@@ -198,6 +199,10 @@ class ApplicationController < ActionController::Base
 
   def set_csrf_cookie
     cookies["XSRF-TOKEN"] = form_authenticity_token if protect_against_forgery?
+  end
+
+  def native?
+    request.user_agent&.include?("TurbolinksFeedbin")
   end
 
   protected
