@@ -27,6 +27,10 @@ $.extend feedbin,
   scrollStarted: false
   loadingMore: false
 
+  basicAuthForm: () ->
+    $('.modal-purpose-subscribe [data-behavior~=submit_add]').removeAttr('disabled')
+    $('.modal-purpose-subscribe #basic_username').focus()
+
   changeContentView: (view) ->
     currentView = $('[data-behavior~=content_option]:not(.hide)')
     nextView = $("[data-behavior~=content_option][data-content-option=#{view}]")
@@ -481,12 +485,19 @@ $.extend feedbin,
     clearTimeout(feedbin.notificationTimeout)
 
     container = $('[data-behavior~=notification_container]')
+    content = $('[data-behavior~=notification_content]')
+
+    if !container.hasClass('shake') && !container.hasClass('hide') && container.hasClass('error') && content.text() == text
+      container.addClass('shake')
+      callback = ->
+        container.removeClass('shake')
+      setTimeout callback, 600
+
     container.removeClass('error')
     container.removeClass('hide')
     container.addClass('visible')
     container.addClass('error') if error
 
-    content = $('[data-behavior~=notification_content]')
     content.text(text)
 
     feedbin.notificationTimeout = setTimeout feedbin.hideNotification, 3000
@@ -1291,7 +1302,6 @@ $.extend feedbin,
   showAuthField: ->
     $('.modal-purpose-subscribe .modal-body, .modal-purpose-subscribe .modal-footer').slideDown(200)
     $('.modal-purpose-subscribe .modal-dialog').addClass('done');
-    $('.modal-purpose-subscribe #basic_username').first().find("input").focus();
     $('.modal-purpose-subscribe .password-footer').removeClass('hide')
     $('.modal-purpose-subscribe .subscribe-footer').addClass('hide')
 
