@@ -21,6 +21,12 @@
     #{$property}: $result;
 }
 
+@mixin ellipse {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 @mixin font-size($size-in-pixels) {
     @include size-in-rems(font-size, $size-in-pixels);
 }
@@ -237,3 +243,4 @@
 @function inline-svg($string) {
     @return url('data:image/svg+xml,#{url-encode($string)}');
 }
+
