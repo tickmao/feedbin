@@ -2030,13 +2030,12 @@ $hamburger-dot: 4px;
                 padding-left: 16px;
             }
             .count-wrap {
-                margin-left: 5px;
-                min-width: 40px;
+                margin-left: 8px;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
                 text-align: right;
-                flex: 0 1 auto;
+                flex: 0 0 auto;
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
@@ -2281,11 +2280,10 @@ $hamburger-dot: 4px;
             }
         }
         &.source-section {
-            @include font-size(12);
+            @include font-size(15);
             @include size-in-rems(padding-top, 22)
-            @include color($color-contrast-500);
+            @include color($color-contrast-600);
             font-weight: bold;
-            text-transform: uppercase;
             display: flex;
             align-items: center;
             svg {
@@ -2532,7 +2530,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     .summary-menu {
         display: none;
         position: absolute;
-        right: 16px;
+        right: 0;
         bottom: 0;
         width: 40px;
         height: 38px;
@@ -2546,8 +2544,20 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             svg {
                 @include fill(white);
                 position: absolute;
-                right: 0px;
-                bottom: 16px;
+                left: 8px;
+                bottom: 19px;
+            }
+        }
+        .entries-display-inline & {
+            height: auto;
+            top: 0;
+            .summary-menu-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                svg {
+                    position: static;
+                }
             }
         }
         .icon-caret.flip {
@@ -2615,6 +2625,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             display: block;
             overflow: visible;
             white-space: normal;
+        }
+        .inline-title {
+            display: none;
         }
     }
     .quoted-tweet, .link-preview {
@@ -2688,6 +2701,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
             }
         }
     }
+    .summary-status-inline, .feed-title-inline {
+        display: none;
+    }
     .link-preview-content {
         padding: 8px;
     }
@@ -2697,192 +2713,157 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     svg.light {
         @include fill($color-contrast-500);
     }
-    .entry-summary.selected & {
-        @include color(white);
-        @include background-color($color-selected-off);
-        .light {
-            @include color($color-selected-muted);
-        }
-        svg.light {
-            @include fill($color-selected-muted);
-        }
-        .quoted-tweet, .link-preview {
-            @include border-color($color-selected-muted-light);
-        }
-        .entries-column.selected & {
-            @include background-color($color-selected);
-        }
-    }
-    .entry-summary.read:not(.selected) & {
-        @include color($color-contrast-400);
-        .light {
-            @include color($color-contrast-400);
-        }
-        svg.light {
-            @include fill($color-contrast-400);
-        }
-    }
 }
 
-.entries-display-inline .entries {
-    .entry-actions-wrap {
-        top: 0;
-        bottom: 0;
-        height: auto;
-    }
-    .inline-content-wrap {
-        display: flex;
-        align-items: baseline;
-        min-width: 0;
-        width: 100%;
-    }
-    .meta-wrap .entry-status {
+@mixin title-font {
+    font-size: 14px;
+    font-weight: bold;
+    @include color($color-contrast-600);
+}
+
+$feed-title-width: 175px;
+.entries-display-inline .entry-summary-link {
+    display: flex;
+    @include ellipse;
+    align-items: center;
+    padding: 8px 8px;
+    .title-wrap .favicon-wrap,
+    .quoted-tweet,
+    .link-preview,
+    .entry-image,
+    .summary-content .feed-title {
         display: none;
     }
-    .entries-inner-wrap {
+    .title-wrap, .summary, .summary-status, .feed-title {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .feed-title-inline {
+        display: block;
+        flex: 0 0 auto;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding-top: 8px;
-        padding-bottom: 8px;
-        > .favicon-wrap {
-            position: absolute;
-            display: flex;
-            top: 8px;
-            z-index: 3;
+        width: $feed-title-width;
+        @include ellipse;
+        margin-right: base-units(1);
+        .favicon-wrap {
+            margin-right: base-units(1);
         }
-    }
-    .meta-wrap {
-        display: inline-block;
-    }
-    .feed-title, .no-title .feed-title {
-        .title-inner {
-            font-weight: normal;
-        }
-    }
-    .feed-title {
-        width: 110px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        padding: 0 10px 0 0;
-        margin: 0 !important;
     }
     .title-wrap {
-        margin: 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        display: none;
+    }
+    .summary-content {
         display: block;
-        line-height: 1.2;
-        padding-right: 26px;
-        .favicon-wrap {
+        margin: 0 base-units(1) 0 0;
+        @include ellipse;
+        .summary-status {
             display: none;
         }
     }
-    .title-inner-wrap {
-        display: inline;
-    }
-    .no-title .title {
-        @include color($color-contrast-600, $root: true);
-        font-weight: bold;
-        @include font-size(15);
-    }
-    .no-title.read .title {
-        @include color($color-contrast-400, $root: true);
-    }
-    .icon-entry-actions {
-        bottom: 15px;
-    }
-    .no-title .feed-title {
-        @include font-size(14);
-    }
-    .title, .body {
-        display: inline;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        line-height: 1.2;
-        margin: 0;
-    }
-    .meta-wrap {
-        margin: 0;
-    }
-    .footer-meta-wrap {
-        flex-direction: row-reverse;
-        margin: 0 0 0 auto;
-        .entry-status {
-            display: block;
-            margin-left: 8px;
-            position: relative;
-            .icon-unread {
-                margin: 2px 0 0 1px;
-            }
-        }
-        time {
-            margin-left: 8px;
+    .summary {
+        @include ellipse;
+        .inline-title {
+            @include ellipse;
+            display: inline;
+            margin: 0 base-units(1) 0 0;
+            @include title-font;
         }
     }
-    .quoted-summary, .link-preview {
-        display: none !important;
+    .summary-status {
+        display: flex;
+        margin-left: auto;
+        width: 150px;
+        flex: 0 0 auto;
     }
 }
 
-.entries-feed-0:not(.entries-display-inline) .entries {
-    .meta-wrap {
-        display: none;
+.entries-display-inline .no-title .entry-summary-link {
+    .feed-title-inline {
+        width: auto;
+        margin-right: 0;
     }
-    .feed-title .title-inner {
-        visibility: hidden;
-    }
-    .title-inner-wrap {
+    .title-wrap {
         display: flex;
-        align-items: baseline;
-        .title {
-            margin-right: 8px;
-        }
-        .entry-status {
-            display: flex;
-            position: relative;
-            top: -1px;
-        }
+        flex: 0 0 auto;
+        @include ellipse;
+        width: $feed-title-width - 28;
+        margin-right: base-units(1);
     }
+    .title {
+        font-size: 14px;
+        font-weight: normal;
+    }
+    .summary {
+        @include title-font;
+    }
+}
+
+.entry-summary.selected .entry-summary-link {
+    @include color(white);
+    @include background-color($color-selected-off);
+    .light {
+        @include color($color-selected-muted);
+    }
+    svg.light {
+        @include fill($color-selected-muted);
+    }
+    .quoted-tweet, .link-preview {
+        @include border-color($color-selected-muted-light);
+    }
+    .entries-column.selected & {
+        @include background-color($color-selected);
+    }
+    .inline-title {
+        @include color(white);
+    }
+}
+.entry-summary.read:not(.selected) .entry-summary-link {
+    @include color($color-contrast-400);
+    .inline-title {
+        @include color($color-contrast-400);
+    }
+    .light {
+        @include color($color-contrast-400);
+    }
+    svg.light {
+        @include fill($color-contrast-400);
+    }
+}
+
+.entries-display-inline .entry-summary.selected.no-title .entry-summary-link {
+    .summary {
+        @include color(white);
+    }
+}
+
+.entries-display-inline .entry-summary.read.no-title:not(.selected) .entry-summary-link {
+    .summary {
+        @include color($color-contrast-400);
+    }
+}
+
+
+.entries-feed-0:not(.entries-display-inline) .entries {
+
 }
 .entries-feed-0.entries-display-inline .entries {
-    .inline-text-wrap {
-        padding-left: 0;
-    }
-    .feed-title {
-        display: none;
-    }
+
 }
 .entries-time-0:not(.entries-display-inline) .entries {
-    .footer-meta-wrap {
-        display: none;
-    }
+
 }
 .entries-time-0.entries-display-inline .entries {
-    .time {
-        display: none;
-    }
-    .inline-text-wrap {
-        padding-right: 0;
-    }
+
 }
 .entries-body-0 .entries {
-    .body {
-        display: none;
-    }
+
 }
 .entries-image-0 .entries, .entries-display-inline .entries {
-    .entry-image, .link-preview {
-        display: none;
-    }
+
 }
 .entries-feed-0.entries-time-0 .entries {
-    .feed-title {
-        display: none;
-    }
+
 }
 
 .entry-toolbar {

@@ -164,14 +164,16 @@ class EntryPresenter < BasePresenter
 
   def formatted_content
     @formatted_content ||= begin
-      formatted_content = entry.content
       if text?
-        formatted_content = ContentFormatter.text_email(formatted_content)
+        ContentFormatter.text_email(entry.content)
       elsif youtube?
-        formatted_content = ContentFormatter.text_email(formatted_content)
-        formatted_content = @template.content_tag(:iframe, "", width: entry.data["media_width"], height: entry.data["media_height"], src: "https://www.youtube-nocookie.com/embed/#{entry.data["youtube_video_id"]}?rel=0&amp;showinfo=0", frameborder: 0, allowfullscreen: true) + formatted_content
+        @template.capture do
+          @template.concat @template.content_tag(:iframe, "", width: entry.data["media_width"], height: entry.data["media_height"], src: "https://www.youtube-nocookie.com/embed/#{entry.data["youtube_video_id"]}?rel=0&amp;showinfo=0", frameborder: 0, allowfullscreen: true)
+          @template.concat ContentFormatter.text_email(entry.content)
+        end
+      else
+        entry.content
       end
-      formatted_content
     end
   end
 
@@ -475,13 +477,20 @@ class EntryPresenter < BasePresenter
     if entry.tweet?
       text = entry.tweet_summary(nil, true).html_safe
       summary = @template.truncate(text, length: 280, omission: "", escape: false)
-      @template.content_tag(:div, summary, class: "summary")
+      @template.content_tag(:div, class: "summary") do
+        @template.content_tag(:span, summary)
+      end
     elsif entry.micropost?
       summary = entry.summary.truncate(250, separator: " ", omission: "…")
-      @template.content_tag(:div, summary, class: "summary")
+      @template.content_tag(:div, class: "summary") do
+        @template.content_tag(:span, summary)
+      end
     elsif title?
       summary = entry.summary.truncate(250, separator: " ", omission: "…")
-      @template.content_tag(:div, summary, class: "summary light")
+      @template.content_tag(:div, class: "summary light") do
+        @template.concat @template.content_tag(:span, title_text, class: "inline-title")
+        @template.concat @template.content_tag(:span, summary)
+      end
     end
   rescue
     nil
@@ -510,6 +519,9 @@ class EntryPresenter < BasePresenter
     end
   end
 
+  def title_text
+    sanitized_title || "--".html_safe
+  end
 
   def feed_title
     if entry.tweet? || entry.micropost?
