@@ -477,12 +477,12 @@ class EntryPresenter < BasePresenter
     if entry.tweet?
       text = entry.tweet_summary(nil, true).html_safe
       summary = @template.truncate(text, length: 280, omission: "", escape: false)
-      @template.content_tag(:div, class: "summary") do
+      @template.content_tag(:div, class: "summary light") do
         @template.content_tag(:span, summary)
       end
     elsif entry.micropost?
       summary = entry.summary.truncate(250, separator: " ", omission: "…")
-      @template.content_tag(:div, class: "summary") do
+      @template.content_tag(:div, class: "summary light") do
         @template.content_tag(:span, summary)
       end
     elsif title?
