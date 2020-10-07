@@ -2560,7 +2560,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
                 }
             }
         }
-        .icon-caret.flip {
+        .icon-direction.flip {
             transform: scaleY(-1);
         }
         .dropdown-wrap .dropdown-content {
@@ -2580,6 +2580,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     @include font-size(14);
     @include size-in-rems(padding, 12 16px 12 16)
     @include color($color-contrast-600);
+    text-decoration: none !important;
     .title-wrap {
         display: flex;
         margin-bottom: $margin;
@@ -2637,18 +2638,19 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         margin: 8px 0 8px 0;
         padding: 8px;
         border-radius: 8px;
+        overflow: hidden;
         @include border($color-borders);
     }
     .entry-image {
         margin: 8px 0 8px 0;
         display: block;
-        border-radius: 4px;
+        border-radius: 8px;
+        overflow: hidden;
         &.is-loading {
             position: relative;
             @include background-color($color-contrast-100);
         }
         img {
-            border-radius: 4px;
             display: block;
             max-width: 100%;
             height: auto;
@@ -2659,14 +2661,12 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         }
     }
     .link-preview {
-        .entry-image {
-            margin: 0;
-            img {
-                border-radius: 0;
-            }
-        }
         padding: 0;
         overflow: hidden;
+        .entry-image {
+            margin: 0;
+            border-radius: 0;
+        }
         img {
             width: 100%;
         }
@@ -2676,19 +2676,19 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
         margin: base-units(1) 0 0 0;
         align-items: center;
         svg {
-            margin-left: 8px;
+            margin: 0 8px;
         }
         .icon-star-on {
-            display: none;
+            visibility: hidden;
             margin: 0 2px 0 auto;
             fill: $color-accent-orange-600;
             height: 12px !important;
             width: 12px !important;
             .entry-summary.starred & {
-                display: block;
+                visibility: visible;
             }
             .entries-column.selected .entry-summary.selected.starred & {
-                display: none;
+                visibility: hidden;
             }
         }
         .icon-retweet {
@@ -2713,6 +2713,9 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     .light {
         @include color($color-contrast-500);
     }
+    .extra-light {
+        @include color($color-contrast-400);
+    }
     svg.light {
         @include fill($color-contrast-500);
     }
@@ -2724,7 +2727,7 @@ li.selected > a .favicon-wrap, .theme-day li.selected > a .favicon-wrap {
     @include color($color-contrast-600);
 }
 
-$feed-title-width: 175px;
+$feed-title-width: 115px;
 .entries-display-inline .entry-summary-link {
     display: flex;
     @include ellipse;
@@ -2758,7 +2761,7 @@ $feed-title-width: 175px;
     }
     .summary-content {
         display: block;
-        margin: 0 base-units(1) 0 0;
+        margin: 0 base-units(2) 0 0;
         @include ellipse;
         .summary-status {
             display: none;
@@ -2776,8 +2779,13 @@ $feed-title-width: 175px;
     .summary-status {
         display: flex;
         margin-left: auto;
-        width: 150px;
         flex: 0 0 auto;
+        flex-direction: row-reverse;
+        margin-right: 4px;
+        .icon-star-on {
+            order: -1;
+            margin-left: 16px;
+        }
     }
 }
 
@@ -2805,7 +2813,7 @@ $feed-title-width: 175px;
 .entry-summary.selected .entry-summary-link {
     @include color(white);
     @include background-color($color-selected-off);
-    .light {
+    .light, .extra-light {
         @include color($color-selected-muted);
     }
     svg.light {
@@ -2826,7 +2834,7 @@ $feed-title-width: 175px;
     .inline-title {
         @include color($color-contrast-400);
     }
-    .light {
+    .light, .extra-light {
         @include color($color-contrast-400);
     }
     svg.light {
@@ -2847,26 +2855,39 @@ $feed-title-width: 175px;
 }
 
 
-.entries-feed-0:not(.entries-display-inline) .entries {
-
+.entries-feed-0 .entries {
+    .feed-title {
+        display: none;
+    }
+    .feed-title-inline {
+        width: 20px;
+    }
 }
+
 .entries-feed-0.entries-display-inline .entries {
-
+    .no-title .title-wrap {
+        display: none;
+    }
 }
-.entries-time-0:not(.entries-display-inline) .entries {
 
-}
-.entries-time-0.entries-display-inline .entries {
-
-}
 .entries-body-0 .entries {
-
+    .summary-inner {
+        display: none;
+    }
 }
+
+.entries-body-0:not(.entries-display-inline) .entries {
+    .no-title {
+        .summary {
+            display: none;
+        }
+    }
+}
+
 .entries-image-0 .entries, .entries-display-inline .entries {
-
-}
-.entries-feed-0.entries-time-0 .entries {
-
+    .entry-image, .link-preview {
+        display: none;
+    }
 }
 
 .entry-toolbar {
@@ -3146,7 +3167,7 @@ $feed-title-width: 175px;
             justify-content: flex-start;
             padding: 0;
             flex: 1 1 50%;
-            font-size: 18px;
+            font-size: 16px;
             @include color($color-contrast-600);
             svg {
                 @include fill($color-contrast-600);
@@ -3178,6 +3199,22 @@ $feed-title-width: 175px;
         }
         .option svg {
             margin-left: 1px;
+        }
+        label[for="user_font_sans-serif-1"] {
+            /* whitney */
+            font-family: "Sans Serif 1";
+        }
+        label[for="user_font_sans-serif-2"] {
+            /* ideal sans */
+            font-family: "Sans Serif 2";
+        }
+        label[for="user_font_serif-1"] {
+            /* sentinel */
+            font-family: "Serif 1";
+        }
+        label[for="user_font_serif-2"] {
+            /* mercury */
+            font-family: "Serif 2";
         }
         label[for="user_font_serif-3"] {
             font-family: Georgia, serif;
@@ -6241,7 +6278,7 @@ Settings
     .entries-inner-wrap {
         padding-right: 0;
     }
-    .entry-image {
+    .entry-image, .link-preview, .summary-status {
         display: none !important;
     }
     a, div {

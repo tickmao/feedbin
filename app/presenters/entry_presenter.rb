@@ -489,7 +489,11 @@ class EntryPresenter < BasePresenter
       summary = entry.summary.truncate(250, separator: " ", omission: "…")
       @template.content_tag(:div, class: "summary light") do
         @template.concat @template.content_tag(:span, title_text, class: "inline-title")
-        @template.concat @template.content_tag(:span, summary)
+        @template.concat @template.content_tag(:span, summary, class: "summary-inner")
+      end
+    else
+      @template.content_tag(:div, class: "summary light") do
+        @template.concat @template.content_tag(:span, title, class: "inline-title")
       end
     end
   rescue
@@ -806,11 +810,10 @@ class EntryPresenter < BasePresenter
 
   def quoted_tweet
     return unless quoted_tweet?
-    @template.content_tag :div, class: "quoted-tweet" do
-      @template.content_tag :strong do
-        tweet_name(entry.main_tweet.quoted_status)
-      end
-      retweet_text
+    @template.content_tag :div, class: "quoted-tweet light" do
+      @template.concat @template.content_tag(:strong) { tweet_name(entry.main_tweet.quoted_status) }
+      @template.concat " – "
+      @template.concat retweet_text
     end
   end
 
