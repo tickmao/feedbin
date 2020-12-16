@@ -34,9 +34,9 @@ module Feedbin
 
     config.middleware.use Rack::Attack
 
-    config.middleware.use BasicAuthentication
-
-    config.middleware.use TldLength
+    # config.middleware.use BasicAuthentication
+    #
+    # config.middleware.use TldLength
 
     config.exceptions_app = routes
 

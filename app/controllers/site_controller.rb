@@ -19,7 +19,7 @@ class SiteController < ApplicationController
 
   def headers
     @user = current_user
-    if @user.admin?
+    if @user && @user.admin?
       @headers = request.env.select { |k, v| k =~ /^HTTP_/ }
     end
   end

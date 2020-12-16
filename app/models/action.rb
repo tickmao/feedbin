@@ -7,7 +7,7 @@ class Action < ApplicationRecord
 
   validate do |action|
     if computed_feed_ids.empty? && automatic_modification.blank?
-      errors[:base] << "Please select at least one feed or tag"
+      action.errors.add :base, "Please select at least one feed or tag"
     end
   end
 

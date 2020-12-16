@@ -5,7 +5,8 @@ class CacheEntryViews
     entries = Entry.where(id: entry_id)
     ApplicationController.render({
       layout: nil,
-      template: "api/v2/entries/index.html.erb",
+      template: "api/v2/entries/index",
+      formats: :html,
       assigns: {entries: entries},
       locals: {
         params: {mode: "extended"}
