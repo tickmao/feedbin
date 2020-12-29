@@ -1,5 +1,5 @@
 <% if embed.image_url.present? %>
-<div class="iframe-embed system-content embed-type-<%= embed.type %>" data-behavior="iframe_placeholder" data-iframe-src="<%= @embed.iframe_src %>" data-iframe-width="<%= params[:width] %>" data-iframe-height="<%= params[:height] %>">
+<div class="iframe-embed system-content embed-type-<%= embed.type %> embed-with-image" data-behavior="iframe_placeholder" data-iframe-src="<%= @embed.iframe_src %>" data-iframe-width="<%= params[:width] %>" data-iframe-height="<%= params[:height] %>">
     <% if embed.image_url.present? %>
         <div class="image-wrap" title="Load embed">
             <div class="play-button">
