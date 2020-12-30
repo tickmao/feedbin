@@ -1,4 +1,4 @@
-class Embed::Default < IframeEmbed
+class IframeEmbed::Default < IframeEmbed
   def fetch
     @page ||= begin
       UrlCache.new(canonical_url)

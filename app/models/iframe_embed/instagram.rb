@@ -1,4 +1,4 @@
-class Embed::Instagram
+class IframeEmbed::Instagram
   attr_reader :url
 
   def initialize(url)

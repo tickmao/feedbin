@@ -96,13 +96,13 @@ class IframeEmbed
 
   def self.embed_sources
     [
-      Embed::Youtube,
-      Embed::Vimeo,
-      Embed::Ted,
-      Embed::Spotify,
-      Embed::Kickstarter,
-      Embed::Soundcloud,
-      Embed::Default
+      IframeEmbed::Youtube,
+      IframeEmbed::Vimeo,
+      IframeEmbed::Ted,
+      IframeEmbed::Spotify,
+      IframeEmbed::Kickstarter,
+      IframeEmbed::Soundcloud,
+      IframeEmbed::Default
     ]
   end
 
