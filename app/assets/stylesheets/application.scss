@@ -4353,9 +4353,12 @@ $feed-title-width: 115px;
     @include color($color-contrast-500);
     position: relative;
     @include font-size(13);
-    padding: 10px 12px;
     border-radius: 8px;
     margin: 1.1em 0 1.1em 0;
+    padding: 8px 16px;
+    @media (max-width: $small-breakpoint) {
+        padding: 8px;
+    }
     strong {
         font-weight: 700 !important;
     }
@@ -4413,6 +4416,16 @@ $feed-title-width: 115px;
     .embed-data {
         padding-right: base-units(2);
     }
+    .embed-profile-image {
+        width: 68px;
+        height: 68px;
+        margin-left: auto;
+        flex-shrink: 0;
+        display: block;
+        img {
+            border-radius: 50%;
+        }
+    }
     .embed-icon {
         width: 34px;
         height: 34px;
@@ -4458,6 +4471,22 @@ $feed-title-width: 115px;
             padding-top: 100%;
         }
     }
+    .embed-duration {
+        display: none;
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
+        text-align: right;
+        padding: 8px;
+        line-height: 1;
+        border-radius: 8px;
+        z-index: 1;
+        font-weight: bold !important;
+        background-color: rgba(black, .3);
+        backdrop-filter: blur(8px);
+        @include font-size(14);
+        @include color($theme-color-midnight-700);
+    }
     .play-button {
         display: none;
         width: 70px;
@@ -4498,6 +4527,9 @@ $feed-title-width: 115px;
             display: block;
             padding-top: 56.25%;
         }
+        &:not(.loaded) .embed-duration {
+            display: inline-block;
+        }
         &:not(.loaded) .image-wrap:hover .play-button {
             display: block;
             .touch & {
@@ -4510,7 +4542,11 @@ $feed-title-width: 115px;
         @include font-size(14);
         display: block;
         @include color($theme-color-midnight-700);
-
+    }
+    .embed-subhead {
+        @include font-size(14);
+        display: block;
+        @include color($theme-color-midnight-700);
     }
     .embed-subtitle {
         @include font-size(14);
