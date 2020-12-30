@@ -4439,7 +4439,7 @@ $feed-title-width: 115px;
             max-width: 100%;
             max-height: 100%;
             * {
-                @include fill($color-contrast-400);
+                @include fill($theme-color-midnight-400);
             }
         }
         .icon-embed-source-spotify,
